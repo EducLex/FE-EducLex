@@ -143,6 +143,443 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+/* Hero dengan background gradient */
+.hero {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #5c3d2e, #a9746e);
+  color: #fff;
+  text-align: center;
+  padding: 2rem;
+}
+.hero-text h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: fadeInDown 1s ease;
+}
+.hero-text p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 1.2s ease;
+}
+.cta-btn {
+  background: #ffd29d;
+  color: #5c3d2e;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.cta-btn:hover {
+  background: #ffb366;
+  transform: scale(1.05);
+}
+
+/* Card link button */
+.btn-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #5c3d2e;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+.btn-link:hover {
+  background: #7a5644;
+}
+
+/* Animasi teks */
+@keyframes fadeInDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Global Font */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Heading pakai Poppins */
+h1, h2, h3, .logo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Hero text styling */
+.hero-text h1 {
+  font-size: 3.2rem;
+  font-weight: 700;
+}
+
+.hero-text p {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #f0e6e6; /* biar kontras dengan background */
+}
+
+/* Navbar logo */
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffd29d;
+}
+
+/* ===== Artikel Page ===== */
+.artikel-container {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.artikel-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: #4e342e;
+}
+
+.artikel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #fff8f2;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.card h2 {
+  font-size: 1.4rem;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 0.6rem;
+  color: #3e2723;
+}
+
+.card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #5d4037;
+  margin-bottom: 1rem;
+}
+
+.card a {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #8d6e63;
+  border-bottom: 2px solid #8d6e63;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.card a:hover {
+  color: #5d4037;
+  border-color: #5d4037;
+}
+
+/* ===== Tanya Jaksa Page ===== */
+.tanya-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.tanya-container h1 {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  color: #4e342e;
+  margin-bottom: 1rem;
+}
+
+.tanya-container .intro {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #5d4037;
+}
+
+/* Form Tanya */
+.form-section form {
+  background: #fff8f2;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.form-section label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #3e2723;
+}
+
+.form-section input,
+.form-section textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border: 1px solid #d7ccc8;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.form-section textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.btn {
+  display: inline-block;
+  background: #8d6e63;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  margin-top: 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #5d4037;
+}
+
+/* FAQ */
+.faq-section {
+  margin-bottom: 2rem;
+}
+
+.faq details {
+  background: #fdf6f0;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.faq summary {
+  font-weight: 600;
+  color: #4e342e;
+}
+
+.faq p {
+  margin-top: 0.5rem;
+  color: #5d4037;
+}
+
+/* Jawaban Section */
+.jawaban-section {
+  margin-bottom: 2rem;
+}
+
+.jawaban-section h2 {
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 1rem;
+  color: #4e342e;
+}
+
+#daftar-pertanyaan .item {
+  background: #fff3e6;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 5px solid #8d6e63;
+}
+
+/* ===== Tulisan Jaksa Page ===== */
+.tulisan-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.tulisan-container h1 {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 1rem;
+  color: #4e342e;
+}
+
+.tulisan-container .intro {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #5d4037;
+}
+
+.tulisan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.tulisan-card {
+  background: #fff8f2;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.tulisan-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.tulisan-card h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  margin: 1rem 0 0.8rem;
+  color: #3e2723;
+}
+
+.tulisan-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #5d4037;
+  margin-bottom: 1rem;
+}
+
+.tulisan-card a {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #8d6e63;
+  border-bottom: 2px solid #8d6e63;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.tulisan-card a:hover {
+  color: #5d4037;
+  border-color: #5d4037;
+}
+
+/* Info penulis */
+.penulis {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.penulis img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.penulis h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.kategori {
+  font-size: 0.8rem;
+  color: #fff;
+  background: #8d6e63;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+}
+
+/* ===== Simulasi Page ===== */
+.simulasi-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.simulasi-container h1 {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 1rem;
+  color: #4e342e;
+}
+
+.simulasi-container .intro {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #5d4037;
+}
+
+.simulasi-box {
+  background: #fff8f2;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.simulasi-box h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+  color: #3e2723;
+}
+
+.simulasi-box p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #5d4037;
+}
+
+.opsi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.opsi button {
+  flex: 1 1 30%;
+  background: #8d6e63;
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.opsi button:hover {
+  background: #5d4037;
+  transform: scale(1.05);
+}
+
+.hasil {
+  padding: 1rem;
+  background: #fdf6f0;
+  border-left: 5px solid #8d6e63;
+  border-radius: 8px;
+  display: none;
+  font-size: 0.95rem;
+  color: #3e2723;
+}
+
 /* Footer */
 footer {
   text-align: center;

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi Kasus | EducLex</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">EducLex</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="artikel.html">Artikel</a></li>
+        <li><a href="tanya.html">Tanya Jaksa</a></li>
+        <li><a href="tulisan.html">Tulisan Jaksa</a></li>
+        <li><a href="simulasi.html" class="active">Simulasi Kasus</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="simulasi-container">
+    <h1>Simulasi Kasus Ringan</h1>
+    <p class="intro">Pilih tindakan yang menurutmu benar dalam situasi berikut, lalu lihat konsekuensinya!</p>
+
+    <!-- Kasus 1 -->
+    <section class="simulasi-box">
+      <h2>Kasus 1: Menemukan Dompet di Jalan</h2>
+      <p>Kamu menemukan dompet berisi uang dan identitas di jalan. Apa yang akan kamu lakukan?</p>
+      <div class="opsi">
+        <button onclick="pilihSimulasi(1, 'lapor')">📢 Melapor ke pihak berwenang</button>
+        <button onclick="pilihSimulasi(1, 'ambil')">💸 Mengambil uangnya diam-diam</button>
+        <button onclick="pilihSimulasi(1, 'biarkan')">👀 Membiarkannya di tempat</button>
+      </div>
+      <div id="hasil-1" class="hasil"></div>
+    </section>
+
+    <!-- Kasus 2 -->
+    <section class="simulasi-box">
+      <h2>Kasus 2: Membajak Akun Teman untuk Bercanda</h2>
+      <p>Seorang teman lupa logout media sosial di komputer sekolah. Kamu berniat membuat status bercanda. Bagaimana sikapmu?</p>
+      <div class="opsi">
+        <button onclick="pilihSimulasi(2, 'logout')">🔐 Logout-kan akun temannya</button>
+        <button onclick="pilihSimulasi(2, 'post')">😅 Membuat status bercanda</button>
+        <button onclick="pilihSimulasi(2, 'abaikan')">🙄 Abaikan saja</button>
+      </div>
+      <div id="hasil-2" class="hasil"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
