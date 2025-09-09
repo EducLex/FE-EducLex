@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EducLex - Sistem Edukasi Hukum Digital</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">EducLex</div>
+      <ul class="nav-links">
+        <li><a href="#artikel">Artikel</a></li>
+        <li><a href="#tanya-jawab">Tanya Jaksa</a></li>
+        <li><a href="#tulisan">Tulisan Jaksa</a></li>
+        <li><a href="#simulasi">Simulasi Kasus</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>EducLex</h1>
+    <p>Sistem Edukasi Hukum Digital untuk Remaja</p>
+    <button class="btn-alert" onclick="showAlert('Selamat datang di EducLex!')">Coba Alert</button>
+  </section>
+
+  <!-- Artikel Hukum Populer -->
+  <section id="artikel" class="section">
+    <h2>Artikel Hukum Populer</h2>
+    <div class="cards" id="artikel-container">
+      <!-- Nanti diisi dengan JS -->
+    </div>
+  </section>
+
+  <!-- Tanya Jawab -->
+  <section id="tanya-jawab" class="section">
+    <h2>Tanya Jawab dengan Jaksa</h2>
+    <div class="chat-box">
+      <div id="chat-messages"></div>
+      <input type="text" id="chat-input" placeholder="Tulis pertanyaan...">
+      <button onclick="sendMessage()">Kirim</button>
+    </div>
+  </section>
+
+  <!-- Tulisan Jaksa -->
+  <section id="tulisan" class="section">
+    <h2>Tulisan Para Jaksa</h2>
+    <ul id="tulisan-list">
+      <li>Bagaimana hukum melindungi remaja dari cyberbullying?</li>
+      <li>Peran hukum dalam perlindungan anak</li>
+      <li>Pentingnya kesadaran hukum sejak dini</li>
+    </ul>
+  </section>
+
+  <!-- Simulasi Kasus -->
+  <section id="simulasi" class="section">
+    <h2>Simulasi Kasus Ringan</h2>
+    <p>Kamu menemukan dompet di jalan, apa yang kamu lakukan?</p>
+    <button onclick="chooseSimulasi('lapor')">Lapor Polisi</button>
+    <button onclick="chooseSimulasi('ambil')">Ambil untuk diri sendiri</button>
+    <div id="simulasi-result"></div>
+  </section>
+
+  <!-- Custom Alert Modal -->
+<div id="custom-alert" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeAlert()">&times;</span>
+    <p id="alert-message"></p>
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 EducLex | Edukasi Hukum untuk Remaja</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
