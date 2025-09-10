@@ -976,6 +976,121 @@ h1, h2, h3, .logo {
   transform: translateY(-2px);
 }
 
+.btn-tambah {
+  background: #8B4513;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+.btn-tambah:hover {
+  background: #5C3317;
+}
+.tulisan-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  transition: transform 0.2s;
+}
+.tulisan-card:hover {
+  transform: scale(1.02);
+}
+.tulisan-card h2 {
+  font-size: 20px;
+  margin: 10px 0;
+}
+.tulisan-card p {
+  color: #555;
+}
+.tulisan-card a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #8B4513;
+  font-weight: bold;
+  text-decoration: none;
+}
+.tulisan-card a:hover {
+  text-decoration: underline;
+}
+
+
+.form-tambah {
+  background: #fff;
+  padding: 25px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-tambah h2 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #34495e;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 6px rgba(52,152,219,0.3);
+}
+
+.btn-tambah {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-tambah:hover {
+  background: linear-gradient(135deg, #2980b9, #1f6391);
+  transform: translateY(-2px);
+}
+
+
 
 /* ==================== Footer ==================== */
 footer {

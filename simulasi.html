@@ -17,7 +17,7 @@
       <li><a href="artikel.html">Artikel</a></li>
       <li><a href="tanya.html">Tanya Jaksa</a></li>
       <li><a href="tulisan.html">Tulisan Jaksa</a></li>
-      <li><a href="simulasi.html">Simulasi Kasus</a></li>
+      <li><a href="simulasi.html" class="active">Simulasi Kasus</a></li>
     </ul>
     <div class="auth-nav">
       <span class="user-icon">👤</span>
@@ -26,13 +26,14 @@
   </nav>
 </header>
 
+<main class="simulasi-container">
+  <h1>Simulasi Kasus Ringan</h1>
+  <p class="intro">Pilih tindakan yang menurutmu benar dalam situasi berikut, lalu lihat konsekuensinya!</p>
 
-  <main class="simulasi-container">
-    <h1>Simulasi Kasus Ringan</h1>
-    <p class="intro">Pilih tindakan yang menurutmu benar dalam situasi berikut, lalu lihat konsekuensinya!</p>
-
-    <!-- Kasus 1 -->
-    <section class="simulasi-box">
+  <!-- Daftar Kasus -->
+  <div id="simulasi-list">
+    <!-- Kasus awal -->
+    <section class="simulasi-box" data-id="1">
       <h2>Kasus 1: Menemukan Dompet di Jalan</h2>
       <p>Kamu menemukan dompet berisi uang dan identitas di jalan. Apa yang akan kamu lakukan?</p>
       <div class="opsi">
@@ -41,10 +42,13 @@
         <button onclick="pilihSimulasi(1, 'biarkan')">👀 Membiarkannya di tempat</button>
       </div>
       <div id="hasil-1" class="hasil"></div>
+      <div class="actions">
+        <button onclick="editKasus(1)">✏️ Edit</button>
+        <button onclick="hapusKasus(1)">🗑️ Hapus</button>
+      </div>
     </section>
 
-    <!-- Kasus 2 -->
-    <section class="simulasi-box">
+    <section class="simulasi-box" data-id="2">
       <h2>Kasus 2: Membajak Akun Teman untuk Bercanda</h2>
       <p>Seorang teman lupa logout media sosial di komputer sekolah. Kamu berniat membuat status bercanda. Bagaimana sikapmu?</p>
       <div class="opsi">
@@ -53,14 +57,47 @@
         <button onclick="pilihSimulasi(2, 'abaikan')">🙄 Abaikan saja</button>
       </div>
       <div id="hasil-2" class="hasil"></div>
+      <div class="actions">
+        <button onclick="editKasus(2)">✏️ Edit</button>
+        <button onclick="hapusKasus(2)">🗑️ Hapus</button>
+      </div>
     </section>
-  </main>
+  </div>
 
-  <footer>
-    <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
-  </footer>
+  <!-- Form Tambah Kasus -->
+<section class="form-tambah">
+  <h2>➕ Tambah Kasus Baru</h2>
+  <form id="formKasus">
+    <div class="form-group">
+      <label for="judul">Judul Kasus</label>
+      <input type="text" id="judul" placeholder="Contoh: Kasus Pelanggaran Lalu Lintas">
+    </div>
+    <div class="form-group">
+      <label for="deskripsi">Deskripsi Kasus</label>
+      <textarea id="deskripsi" placeholder="Tuliskan deskripsi kasus..." rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="opsi1">Opsi 1</label>
+      <input type="text" id="opsi1" placeholder="Contoh: Melapor ke Polisi">
+    </div>
+    <div class="form-group">
+      <label for="opsi2">Opsi 2</label>
+      <input type="text" id="opsi2" placeholder="Contoh: Mengabaikan">
+    </div>
+    <div class="form-group">
+      <label for="opsi3">Opsi 3</label>
+      <input type="text" id="opsi3" placeholder="Contoh: Membantu langsung korban">
+    </div>
+    <button type="button" class="btn-tambah" onclick="tambahKasus()">➕ Tambahkan Kasus</button>
+  </form>
+</section>
 
-  <script src="script.js"></script>
-  <script src="assets/js/main.js"></script>
+</main>
+
+<footer>
+  <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
+</footer>
+
+<script src="simulasi.js"></script>
 </body>
 </html>

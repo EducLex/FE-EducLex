@@ -6,6 +6,7 @@
   <title>Tulisan Jaksa | EducLex</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -26,57 +27,61 @@
   </nav>
 </header>
 
-  <main class="tulisan-container">
-    <h1>Tulisan Para Jaksa</h1>
-    <p class="intro">
-      Halaman ini berisi opini, pengalaman, dan tulisan edukasi dari para jaksa yang bertujuan memberikan wawasan hukum secara ringan namun bermakna.
-    </p>
+<main class="tulisan-container">
+  <h1>Tulisan Para Jaksa</h1>
+  <p class="intro">
+    Halaman ini berisi opini, pengalaman, dan tulisan edukasi dari para jaksa yang bertujuan memberikan wawasan hukum secara ringan namun bermakna.
+  </p>
 
-    <div class="tulisan-grid">
-      <article class="tulisan-card">
-        <div class="penulis">
-          <img src="assets/jaksa1.jpg" alt="Jaksa A" />
-          <div>
-            <h3>Jaksa Andi Pratama</h3>
-            <span class="kategori">Opini</span>
-          </div>
+  <!-- Tombol Tambah Tulisan -->
+  <button id="btnTambahTulisan" class="btn-tambah">➕ Tambah Tulisan</button>
+
+  <!-- Tulisan bawaan -->
+  <div class="tulisan-grid" id="tulisanLama">
+    <article class="tulisan-card">
+      <div class="penulis">
+        <img src="assets/jaksa1.jpg" alt="Jaksa A" />
+        <div>
+          <h3>Jaksa Andi Pratama</h3>
+          <span class="kategori">Opini</span>
         </div>
-        <h2>Menumbuhkan Kesadaran Hukum di Kalangan Remaja</h2>
-        <p>Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum. Penting untuk menanamkan kesadaran hukum sejak dini...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+      </div>
+      <h2>Menumbuhkan Kesadaran Hukum di Kalangan Remaja</h2>
+      <p>Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum...</p>
+      <a href="#" class="btn-detail" data-judul="Menumbuhkan Kesadaran Hukum di Kalangan Remaja"
+         data-penulis="Jaksa Andi Pratama" data-kategori="Opini"
+         data-isi="Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum. 
+         Penting untuk menanamkan kesadaran hukum sejak dini agar mereka dapat memahami batasan 
+         dan konsekuensi dari perbuatannya.">Baca Selengkapnya</a>
+    </article>
 
-      <article class="tulisan-card">
-        <div class="penulis">
-          <img src="assets/jaksa2.jpg" alt="Jaksa B" />
-          <div>
-            <h3>Jaksa Siti Lestari</h3>
-            <span class="kategori">Edukasi</span>
-          </div>
+    <article class="tulisan-card">
+      <div class="penulis">
+        <img src="assets/jaksa2.jpg" alt="Jaksa B" />
+        <div>
+          <h3>Jaksa Siti Lestari</h3>
+          <span class="kategori">Edukasi</span>
         </div>
-        <h2>Peran Jaksa sebagai Sahabat Hukum Masyarakat</h2>
-        <p>Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum agar masyarakat memahami hak dan kewajiban mereka...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+      </div>
+      <h2>Peran Jaksa sebagai Sahabat Hukum Masyarakat</h2>
+      <p>Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum...</p>
+      <a href="#" class="btn-detail" data-judul="Peran Jaksa sebagai Sahabat Hukum Masyarakat"
+         data-penulis="Jaksa Siti Lestari" data-kategori="Edukasi"
+         data-isi="Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum agar masyarakat 
+         memahami hak dan kewajiban mereka. Dengan edukasi hukum, diharapkan masyarakat tidak hanya tahu 
+         hukum tetapi juga bisa menghindari pelanggaran.">Baca Selengkapnya</a>
+    </article>
+  </div>
 
-      <article class="tulisan-card">
-        <div class="penulis">
-          <img src="assets/jaksa3.jpg" alt="Jaksa C" />
-          <div>
-            <h3>Jaksa Bambang Nugroho</h3>
-            <span class="kategori">Pengalaman</span>
-          </div>
-        </div>
-        <h2>Pelajaran dari Kasus Ringan di Kalangan Pelajar</h2>
-        <p>Saya pernah menangani kasus ringan yang melibatkan pelajar. Dari sana, saya belajar bahwa edukasi lebih penting daripada hukuman semata...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
-    </div>
-  </main>
+  <!-- Tulisan baru akan muncul di sini -->
+  <div class="tulisan-grid" id="tulisanBaru"></div>
+</main>
 
-  <footer>
-    <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
-  </footer>
-  <script src="assets/js/main.js"></script>
+<footer>
+  <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
+</footer>
+
+<!-- Script JS -->
+<script src="assets/js/tulisan.js"></script>
 </body>
 </html>
