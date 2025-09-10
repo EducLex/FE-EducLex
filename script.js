@@ -12,16 +12,6 @@ if (regForm) {
   });
 }
 
-const toRegister = document.getElementById("toRegister");
-if (toRegister) {
-  toRegister.addEventListener("click", function(e) {
-    e.preventDefault(); 
-    window.location.href = "regis.html";
-  });
-}
-
-
-
 // Login
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
@@ -40,17 +30,6 @@ if (loginForm) {
     }
   });
 }
-
-// Tombol Google di login & register
-const googleBtns = document.querySelectorAll(".google-btn");
-if (googleBtns) {
-  googleBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      showAlert("🚀 Fitur Login/Daftar Google belum aktif. (Hanya tampilan)");
-    });
-  });
-}
-
 
 // === Custom Alert Modal ===
 function showAlert(message) {
