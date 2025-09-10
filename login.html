@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | EducLex</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+<header>
+  <nav class="navbar">
+    <div class="logo">EducLex</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="artikel.html">Artikel</a></li>
+      <li><a href="tanya.html">Tanya Jaksa</a></li>
+      <li><a href="tulisan.html">Tulisan Jaksa</a></li>
+      <li><a href="simulasi.html">Simulasi Kasus</a></li>
+    </ul>
+    <div class="auth-nav">
+      <span class="user-icon">👤</span>
+      <a href="login.html" class="btn-login">Login</a>
+    </div>
+  </nav>
+</header>
+
+
+<main>
+  <div class="auth-container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <span class="icon">👤</span>
+      </div>
+      <div class="input-group">
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <span class="icon">🔒</span>
+      </div>
+      <button type="submit">Masuk</button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>atau</span>
+    </div>
+
+    <!-- Tombol Google -->
+    <button class="google-btn">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+      Login dengan Google
+    </button>
+
+    <p>Belum punya akun? <a href="regis.html" id="toRegister">Daftar</a></p>
+  </div>
+</main>
+
+  <footer>
+    <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

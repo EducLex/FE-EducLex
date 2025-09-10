@@ -1,3 +1,57 @@
+// Register
+const regForm = document.getElementById("registerForm");
+if (regForm) {
+  regForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const username = document.getElementById("regUsername").value;
+    const password = document.getElementById("regPassword").value;
+
+    localStorage.setItem("user", JSON.stringify({ username, password }));
+    showAlert("✅ Registrasi berhasil! Silakan login.");
+    window.location.href = "login.html";
+  });
+}
+
+const toRegister = document.getElementById("toRegister");
+if (toRegister) {
+  toRegister.addEventListener("click", function(e) {
+    e.preventDefault(); 
+    window.location.href = "regis.html";
+  });
+}
+
+
+
+// Login
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user && user.username === username && user.password === password) {
+      showAlert(`✅ Selamat datang, ${username}!`);
+      window.location.href = "index.html";
+    } else {
+      showAlert("❌ Username atau password salah!");
+    }
+  });
+}
+
+// Tombol Google di login & register
+const googleBtns = document.querySelectorAll(".google-btn");
+if (googleBtns) {
+  googleBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      showAlert("🚀 Fitur Login/Daftar Google belum aktif. (Hanya tampilan)");
+    });
+  });
+}
+
+
 // === Custom Alert Modal ===
 function showAlert(message) {
   document.getElementById("alert-message").innerText = message;
