@@ -9,13 +9,12 @@
 </head>
 <body>
 
-
 <header>
   <nav class="navbar">
     <div class="logo">EducLex</div>
     <ul class="nav-links">
       <li><a href="index.html">Beranda</a></li>
-      <li><a href="artikel.html">Artikel</a></li>
+      <li><a href="artikel.html" class="active">Artikel</a></li>
       <li><a href="tanya.html">Tanya Jaksa</a></li>
       <li><a href="tulisan.html">Tulisan Jaksa</a></li>
       <li><a href="simulasi.html">Simulasi Kasus</a></li>
@@ -27,51 +26,60 @@
   </nav>
 </header>
 
+<main class="artikel-container">
+  <h1>Artikel Hukum Populer</h1>
+  <div class="artikel-grid">
+    <article class="card">
+      <h2>Kenapa Hukum Itu Penting?</h2>
+      <p>Hukum menjaga keteraturan sosial, melindungi hak, dan mencegah konflik...</p>
+      <a href="#" class="read-more" data-id="1">Baca Selengkapnya</a>
+    </article>
 
-  <main class="artikel-container">
-    <h1>Artikel Hukum Populer</h1>
-    <div class="artikel-grid">
-      <article class="card">
-        <h2>Kenapa Hukum Itu Penting?</h2>
-        <p>Hukum menjaga keteraturan sosial dan memberikan rasa aman pada masyarakat. Tanpa hukum, kekacauan akan mudah terjadi...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+    <article class="card">
+      <h2>Hak Remaja dalam Hukum</h2>
+      <p>Remaja memiliki perlindungan hukum, terutama terkait pendidikan dan anti-bullying...</p>
+      <a href="#" class="read-more" data-id="2">Baca Selengkapnya</a>
+    </article>
 
-      <article class="card">
-        <h2>Hak Remaja dalam Hukum</h2>
-        <p>Remaja sering kali tidak tahu bahwa mereka memiliki hak hukum, seperti hak mendapatkan perlindungan dari bullying...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+    <article class="card">
+      <h2>Etika Menggunakan Media Sosial</h2>
+      <p>Penggunaan media sosial bisa menimbulkan masalah hukum jika tidak bijak...</p>
+      <a href="#" class="read-more" data-id="3">Baca Selengkapnya</a>
+    </article>
 
-      <article class="card">
-        <h2>Etika Menggunakan Media Sosial</h2>
-        <p>Banyak kasus hukum muncul akibat penyalahgunaan media sosial. Yuk pahami bagaimana hukum melindungi aktivitas online kita...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+    <article class="card">
+      <h2>Peran Jaksa dalam Penegakan Hukum</h2>
+      <p>Jaksa tidak hanya menuntut di pengadilan, tetapi juga memberi edukasi hukum...</p>
+      <a href="#" class="read-more" data-id="4">Baca Selengkapnya</a>
+    </article>
 
-      <article class="card">
-        <h2>Peran Jaksa dalam Penegakan Hukum</h2>
-        <p>Jaksa tidak hanya menuntut di pengadilan, tetapi juga memberi edukasi hukum ke masyarakat. Ini peran penting yang sering dilupakan...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+    <article class="card">
+      <h2>Kasus Ringan yang Bisa Jadi Berat</h2>
+      <p>Tindakan kecil bisa punya dampak hukum besar, seperti pencurian ringan...</p>
+      <a href="#" class="read-more" data-id="5">Baca Selengkapnya</a>
+    </article>
 
-      <article class="card">
-        <h2>Kasus Ringan yang Bisa Jadi Berat</h2>
-        <p>Banyak remaja tidak sadar kalau perbuatan kecil bisa berimplikasi hukum, contohnya mengambil barang teman tanpa izin...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
+    <article class="card">
+      <h2>Kenali Undang-Undang ITE</h2>
+      <p>UU ITE mengatur perilaku di internet, termasuk ujaran kebencian dan hoaks...</p>
+      <a href="#" class="read-more" data-id="6">Baca Selengkapnya</a>
+    </article>
+  </div>
+</main>
 
-      <article class="card">
-        <h2>Kenali Undang-Undang ITE</h2>
-        <p>UU ITE sering dipakai untuk mengatur perilaku online. Apa saja hal yang perlu diwaspadai agar kita tidak tersandung masalah hukum?...</p>
-        <a href="#">Baca Selengkapnya</a>
-      </article>
-    </div>
-  </main>
+<!-- Modal untuk artikel detail -->
+<div id="artikelModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p id="modalContent"></p>
+  </div>
+</div>
 
-  <footer>
-    <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
-  </footer>
-  <script src="assets/js/main.js"></script>
+<footer>
+  <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
+</footer>
+
+<script src="assets/js/artikel.js"></script>
 </body>
 </html>
