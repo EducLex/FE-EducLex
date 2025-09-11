@@ -13,11 +13,17 @@ function renderPertanyaan() {
   container.innerHTML = "";
 
   const list = getPertanyaan();
-  list.reverse().forEach(item => {
+  list.forEach((item, index) => {
     const div = document.createElement("div");
     div.classList.add("item");
-    div.innerHTML = `<strong>${item.nama}:</strong> ${item.pertanyaan} 
-      <br><em>Jawaban: ${item.jawaban}</em>`;
+    div.innerHTML = `
+      <p><strong>${item.nama}:</strong> ${item.pertanyaan}</p>
+      <p><em>Jawaban: ${item.jawaban}</em></p>
+      <div class="actions">
+        <button onclick="editPertanyaan(${index})">✏️ Edit</button>
+        <button onclick="hapusPertanyaan(${index})">🗑️ Hapus</button>
+      </div>
+    `;
     container.appendChild(div);
   });
 }
@@ -68,6 +74,51 @@ function kirimPertanyaan(event) {
   });
 
   return false;
+}
+
+// Edit pertanyaan
+function editPertanyaan(index) {
+  const list = getPertanyaan();
+  const data = list[index];
+
+  Swal.fire({
+    title: "Edit Pertanyaan",
+    input: "text",
+    inputValue: data.pertanyaan,
+    showCancelButton: true,
+    confirmButtonText: "Simpan",
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed && result.value.trim() !== "") {
+      list[index].pertanyaan = result.value.trim();
+      simpanPertanyaan(list);
+      renderPertanyaan();
+      Swal.fire("Berhasil!", "Pertanyaan berhasil diperbarui.", "success");
+    }
+  });
+}
+
+// Hapus pertanyaan
+function hapusPertanyaan(index) {
+  const list = getPertanyaan();
+
+  Swal.fire({
+    title: "Apakah kamu yakin?",
+    text: "Pertanyaan ini akan dihapus permanen.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Ya, hapus!",
+    cancelButtonText: "Batal"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      list.splice(index, 1);
+      simpanPertanyaan(list);
+      renderPertanyaan();
+      Swal.fire("Dihapus!", "Pertanyaanmu sudah dihapus.", "success");
+    }
+  });
 }
 
 // Saat halaman dibuka, render pertanyaan
