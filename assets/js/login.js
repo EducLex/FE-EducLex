@@ -1,21 +1,38 @@
-
-
-
-
 // Login
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-  loginForm.addEventListener("submit", function (e) {
+  loginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
     const username = document.getElementById("loginUsername").value;
     const password = document.getElementById("loginPassword").value;
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    try {
+      // 🔹 Kirim data ke backend
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
 
-    if (user && user.username === username && user.password === password) {
-      showAlert(`✅ Selamat datang, ${username}!`);
+      if (!response.ok) {
+        throw new Error("Login gagal, periksa kembali username/password.");
+      }
+
+      const data = await response.json();
+
+      // 🔹 Simpan token / data user ke localStorage
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+      localStorage.setItem("user", JSON.stringify(data.user || { username }));
+
+      showAlert(`✅ Selamat datang, ${data.user?.username || username}!`);
       window.location.href = "index.html";
-    } else {
+
+    } catch (error) {
+      console.error("Error:", error);
       showAlert("❌ Username atau password salah!");
     }
   });
