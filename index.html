@@ -11,18 +11,19 @@
   <!-- Navbar -->
   <header>
     <nav class="navbar">
-  <div class="logo">EducLex</div>
-  <ul class="nav-links">
-    <li><a href="index.html">Beranda</a></li>
-    <li><a href="artikel.html">Artikel</a></li>
-    <li><a href="tanya.html">Tanya Jaksa</a></li>
-    <li><a href="tulisan.html">Tulisan Jaksa</a></li>
-    <li><a href="simulasi.html">Simulasi Kasus</a></li>
-  </ul>
-  <div class="user-icon">
-    <a href="login.html" title="Login/Register">👤</a>
-  </div>
-</nav>
+      <div class="logo">EducLex</div>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Beranda</a></li>
+        <li><a href="artikel.html">Artikel</a></li>
+        <li><a href="tanya.html">Tanya Jaksa</a></li>
+        <li><a href="tulisan.html">Tulisan Jaksa</a></li>
+        <li><a href="peraturan.html">Peraturan</a></li>
+      </ul>
+      <div class="auth-nav">
+        <span class="user-icon">👤</span>
+        <a href="login.html" class="btn-login">Login</a>
+      </div>
+    </nav>
   </header>
 
   <!-- Hero Section -->
@@ -30,7 +31,7 @@
     <div class="hero-text">
       <h1>EducLex</h1>
       <p>Sistem Edukasi Hukum Digital untuk Remaja</p>
-      <button class="cta-btn" onclick="showAlert('Selamat datang di EducLex!')">Mulai Jelajahi</button>
+      <a href="artikel.html" class="cta-btn">Mulai Jelajahi</a>
     </div>
   </section>
 
@@ -54,9 +55,9 @@
         <a href="tulisan.html" class="btn-link">Baca Tulisan</a>
       </div>
       <div class="card">
-        <h3>🎮 Simulasi Kasus</h3>
-        <p>Coba simulasi interaktif untuk memahami hukum dengan cara menyenangkan.</p>
-        <a href="simulasi.html" class="btn-link">Coba Simulasi</a>
+        <h3>⚖️ Peraturan</h3>
+        <p>Pelajari pasal-pasal hukum yang relevan dengan kasus sehari-hari.</p>
+        <a href="peraturan.html" class="btn-link">Lihat Peraturan</a>
       </div>
     </div>
   </section>
@@ -66,15 +67,7 @@
     <p>© 2025 EducLex | Edukasi Hukum untuk Remaja</p>
   </footer>
 
-  <!-- Modal Alert -->
-  <div id="custom-alert" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeAlert()">&times;</span>
-      <p id="alert-message"></p>
-    </div>
-  </div>
-
+  <!-- Script -->
   <script src="script.js"></script>
-  <script src="assets/js/main.js"></script>
 </body>
 </html>
