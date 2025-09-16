@@ -1,46 +1,93 @@
-const apiBase = "http://localhost:8080"; // alamat backend kamu
-
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
+  const loginFormEl = document.getElementById("loginForm");
+  const alertContainer = document.getElementById("alert-container");
 
-  if (!loginForm) return;
+  // 🔹 Gunakan 1 base URL fix sesuai backend
+  const apiBase = "http://localhost:8080"; // ✅ ganti dari MongoDB URL ke backend
 
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const username = document.getElementById("loginUsername").value.trim();
-    const password = document.getElementById("loginPassword").value.trim();
-
-    if (!username || !password) {
-      alert("⚠️ Username dan password wajib diisi!");
+  function showAlert(message, type = "error") {
+    if (!alertContainer) {
+      console.warn("⚠️ Elemen #alert-container tidak ditemukan di DOM!");
       return;
     }
 
-    try {
-      const response = await fetch(`${apiBase}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+    alertContainer.innerHTML = `
+      <div class="alert ${type}">
+        ${message}
+      </div>
+    `;
 
-      const data = await response.json().catch(() => ({}));
+    setTimeout(() => {
+      if (alertContainer) {
+        alertContainer.innerHTML = "";
+      }
+    }, 4000);
+  }
 
-      if (response.ok) {
-        // ✅ Simpan token dari backend
+  if (loginFormEl) {
+    loginFormEl.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      if (!username || !password) {
+        showAlert("❌ Username dan password wajib diisi!", "error");
+        return;
+      }
+
+      try {
+        console.log("🔄 Mengirim login ke:", `${apiBase}/auth/login`);
+
+        const response = await fetch(`${apiBase}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+          credentials: "include"
+        });
+
+        let data = {};
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          data = { message: await response.text() };
+        }
+
+        if (!response.ok) {
+          showAlert(data.error || data.message || "❌ Username atau password salah!", "error");
+          return;
+        }
+
+        // ✅ Simpan token & user
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
-        // Simpan info user
         localStorage.setItem("user", JSON.stringify({ username }));
 
-        alert(`✅ Login berhasil, selamat datang ${username}!`);
-        window.location.href = "index.html"; // redirect ke halaman utama
-      } else {
-        alert(data.message || "❌ Username atau password salah!");
+        showAlert(
+          `✅ ${data.message || "Login berhasil"} | Selamat datang, ${username}!`,
+          "success"
+        );
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+
+      } catch (error) {
+        console.error("❌ Error fetch:", error);
+        showAlert("❌ Tidak bisa terhubung ke server! Pastikan backend jalan di http://localhost:8080", "error");
       }
-    } catch (err) {
-      console.error("Error:", err);
-      alert("❌ Gagal terhubung ke server. Pastikan backend jalan di port 8080.");
+    });
+  }
+
+  // 🔹 Dummy tombol Google
+  document.querySelectorAll(".google-btn").forEach((btn) => {
+    if (!btn) {
+      console.warn("⚠️ Elemen .google-btn tidak ditemukan di DOM!");
+      return;
     }
+    btn.addEventListener("click", () => {
+      alert("🚀 Fitur Login/Daftar Google belum aktif. (Hanya tampilan)");
+    });
   });
 });
