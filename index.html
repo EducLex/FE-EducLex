@@ -19,9 +19,16 @@
         <li><a href="tulisan.html">Tulisan Jaksa</a></li>
         <li><a href="peraturan.html">Peraturan</a></li>
       </ul>
-      <div class="auth-nav">
-        <span class="user-icon">👤</span>
-        <a href="login.html" class="btn-login">Login</a>
+
+      <!-- 🔄 Dropdown User -->
+      <div class="dropdown">
+        <button class="dropbtn">
+          👤 Akun ▾
+        </button>
+        <div class="dropdown-content" id="userMenu">
+          <a href="login.html" id="loginLink">🔑 Login</a>
+          <a href="#" id="logoutBtn">🚪 Logout</a>
+        </div>
       </div>
     </nav>
   </header>
@@ -66,6 +73,14 @@
   <footer>
     <p>© 2025 EducLex | Edukasi Hukum untuk Remaja</p>
   </footer>
+
+  <!-- 🔔 Custom Alert Modal -->
+  <div id="custom-alert" class="custom-alert">
+    <div class="custom-alert-content">
+      <p id="alert-message"></p>
+      <button onclick="closeAlert()">Tutup</button>
+    </div>
+  </div>
 
   <!-- Script -->
   <script src="script.js"></script>

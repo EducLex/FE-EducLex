@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EducLex - Dashboard Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dbadmin.css">
+  <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="logo">EducLex Admin</div>
+    <div class="user-info">
+      <i class="fas fa-user-circle"></i> <span id="adminName">Admin</span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="#"><i class="fas fa-file-alt"></i> Artikel</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Tanya Jaksa</a></li>
+        <li><a href="#"><i class="fas fa-pen"></i> Tulisan Jaksa</a></li>
+        <li><a href="#"><i class="fas fa-gavel"></i> Peraturan</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Pengguna</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1>Dashboard Admin</h1>
+
+      <!-- Statistik Cards -->
+      <div class="stats-cards">
+        <div class="card stat">
+          <h3>📚 Artikel</h3>
+          <p>120</p>
+        </div>
+        <div class="card stat">
+          <h3>💬 Pertanyaan</h3>
+          <p>45</p>
+        </div>
+        <div class="card stat">
+          <h3>✍️ Tulisan</h3>
+          <p>32</p>
+        </div>
+        <div class="card stat">
+          <h3>⚖️ Peraturan</h3>
+          <p>56</p>
+        </div>
+      </div>
+
+      <!-- Tabel Data -->
+      <section class="data-section">
+        <h2>Data Pengguna Terbaru</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rania</td>
+              <td>rania@example.com</td>
+              <td>User</td>
+              <td>
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Budi</td>
+              <td>budi@example.com</td>
+              <td>Admin</td>
+              <td>
+                <button class="btn-edit">Edit</button>
+                <button class="btn-delete">Hapus</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <p>© 2025 EducLex | Dashboard Admin</p>
+  </footer>
+
+  <script>
+    // Logout handler
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

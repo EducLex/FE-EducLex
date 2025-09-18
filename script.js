@@ -1,3 +1,74 @@
+// === CEK STATUS LOGIN DAN ATUR TOMBOL AUTH ===
+document.addEventListener("DOMContentLoaded", function () {
+  const loginLink = document.getElementById("loginLink");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  const token = localStorage.getItem("token"); // cek login
+  const role = localStorage.getItem("role");   // role user
+
+  // Default: Login & Logout selalu ada
+  if (loginLink) loginLink.style.display = "block";
+  if (logoutBtn) logoutBtn.style.display = "block";
+
+  if (token) {
+    // ✅ Sudah login
+    if (loginLink) loginLink.style.display = "none"; // login hilang setelah berhasil login
+
+    if (logoutBtn) {
+      logoutBtn.onclick = (e) => {
+        e.preventDefault();
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        window.location.href = "login.html";
+      };
+    }
+
+  } else {
+    // ❌ Belum login
+    if (loginLink) loginLink.onclick = () => window.location.href = "login.html";
+
+    if (logoutBtn) {
+      logoutBtn.onclick = (e) => {
+        e.preventDefault();
+        showAlert("⚠️ Kamu belum login.");
+      };
+    }
+  }
+
+  // === Redirect tombol "Mulai Jelajahi" ===
+  const ctaBtn = document.querySelector(".cta-btn");
+  if (ctaBtn) {
+    ctaBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (!token) {
+        window.location.href = "login.html"; // belum login → login dulu
+      } else {
+        window.location.href = "artikel.html"; // sudah login → ke artikel
+      }
+    });
+  }
+});
+
+// Animasi tombol smooth (fade-in/out)
+function toggleButton(element, show) {
+  if (!element) return;
+  if (show) {
+    element.style.display = "inline-block";
+    element.style.opacity = "0";
+    setTimeout(() => {
+      element.style.transition = "opacity 0.4s ease";
+      element.style.opacity = "1";
+    }, 50);
+  } else {
+    element.style.opacity = "0";
+    setTimeout(() => {
+      element.style.display = "none";
+    }, 300);
+  }
+}
+
+// === kode lama registrasi, login, alert, artikel, chat, simulasi tetap dipertahankan ===
+
 // Register
 const regForm = document.getElementById("registerForm");
 if (regForm) {
@@ -24,7 +95,11 @@ if (loginForm) {
 
     if (user && user.username === username && user.password === password) {
       showAlert(`✅ Selamat datang, ${username}!`);
-      window.location.href = "index.html";
+      localStorage.setItem("token", "dummyToken"); // simpan token
+      localStorage.setItem("role", "user");        // default role user
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
     } else {
       showAlert("❌ Username atau password salah!");
     }
@@ -33,21 +108,37 @@ if (loginForm) {
 
 // === Custom Alert Modal ===
 function showAlert(message) {
-  document.getElementById("alert-message").innerText = message;
-  document.getElementById("custom-alert").style.display = "flex";
+  const modal = document.getElementById("custom-alert");
+  const msgBox = document.getElementById("alert-message");
+
+  if (msgBox) msgBox.innerText = message;
+  if (modal) {
+    modal.style.display = "flex";
+    modal.style.opacity = "0";
+    setTimeout(() => {
+      modal.style.transition = "opacity 0.4s ease";
+      modal.style.opacity = "1";
+    }, 50);
+  }
 }
 
 function closeAlert() {
-  document.getElementById("custom-alert").style.display = "none";
+  const modal = document.getElementById("custom-alert");
+  if (modal) {
+    modal.style.opacity = "0";
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 300);
+  }
 }
 
 // Tutup modal kalau klik di luar box
-window.onclick = function(event) {
+window.onclick = function (event) {
   const modal = document.getElementById("custom-alert");
   if (event.target === modal) {
-    modal.style.display = "none";
+    closeAlert();
   }
-}
+};
 
 // Artikel hukum populer (dummy data)
 const artikel = [
@@ -57,61 +148,66 @@ const artikel = [
 ];
 
 const artikelContainer = document.getElementById("artikel-container");
-artikel.forEach(a => {
-  const card = document.createElement("div");
-  card.classList.add("card");
-  card.innerHTML = `<h3>${a.title}</h3><p>${a.content}</p>`;
-  artikelContainer.appendChild(card);
-});
+if (artikelContainer) {
+  artikel.forEach(a => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `<h3>${a.title}</h3><p>${a.content}</p>`;
+    artikelContainer.appendChild(card);
+  });
+}
 
 // Chat sederhana (dummy jawaban jaksa)
 function sendMessage() {
   const input = document.getElementById("chat-input");
-  const msg = input.value.trim();
+  const msg = input ? input.value.trim() : "";
   if (msg === "") return;
 
   const chatBox = document.getElementById("chat-messages");
-  chatBox.innerHTML += `<div><b>Kamu:</b> ${msg}</div>`;
+  if (chatBox) {
+    chatBox.innerHTML += `<div><b>Kamu:</b> ${msg}</div>`;
+    setTimeout(() => {
+      chatBox.innerHTML += `<div><b>Jaksa:</b> Terima kasih, pertanyaanmu sangat bagus. Hukum selalu hadir untuk melindungi kita.</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 1000);
+  }
 
-  setTimeout(() => {
-    chatBox.innerHTML += `<div><b>Jaksa:</b> Terima kasih, pertanyaanmu sangat bagus. Hukum selalu hadir untuk melindungi kita.</div>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }, 1000);
-
-  input.value = "";
+  if (input) input.value = "";
 }
 
 // Simulasi Kirim Pertanyaan
 function kirimPertanyaan(event) {
   event.preventDefault();
 
-  const nama = document.getElementById("nama").value || "Anonim";
-  const pertanyaan = document.getElementById("pertanyaan").value;
+  const nama = document.getElementById("nama")?.value || "Anonim";
+  const pertanyaan = document.getElementById("pertanyaan")?.value;
 
   const container = document.getElementById("daftar-pertanyaan");
 
-  const div = document.createElement("div");
-  div.classList.add("item");
-  div.innerHTML = `<strong>${nama}:</strong> ${pertanyaan} <br><em>Jawaban: Pertanyaanmu sedang diproses oleh Jaksa EducLex...</em>`;
-
-  container.prepend(div);
+  if (container) {
+    const div = document.createElement("div");
+    div.classList.add("item");
+    div.innerHTML = `<strong>${nama}:</strong> ${pertanyaan} <br><em>Jawaban: Pertanyaanmu sedang diproses oleh Jaksa EducLex...</em>`;
+    container.prepend(div);
+  }
 
   // reset form
-  document.getElementById("tanyaForm").reset();
+  document.getElementById("tanyaForm")?.reset();
 
   // tampilkan alert custom
   showAlert("Pertanyaanmu berhasil dikirim! Tunggu jawaban dari Jaksa.");
   return false;
 }
 
-
 // Simulasi kasus
 function chooseSimulasi(pilihan) {
   const result = document.getElementById("simulasi-result");
-  if (pilihan === "lapor") {
-    result.innerHTML = "👍 Bagus! Kamu melakukan hal yang benar sesuai hukum.";
-  } else {
-    result.innerHTML = "⚠️ Mengambil dompet bukanlah pilihan tepat, itu bisa dianggap pencurian.";
+  if (result) {
+    if (pilihan === "lapor") {
+      result.innerHTML = "👍 Bagus! Kamu melakukan hal yang benar sesuai hukum.";
+    } else {
+      result.innerHTML = "⚠️ Mengambil dompet bukanlah pilihan tepat, itu bisa dianggap pencurian.";
+    }
   }
 }
 
@@ -136,10 +232,11 @@ function pilihSimulasi(id, pilihan) {
   }
 
   const hasilBox = document.getElementById(`hasil-${id}`);
-  hasilBox.innerText = pesan;
-  hasilBox.style.display = "block";
+  if (hasilBox) {
+    hasilBox.innerText = pesan;
+    hasilBox.style.display = "block";
+  }
 
   // alert custom
   showAlert(pesan);
 }
-

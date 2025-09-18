@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 Gunakan 1 base URL fix sesuai backend
   const apiBase = "http://localhost:8080"; // ✅ ganti dari MongoDB URL ke backend
 
+  // Fungsi alert lama tetap dipertahankan (fallback)
   function showAlert(message, type = "error") {
     if (!alertContainer) {
       console.warn("⚠️ Elemen #alert-container tidak ditemukan di DOM!");
@@ -64,14 +65,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         localStorage.setItem("user", JSON.stringify({ username }));
 
-        showAlert(
-          `✅ ${data.message || "Login berhasil"} | Selamat datang, ${username}!`,
-          "success"
-        );
-
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 1200);
+        // 🔹 SweetAlert2 untuk login berhasil
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            icon: "success",
+            title: "Login Berhasil 🎉",
+            text: `Selamat datang, ${username}!`,
+            showConfirmButton: false,
+            timer: 1800,
+            timerProgressBar: true
+          }).then(() => {
+            window.location.href = "index.html";
+          });
+        } else {
+          // fallback pakai alert lama
+          showAlert(
+            `✅ ${data.message || "Login berhasil"} | Selamat datang, ${username}!`,
+            "success"
+          );
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1200);
+        }
 
       } catch (error) {
         console.error("❌ Error fetch:", error);
@@ -87,7 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     btn.addEventListener("click", () => {
-      alert("🚀 Fitur Login/Daftar Google belum aktif. (Hanya tampilan)");
+      if (typeof Swal !== "undefined") {
+        Swal.fire({
+          icon: "info",
+          title: "Fitur Belum Tersedia 🚀",
+          text: "Login/Daftar dengan Google masih dalam tahap pengembangan.",
+          confirmButtonText: "OK"
+        });
+      } else {
+        alert("🚀 Fitur Login/Daftar Google belum aktif. (Hanya tampilan)");
+      }
     });
   });
 });
