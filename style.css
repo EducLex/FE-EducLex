@@ -1165,6 +1165,82 @@ footer {
   }
 }
 
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #6b4226; /* coklat */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 40px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 🔹 Styling form tambah artikel */
+.form-tambah-artikel {
+  background: #fff7f0;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.form-tambah-artikel h2 {
+  font-family: 'Poppins', sans-serif;
+  color: #5a3825;
+  margin-bottom: 15px;
+}
+
+.form-tambah-artikel form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-tambah-artikel label {
+  font-weight: 600;
+  color: #4a2f20;
+  margin-bottom: 5px;
+}
+
+.form-tambah-artikel input[type="text"],
+.form-tambah-artikel textarea,
+.form-tambah-artikel input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c4a484;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.form-tambah-artikel textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-tambah-artikel button {
+  background: #8b5e3c;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form-tambah-artikel button:hover {
+  background: #6f472d;
+}
+
+
+
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {
   .nav-links {

@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const tulisanBaru = document.getElementById("tulisanBaru");
 
   // 🔹 Fungsi untuk membuat card tulisan
-  function buatCard({ penulis, kategori, judul, isi }) {
+  function buatCard({ _id, penulis, kategori, judul, isi }) {
     const card = document.createElement("article");
     card.classList.add("tulisan-card");
 
@@ -19,20 +19,42 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${isi.substring(0, 100)}...</p>
       <div class="card-actions">
         <a href="#" class="btn-detail"
+           data-id="${_id || ''}"
            data-judul="${judul}"
            data-penulis="${penulis}"
            data-kategori="${kategori}"
            data-isi="${isi}">📖 Baca</a>
-        <button class="btn-edit">✏️ Edit</button>
-        <button class="btn-hapus">🗑️ Hapus</button>
+        <button class="btn-edit" data-id="${_id || ''}">✏️ Edit</button>
+        <button class="btn-hapus" data-id="${_id || ''}">🗑️ Hapus</button>
       </div>
     `;
-
     return card;
   }
 
+  // ✅ FETCH DATA TULISAN DARI BACKEND
+  async function fetchTulisan() {
+    try {
+      const res = await fetch("http://localhost:8080/tulisan");
+      const data = await res.json();
+
+      if (!Array.isArray(data)) throw new Error("Data tulisan tidak valid");
+
+      tulisanBaru.innerHTML = ""; // Kosongkan dulu container
+      data.forEach(tulisan => {
+        const card = buatCard(tulisan);
+        tulisanBaru.appendChild(card);
+      });
+    } catch (err) {
+      console.error("❌ Gagal memuat tulisan:", err);
+      Swal.fire("Gagal", "Tidak dapat memuat tulisan dari server.", "error");
+    }
+  }
+
+  // ✅ Muat tulisan pertama kali
+  await fetchTulisan();
+
   // 🔹 Tambah tulisan baru
-  document.getElementById("btnTambahTulisan").addEventListener("click", () => {
+  document.getElementById("btnTambahTulisan").addEventListener("click", async () => {
     Swal.fire({
       title: "Tambah Tulisan Baru",
       html: `
@@ -57,17 +79,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return { penulis, kategori, judul, isi };
       }
-    }).then((res) => {
+    }).then(async (res) => {
       if (res.isConfirmed) {
-        const card = buatCard(res.value);
-        tulisanBaru.prepend(card);
-        Swal.fire("Berhasil!", "Tulisan berhasil ditambahkan.", "success");
+        try {
+          const tambahRes = await fetch("http://localhost:8080/tulisan", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(res.value),
+          });
+
+          if (!tambahRes.ok) throw new Error("Gagal menambah tulisan");
+
+          Swal.fire("Berhasil!", "Tulisan berhasil ditambahkan.", "success");
+          await fetchTulisan();
+        } catch (error) {
+          console.error(error);
+          Swal.fire("Gagal", "Tidak dapat menambahkan tulisan.", "error");
+        }
       }
     });
   });
 
   // 🔹 Event Delegation: Detail, Edit, Hapus
-  document.body.addEventListener("click", (e) => {
+  document.body.addEventListener("click", async (e) => {
     // ➤ Detail
     if (e.target.classList.contains("btn-detail")) {
       e.preventDefault();
@@ -89,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ➤ Edit
     if (e.target.classList.contains("btn-edit")) {
       const card = e.target.closest(".tulisan-card");
+      const id = e.target.dataset.id;
       const judul = card.querySelector("h2").innerText;
       const penulis = card.querySelector("h3").innerText;
       const kategori = card.querySelector(".kategori").innerText;
@@ -104,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `,
         showCancelButton: true,
         confirmButtonText: "Update",
-      }).then((res) => {
+      }).then(async (res) => {
         if (res.isConfirmed) {
           const newPenulis = document.getElementById("penulis").value.trim();
           const newKategori = document.getElementById("kategori").value.trim();
@@ -116,23 +153,32 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          const updatedCard = buatCard({
-            penulis: newPenulis,
-            kategori: newKategori,
-            judul: newJudul,
-            isi: newIsi,
-          });
+          try {
+            const updateRes = await fetch(`http://localhost:8080/tulisan/${id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                penulis: newPenulis,
+                kategori: newKategori,
+                judul: newJudul,
+                isi: newIsi,
+              }),
+            });
 
-          card.replaceWith(updatedCard);
+            if (!updateRes.ok) throw new Error("Gagal memperbarui tulisan");
 
-          Swal.fire("Berhasil!", "Tulisan berhasil diperbarui.", "success");
+            Swal.fire("Berhasil!", "Tulisan berhasil diperbarui.", "success");
+            await fetchTulisan();
+          } catch (err) {
+            Swal.fire("Gagal", "Tidak dapat memperbarui tulisan.", "error");
+          }
         }
       });
     }
 
     // ➤ Hapus
     if (e.target.classList.contains("btn-hapus")) {
-      const card = e.target.closest(".tulisan-card");
+      const id = e.target.dataset.id;
 
       Swal.fire({
         title: "Yakin hapus?",
@@ -141,12 +187,23 @@ document.addEventListener("DOMContentLoaded", () => {
         showCancelButton: true,
         confirmButtonText: "Ya, hapus",
         cancelButtonText: "Batal"
-      }).then((res) => {
+      }).then(async (res) => {
         if (res.isConfirmed) {
-          card.remove();
-          Swal.fire("Terhapus!", "Tulisan sudah dihapus.", "success");
+          try {
+            const hapusRes = await fetch(`http://localhost:8080/tulisan/${id}`, {
+              method: "DELETE",
+            });
+
+            if (!hapusRes.ok) throw new Error("Gagal menghapus tulisan");
+
+            Swal.fire("Terhapus!", "Tulisan sudah dihapus.", "success");
+            await fetchTulisan();
+          } catch (err) {
+            Swal.fire("Gagal", "Tidak dapat menghapus tulisan.", "error");
+          }
         }
       });
     }
   });
 });
+u
