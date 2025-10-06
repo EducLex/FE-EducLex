@@ -30,38 +30,20 @@
   <h1>Peraturan & Pasal Hukum</h1>
   <p class="intro">Berikut adalah daftar peraturan perundang-undangan yang relevan dengan kasus sehari-hari.</p>
 
-  <!-- Daftar Peraturan -->
-  <div id="peraturan-list">
+  <!-- ✅ Daftar Peraturan (ID disesuaikan dengan JS) -->
+  <div id="peraturanContainer"></div>
 
-    <section class="simulasi-box">
-      <h2>Kasus 1: Menemukan Dompet di Jalan</h2>
-      <ul>
-        <li><b>KUHP Pasal 362</b>: Barang siapa mengambil sesuatu barang yang seluruhnya atau sebagian kepunyaan orang lain, dengan maksud untuk memiliki secara melawan hukum, diancam karena pencurian.</li>
-        <li><b>KUHP Pasal 372</b>: Barang siapa dengan sengaja dan melawan hukum memiliki barang yang bukan miliknya, diancam karena penggelapan.</li>
-      </ul>
-    </section>
-
-    <section class="simulasi-box">
-      <h2>Kasus 2: Membajak Akun Teman</h2>
-      <ul>
-        <li><b>UU ITE Pasal 30 Ayat (1)</b>: Setiap orang dengan sengaja dan tanpa hak mengakses komputer dan/atau sistem elektronik milik orang lain dengan cara apapun, dipidana penjara paling lama 6 tahun dan/atau denda paling banyak Rp600.000.000.</li>
-        <li><b>UU ITE Pasal 32</b>: Melakukan perubahan, penghilangan, atau pengrusakan informasi elektronik tanpa hak dapat dikenakan pidana.</li>
-      </ul>
-    </section>
-
-  </div>
-
-  <!-- Form Tambah Peraturan Baru -->
+  <!-- ✅ Form Tambah Peraturan Baru -->
   <section class="form-tambah">
     <h2>➕ Tambah Peraturan Baru</h2>
     <form id="formPeraturan">
       <div class="form-group">
         <label for="judul">Judul Kasus</label>
-        <input type="text" id="judul" placeholder="Contoh: Kasus Pelanggaran Lalu Lintas">
+        <input type="text" id="judul" name="judul" placeholder="Contoh: Kasus Pelanggaran Lalu Lintas" required>
       </div>
       <div class="form-group">
         <label for="pasal">Pasal/Peraturan</label>
-        <textarea id="pasal" placeholder="Tuliskan pasal hukum yang relevan..." rows="3"></textarea>
+        <textarea id="pasal" name="pasal" placeholder="Tuliskan pasal hukum yang relevan..." rows="3" required></textarea>
       </div>
       <button type="button" class="btn-tambah" onclick="tambahPeraturan()">➕ Tambahkan Peraturan</button>
     </form>
@@ -73,33 +55,8 @@
   <p>&copy; 2025 EducLex. Semua Hak Dilindungi.</p>
 </footer>
 
-<script>
-  // Tambah peraturan baru
-  function tambahPeraturan() {
-    const judul = document.getElementById("judul").value;
-    const pasal = document.getElementById("pasal").value;
-
-    if (!judul || !pasal) {
-      alert("⚠️ Harap isi semua field!");
-      return;
-    }
-
-    const newPeraturan = document.createElement("section");
-    newPeraturan.className = "simulasi-box";
-    newPeraturan.innerHTML = `
-      <h2>${judul}</h2>
-      <ul>
-        <li>${pasal}</li>
-      </ul>
-    `;
-
-    document.getElementById("peraturan-list").appendChild(newPeraturan);
-
-    // Reset input
-    document.getElementById("judul").value = "";
-    document.getElementById("pasal").value = "";
-  }
-</script>
+<!-- ✅ Perbaiki path JS -->
+<script src="assets/js/peraturan.js" defer></script>
 
 </body>
 </html>
