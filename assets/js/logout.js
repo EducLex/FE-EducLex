@@ -18,20 +18,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCancel = document.getElementById("btn-cancel");
 
   if (btnLogout) {
-    btnLogout.addEventListener("click", () => {
+    btnLogout.addEventListener("click", async () => {
+      // 🔸 Konfirmasi sebelum logout
+      const yakin = confirm("Apakah Anda yakin ingin logout dari akun ini?");
+      if (!yakin) {
+        showAlert("🚪 Logout dibatalkan oleh pengguna.", "info");
+        return;
+      }
+
       const storedUser = localStorage.getItem("user");
       const token = localStorage.getItem("token");
 
+      // Gunakan switch untuk kondisi localStorage
       switch (true) {
         case !!token && !!storedUser:
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          localStorage.removeItem("role");
+          try {
+            // 🔹 Fetch ke endpoint logout
+            const response = await fetch("http://localhost:8080/auth/logout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include", // kirim cookie/session
+            });
 
-          showAlert("✅ Anda berhasil logout!", "success");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1500);
+            if (!response.ok) {
+              throw new Error(`Gagal logout (status: ${response.status})`);
+            }
+
+            const result = await response.json();
+
+            // ✅ Jika berhasil
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+
+            showAlert(result.message || "✅ Anda berhasil logout!", "success");
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 1500);
+          } catch (error) {
+            console.error("Logout error:", error);
+            showAlert("❌ Gagal logout. Periksa koneksi atau server backend.", "error");
+          }
           break;
 
         case !!token && !storedUser:

@@ -6,26 +6,74 @@ document.addEventListener("DOMContentLoaded", function () {
   const token = localStorage.getItem("token"); // cek login
   const role = localStorage.getItem("role");   // role user
 
-  // Default: Login & Logout selalu ada
-  if (loginLink) loginLink.style.display = "block";
-  if (logoutBtn) logoutBtn.style.display = "block";
+  // ✅ Awal: sembunyikan dua-duanya untuk diatur lagi
+  if (loginLink) loginLink.style.display = "none";
+  if (logoutBtn) logoutBtn.style.display = "none";
 
   if (token) {
     // ✅ Sudah login
-    if (loginLink) loginLink.style.display = "none"; // login hilang setelah berhasil login
+    toggleButton(loginLink, false); // sembunyikan login
+    toggleButton(logoutBtn, true);  // tampilkan logout
 
     if (logoutBtn) {
       logoutBtn.onclick = (e) => {
         e.preventDefault();
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        window.location.href = "login.html";
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            icon: "question",
+            title: "Yakin ingin keluar?",
+            text: "Sesi kamu akan diakhiri.",
+            showCancelButton: true,
+            confirmButtonText: "Logout",
+            cancelButtonText: "Batal",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              fetch("http://localhost:8080/auth/logout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+              })
+                .then((res) => {
+                  if (!res.ok) throw new Error("Gagal logout");
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("role");
+                  localStorage.removeItem("user");
+                  Swal.fire({
+                    icon: "success",
+                    title: "Berhasil Logout 👋",
+                    text: "Sampai jumpa lagi!",
+                    timer: 1500,
+                    showConfirmButton: false,
+                  }).then(() => {
+                    window.location.href = "login.html";
+                  });
+                })
+                .catch((err) => {
+                  console.error("Logout error:", err);
+                  Swal.fire({
+                    icon: "error",
+                    title: "Gagal Logout",
+                    text: "Terjadi kesalahan koneksi ke server.",
+                  });
+                });
+            }
+          });
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("role");
+          alert("Kamu telah logout.");
+          window.location.href = "login.html";
+        }
       };
     }
 
   } else {
     // ❌ Belum login
-    if (loginLink) loginLink.onclick = () => window.location.href = "login.html";
+    toggleButton(loginLink, true);
+    toggleButton(logoutBtn, false);
+
+    if (loginLink)
+      loginLink.onclick = () => (window.location.href = "login.html");
 
     if (logoutBtn) {
       logoutBtn.onclick = (e) => {
@@ -95,8 +143,8 @@ if (loginForm) {
 
     if (user && user.username === username && user.password === password) {
       showAlert(`✅ Selamat datang, ${username}!`);
-      localStorage.setItem("token", "dummyToken"); // simpan token
-      localStorage.setItem("role", "user");        // default role user
+      localStorage.setItem("token", "dummyToken");
+      localStorage.setItem("role", "user");
       setTimeout(() => {
         window.location.href = "index.html";
       }, 1000);
@@ -191,10 +239,7 @@ function kirimPertanyaan(event) {
     container.prepend(div);
   }
 
-  // reset form
   document.getElementById("tanyaForm")?.reset();
-
-  // tampilkan alert custom
   showAlert("Pertanyaanmu berhasil dikirim! Tunggu jawaban dari Jaksa.");
   return false;
 }
@@ -213,7 +258,7 @@ function chooseSimulasi(pilihan) {
 
 function pilihSimulasi(id, pilihan) {
   let pesan = "";
-  if (id === 1) { // Kasus dompet
+  if (id === 1) {
     if (pilihan === "lapor") {
       pesan = "✅ Bagus! Melaporkan ke pihak berwenang adalah tindakan benar.";
     } else if (pilihan === "ambil") {
@@ -221,7 +266,7 @@ function pilihSimulasi(id, pilihan) {
     } else {
       pesan = "ℹ️ Membiarkan bukan pilihan tepat, bisa membahayakan orang lain.";
     }
-  } else if (id === 2) { // Kasus akun sosmed
+  } else if (id === 2) {
     if (pilihan === "logout") {
       pesan = "✅ Tepat! Kamu melindungi privasi temanmu.";
     } else if (pilihan === "post") {
@@ -237,6 +282,5 @@ function pilihSimulasi(id, pilihan) {
     hasilBox.style.display = "block";
   }
 
-  // alert custom
   showAlert(pesan);
 }
