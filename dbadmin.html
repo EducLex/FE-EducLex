@@ -6,6 +6,7 @@
   <title>EducLex - Dashboard Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="dbadmin.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -13,7 +14,8 @@
   <header class="admin-header">
     <div class="logo">EducLex Admin</div>
     <div class="user-info">
-      <i class="fas fa-user-circle"></i> <span id="adminName">Admin</span>
+      <i class="fas fa-user-circle"></i> 
+      <span id="adminName">Admin</span>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
   </header>
@@ -40,26 +42,26 @@
       <div class="stats-cards">
         <div class="card stat">
           <h3>📚 Artikel</h3>
-          <p>120</p>
+          <p id="totalArtikel">0</p>
         </div>
         <div class="card stat">
           <h3>💬 Pertanyaan</h3>
-          <p>45</p>
+          <p id="totalTanya">0</p>
         </div>
         <div class="card stat">
           <h3>✍️ Tulisan</h3>
-          <p>32</p>
+          <p id="totalTulisan">0</p>
         </div>
         <div class="card stat">
           <h3>⚖️ Peraturan</h3>
-          <p>56</p>
+          <p id="totalPeraturan">0</p>
         </div>
       </div>
 
-      <!-- Tabel Data -->
+      <!-- Tabel Data Pengguna -->
       <section class="data-section">
         <h2>Data Pengguna Terbaru</h2>
-        <table class="data-table">
+        <table class="data-table" id="userTable">
           <thead>
             <tr>
               <th>Nama</th>
@@ -68,7 +70,8 @@
               <th>Aksi</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="userTableBody">
+            <!-- Data pengguna akan dimuat lewat fetch JS -->
             <tr>
               <td>Rania</td>
               <td>rania@example.com</td>

@@ -1258,3 +1258,357 @@ footer {
     font-size: 1rem;
   }
 }
+
+/* ==================== Tulisan Jaksa (Versi Card PDF) ==================== */
+.tulisan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.tulisan-card {
+  background: #fffdf9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(93, 64, 55, 0.15);
+  transition: transform 0.25s, box-shadow 0.25s;
+  text-align: center;
+  overflow: hidden;
+  padding-bottom: 1rem;
+}
+
+.tulisan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(93, 64, 55, 0.25);
+}
+
+.tulisan-card img.pdf-icon {
+  width: 80px;
+  margin-top: 1rem;
+}
+
+.tulisan-card .kategori {
+  font-size: 0.85rem;
+  color: #6d4c41;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  border-bottom: 2px solid #8d6e63;
+  display: inline-block;
+  padding-bottom: 3px;
+}
+
+.tulisan-card h2 {
+  font-size: 1.1rem;
+  color: #3e2723;
+  margin: 1rem 0 0.5rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.tulisan-card p {
+  color: #5d4037;
+  font-size: 0.95rem;
+  padding: 0 1rem;
+  min-height: 60px;
+}
+
+/* Tombol aksi (lihat / unduh) */
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.btn-detail, .btn-edit, .btn-hapus {
+  background: #d7ccc8;
+  color: #3e2723;
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-detail:hover {
+  background: #a1887f;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-edit {
+  background: #ffcc80;
+}
+
+.btn-edit:hover {
+  background: #f5b74f;
+  color: #3e2723;
+}
+
+.btn-hapus {
+  background: #ef9a9a;
+}
+
+.btn-hapus:hover {
+  background: #e57373;
+  color: white;
+}
+
+/* === Font & Dasar === */
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f8f5f2;
+  color: #3e2723;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Navbar === */
+.navbar {
+  background-color: #5d4037;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  color: white;
+}
+
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links .active {
+  color: #ffcc80;
+}
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-login {
+  background-color: #8d6e63;
+  padding: 8px 15px;
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #a1887f;
+}
+
+/* === Container Utama === */
+.tulisan-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.tulisan-container h1 {
+  font-family: 'Poppins', sans-serif;
+  color: #4e342e;
+  margin-bottom: 10px;
+}
+
+.tulisan-container p.intro {
+  color: #6d4c41;
+  margin-bottom: 40px;
+  font-size: 1rem;
+}
+
+/* === Tombol Tambah Tulisan === */
+.btn-tambah {
+  background-color: #795548;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  margin-bottom: 30px;
+}
+
+.btn-tambah:hover {
+  background-color: #8d6e63;
+}
+
+/* === Grid Kartu Tulisan === */
+.tulisan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  justify-content: center;
+}
+
+/* === Kartu Tulisan === */
+.tulisan-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(93, 64, 55, 0.15);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.tulisan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(93, 64, 55, 0.25);
+}
+
+/* === Ikon PDF === */
+.pdf-icon {
+  width: 70px;
+  margin: 25px auto 10px;
+  display: block;
+}
+
+/* === Teks Kategori & Judul === */
+.kategori {
+  color: #795548;
+  font-weight: 600;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.tulisan-card h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  margin: 10px 20px;
+  color: #3e2723;
+  line-height: 1.4;
+  min-height: 60px;
+}
+
+/* === Tombol Lihat & Unduh === */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-lihat,
+.btn-unduh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.btn-lihat {
+  background-color: #a1887f;
+  color: white;
+}
+
+.btn-lihat:hover {
+  background-color: #bcaaa4;
+}
+
+.btn-unduh {
+  background-color: #6d4c41;
+  color: white;
+}
+
+.btn-unduh:hover {
+  background-color: #8d6e63;
+}
+
+/* === Footer === */
+footer {
+  background-color: #5d4037;
+  color: white;
+  padding: 40px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+footer h3 {
+  font-weight: 600;
+  border-left: 4px solid #8d6e63;
+  padding-left: 8px;
+}
+
+footer p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #f5f5f5;
+}
+
+footer a {
+  color: #ffcc80;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer hr {
+  margin: 40px auto;
+  width: 85%;
+  border: 0.5px solid rgba(255,255,255,0.2);
+}
+
+footer p:last-child {
+  text-align: center;
+  font-size: 14px;
+  color: #E0E0E0;
+}
+
+/* === Responsif === */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    background: #5d4037;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    display: none;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .tulisan-container {
+    padding: 20px;
+  }
+
+  .tulisan-card h2 {
+    font-size: 1rem;
+  }
+}

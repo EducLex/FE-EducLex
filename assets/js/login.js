@@ -1,49 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loginFormEl = document.getElementById("loginForm");
   const alertContainer = document.getElementById("alert-container");
-  const apiBase = "http://localhost:8080"; // ✅ backend base URL
+  const apiBase = "http://localhost:8080";
   const loginLink = document.getElementById("loginLink");
   const logoutBtn = document.getElementById("logoutBtn");
 
-  // 🔹 Fungsi alert dengan switch type
+  // 🔹 Fungsi alert
   function showAlert(message, type = "info") {
-    if (!alertContainer) {
-      console.warn("⚠️ Elemen #alert-container tidak ditemukan di DOM!");
-      return;
-    }
+    if (!alertContainer) return;
 
     let icon = "";
     switch (type) {
-      case "success":
-        icon = "✅";
-        break;
-      case "error":
-        icon = "❌";
-        break;
-      case "warning":
-        icon = "⚠️";
-        break;
-      default:
-        icon = "ℹ️";
+      case "success": icon = "✅"; break;
+      case "error": icon = "❌"; break;
+      case "warning": icon = "⚠️"; break;
+      default: icon = "ℹ️";
     }
 
-    alertContainer.innerHTML = `
-      <div class="alert ${type}">
-        ${icon} ${message}
-      </div>
-    `;
-
-    setTimeout(() => {
-      if (alertContainer) {
-        alertContainer.innerHTML = "";
-      }
-    }, 4000);
+    alertContainer.innerHTML = `<div class="alert ${type}">${icon} ${message}</div>`;
+    setTimeout(() => (alertContainer.innerHTML = ""), 4000);
   }
 
-  // 🔹 Event handler untuk form login
+  // =============================== 🔹 LOGIN BIASA ===============================
   if (loginFormEl) {
     loginFormEl.addEventListener("submit", async function (e) {
       e.preventDefault();
+
       const username = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
 
@@ -75,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // ✅ Simpan token & user di localStorage
+        // ✅ Simpan token
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
@@ -87,7 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
           logoutBtn.style.display = "block";
         }
 
-        // 🔹 Alert sukses (pakai Swal kalau ada)
+        // ✅ Redirect ke beranda setelah login berhasil
+        const redirectToHome = () => {
+          window.location.href = "index.html";
+        };
+
+        // 🔹 Alert sukses
         if (typeof Swal !== "undefined") {
           Swal.fire({
             icon: "success",
@@ -96,14 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
             showConfirmButton: false,
             timer: 1800,
             timerProgressBar: true
-          }).then(() => {
-            window.location.href = "index.html";
-          });
+          }).then(redirectToHome);
         } else {
           showAlert(`Login berhasil! Selamat datang, ${username}!`, "success");
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1200);
+          setTimeout(redirectToHome, 1200);
         }
 
       } catch (error) {
@@ -116,29 +99,76 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔹 Dummy tombol Google (tidak dihapus)
+  // =============================== 🔹 LOGIN DENGAN GOOGLE ===============================
   document.querySelectorAll(".google-btn").forEach((btn) => {
-    if (!btn) {
-      console.warn("⚠️ Elemen .google-btn tidak ditemukan di DOM!");
-      return;
-    }
-    btn.addEventListener("click", () => {
-      switch (true) {
-        case typeof Swal !== "undefined":
-          Swal.fire({
-            icon: "info",
-            title: "Fitur Belum Tersedia 🚀",
-            text: "Login/Daftar dengan Google masih dalam tahap pengembangan.",
-            confirmButtonText: "OK"
-          });
-          break;
-        default:
-          alert("🚀 Fitur Login/Daftar Google belum aktif. (Hanya tampilan)");
+    if (!btn) return;
+
+    btn.addEventListener("click", async () => {
+      try {
+        console.log("🔹 Memulai login Google...");
+        
+        // Buka popup Google login
+        const popup = window.open(
+          `${apiBase}/auth/google/login`,
+          "_blank",
+          "width=600,height=600"
+        );
+
+        if (!popup) {
+          showAlert("❌ Gagal membuka jendela login Google. Periksa pop-up blocker!", "error");
+          return;
+        }
+
+        // Pantau popup sampai tertutup
+        const timer = setInterval(async () => {
+          if (popup.closed) {
+            clearInterval(timer);
+
+            // Setelah popup ditutup, cek apakah login Google berhasil
+            try {
+              const res = await fetch(`${apiBase}/auth/google/status`, {
+                credentials: "include",
+              });
+
+              const data = await res.json();
+
+              if (res.ok && data.token) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+                const redirectToHome = () => {
+                  window.location.href = "index.html";
+                };
+
+                if (typeof Swal !== "undefined") {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Login Google Berhasil 🎉",
+                    text: `Selamat datang, ${data.user?.name || "Pengguna"}!`,
+                    timer: 1800,
+                    showConfirmButton: false,
+                  }).then(redirectToHome);
+                } else {
+                  showAlert("Login Google berhasil!", "success");
+                  setTimeout(redirectToHome, 1500);
+                }
+              } else {
+                showAlert("Login Google dibatalkan atau gagal.", "warning");
+              }
+            } catch (err) {
+              console.error("❌ Gagal memeriksa status Google:", err);
+              showAlert("Gagal memverifikasi login Google.", "error");
+            }
+          }
+        }, 1000);
+      } catch (err) {
+        console.error("❌ Error Google login:", err);
+        showAlert("Gagal memulai login dengan Google!", "error");
       }
     });
   });
 
-  // 🔹 Cek status login saat halaman dibuka
+  // =============================== 🔹 CEK STATUS LOGIN ===============================
   const token = localStorage.getItem("token");
   if (token) {
     if (loginLink) loginLink.style.display = "none";

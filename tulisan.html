@@ -7,6 +7,163 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://kit.fontawesome.com/a2e0f6a26b.js" crossorigin="anonymous"></script>
+  <style>
+    /* ====== Tema Warna Coklat Elegan ====== */
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f5f2;
+      color: #3e2723;
+    }
+
+    .navbar {
+      background-color: #5d4037;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      color: white;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links .active {
+      color: #ffcc80;
+    }
+
+    .btn-login {
+      background-color: #8d6e63;
+      padding: 8px 15px;
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-login:hover {
+      background-color: #a1887f;
+    }
+
+    .tulisan-container {
+      max-width: 1200px;
+      margin: 50px auto;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .btn-tambah {
+      background-color: #795548;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      margin-bottom: 30px;
+    }
+
+    .btn-tambah:hover {
+      background-color: #8d6e63;
+    }
+
+    /* ====== Grid Card Layout ====== */
+    .tulisan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    /* ====== Kartu Tulisan (Model PDF Style) ====== */
+    .tulisan-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(93, 64, 55, 0.15);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      padding-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tulisan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(93, 64, 55, 0.25);
+    }
+
+    .pdf-icon {
+      width: 70px;
+      margin-top: 20px;
+    }
+
+    .tulisan-card h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      margin: 15px 0 10px;
+      color: #3e2723;
+      padding: 0 15px;
+      text-align: center;
+    }
+
+    .tulisan-card p {
+      font-size: 0.95rem;
+      color: #5d4037;
+      padding: 0 20px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .kategori {
+      background-color: #ffcc80;
+      color: #3e2723;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 4px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-detail, .btn-edit, .btn-hapus {
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      text-decoration: none;
+      color: white;
+    }
+
+    .btn-detail { background-color: #6d4c41; }
+    .btn-detail:hover { background-color: #8d6e63; }
+
+    .btn-edit { background-color: #a1887f; }
+    .btn-edit:hover { background-color: #bcaaa4; }
+
+    .btn-hapus { background-color: #d32f2f; }
+    .btn-hapus:hover { background-color: #b71c1c; }
+  </style>
 </head>
 <body>
 
@@ -17,7 +174,7 @@
       <li><a href="index.html">Beranda</a></li>
       <li><a href="artikel.html">Artikel</a></li>
       <li><a href="tanya.html">Tanya Jaksa</a></li>
-      <li><a href="tulisan.html">Tulisan Jaksa</a></li>
+      <li><a href="tulisan.html" class="active">Tulisan Jaksa</a></li>
       <li><a href="peraturan.html">Peraturan</a></li>
     </ul>
     <div class="auth-nav">
@@ -39,37 +196,31 @@
   <!-- Tulisan bawaan -->
   <div class="tulisan-grid" id="tulisanLama">
     <article class="tulisan-card">
-      <div class="penulis">
-        <img src="assets/jaksa1.jpg" alt="Jaksa A" />
-        <div>
-          <h3>Jaksa Andi Pratama</h3>
-          <span class="kategori">Opini</span>
-        </div>
+      <img src="assets/pdf-icon.png" alt="PDF" class="pdf-icon">
+      <div class="card-body">
+        <p class="kategori">Opini</p>
+        <h2>Menumbuhkan Kesadaran Hukum di Kalangan Remaja</h2>
+        <p>Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum...</p>
       </div>
-      <h2>Menumbuhkan Kesadaran Hukum di Kalangan Remaja</h2>
-      <p>Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum...</p>
-      <a href="#" class="btn-detail" data-judul="Menumbuhkan Kesadaran Hukum di Kalangan Remaja"
-         data-penulis="Jaksa Andi Pratama" data-kategori="Opini"
-         data-isi="Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum. 
-         Penting untuk menanamkan kesadaran hukum sejak dini agar mereka dapat memahami batasan 
-         dan konsekuensi dari perbuatannya.">Baca Selengkapnya</a>
+      <div class="card-actions">
+        <a href="#" class="btn-detail" data-judul="Menumbuhkan Kesadaran Hukum di Kalangan Remaja"
+           data-penulis="Jaksa Andi Pratama" data-kategori="Opini"
+           data-isi="Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum. Penting untuk menanamkan kesadaran hukum sejak dini agar mereka dapat memahami batasan dan konsekuensi dari perbuatannya.">👁️ Lihat</a>
+      </div>
     </article>
 
     <article class="tulisan-card">
-      <div class="penulis">
-        <img src="assets/jaksa2.jpg" alt="Jaksa B" />
-        <div>
-          <h3>Jaksa Siti Lestari</h3>
-          <span class="kategori">Edukasi</span>
-        </div>
+      <img src="assets/pdf-icon.png" alt="PDF" class="pdf-icon">
+      <div class="card-body">
+        <p class="kategori">Edukasi</p>
+        <h2>Peran Jaksa sebagai Sahabat Hukum Masyarakat</h2>
+        <p>Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum...</p>
       </div>
-      <h2>Peran Jaksa sebagai Sahabat Hukum Masyarakat</h2>
-      <p>Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum...</p>
-      <a href="#" class="btn-detail" data-judul="Peran Jaksa sebagai Sahabat Hukum Masyarakat"
-         data-penulis="Jaksa Siti Lestari" data-kategori="Edukasi"
-         data-isi="Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum agar masyarakat 
-         memahami hak dan kewajiban mereka. Dengan edukasi hukum, diharapkan masyarakat tidak hanya tahu 
-         hukum tetapi juga bisa menghindari pelanggaran.">Baca Selengkapnya</a>
+      <div class="card-actions">
+        <a href="#" class="btn-detail" data-judul="Peran Jaksa sebagai Sahabat Hukum Masyarakat"
+           data-penulis="Jaksa Siti Lestari" data-kategori="Edukasi"
+           data-isi="Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum agar masyarakat memahami hak dan kewajiban mereka. Dengan edukasi hukum, diharapkan masyarakat tidak hanya tahu hukum tetapi juga bisa menghindari pelanggaran.">👁️ Lihat</a>
+      </div>
     </article>
   </div>
 
@@ -81,7 +232,6 @@
 <footer style="background-color:#5d4037; color:white; padding:40px 0; font-family:'Poppins', sans-serif;">
   <div style="max-width:1200px; margin:auto; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:40px;">
 
-    <!-- Alamat -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Alamat</h3>
       <p style="margin-top:10px; line-height:1.6;">
@@ -91,7 +241,6 @@
       </p>
     </div>
 
-    <!-- Surel -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Surel</h3>
       <p style="margin-top:10px;">
@@ -101,7 +250,6 @@
       </p>
     </div>
 
-    <!-- Bantuan -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Bantuan</h3>
       <p style="margin-top:10px; line-height:1.6;">
@@ -109,7 +257,6 @@
       </p>
     </div>
 
-    <!-- Media Sosial -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Media Sosial</h3>
       <div style="margin-top:10px; display:flex; gap:10px;">
@@ -117,11 +264,11 @@
           style="background:white; border-radius:50%; width:35px; height:35px; display:flex; align-items:center; justify-content:center; color:#5d4037; text-decoration:none; font-size:18px;">
           <i class="fab fa-facebook-f"></i>
         </a>
-        <a href="https://www.instagram.com/kejati_jabar/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA==" target="_blank" title="Instagram"
+        <a href="https://www.instagram.com/kejati_jabar" target="_blank" title="Instagram"
           style="background:white; border-radius:50%; width:35px; height:35px; display:flex; align-items:center; justify-content:center; color:#5d4037; text-decoration:none; font-size:18px;">
           <i class="fab fa-instagram"></i>
         </a>
-        <a href="https://kejati-jawabarat.kejaksaan.info/UC7p3xx7wxjKwIdAp2Y-uZeA" target="_blank" title="YouTube"
+        <a href="https://kejati-jawabarat.kejaksaan.info/" target="_blank" title="YouTube"
           style="background:white; border-radius:50%; width:35px; height:35px; display:flex; align-items:center; justify-content:center; color:#5d4037; text-decoration:none; font-size:18px;">
           <i class="fab fa-youtube"></i>
         </a>
@@ -130,14 +277,12 @@
   </div>
 
   <hr style="margin:40px auto; width:85%; border:0.5px solid rgba(255,255,255,0.2);">
-
   <p style="text-align:center; font-size:14px; color:#E0E0E0;">
     © 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja. <br>
     Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.
   </p>
 </footer>
 
-<!-- Script JS -->
 <script src="assets/js/tulisan.js"></script>
 </body>
 </html>
