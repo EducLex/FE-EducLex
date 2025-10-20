@@ -1,21 +1,25 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const apiBase = "http://localhost:8080";
+  const dashboardEndpoint = `${apiBase}/dashboard`;
   const token = localStorage.getItem("token");
 
-  // ===== CEK LOGIN =====
+  // ===== CEK LOGIN (DIPERBARUI) =====
   if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Akses Ditolak",
-      text: "Silakan login terlebih dahulu!",
-    }).then(() => {
-      window.location.href = "login.html";
-    });
-    return;
+    console.warn("⚠️ Tidak ada token. Menjalankan dashboard dalam mode tamu.");
+    const adminNameEl = document.getElementById("adminName");
+    if (adminNameEl) adminNameEl.textContent = "Guest (Mode Tamu)";
+  } else {
+    const adminNameEl = document.getElementById("adminName");
+    if (adminNameEl) adminNameEl.textContent = "Admin";
   }
 
   // ===== LOGOUT =====
   document.getElementById("logoutBtn").addEventListener("click", () => {
+    if (!token) {
+      Swal.fire("Info", "Anda belum login, tidak ada sesi yang perlu diakhiri.", "info");
+      return;
+    }
+
     Swal.fire({
       title: "Apakah Anda yakin ingin logout?",
       icon: "warning",
@@ -52,11 +56,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // ===== MUAT DATA DASHBOARD =====
+  // ===== MUAT DATA DASHBOARD UTAMA (/dashboard) =====
   async function loadDashboardData() {
-    try {
-      const headers = { Authorization: `Bearer ${token}` };
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+    try {
+      console.log("🔄 Fetch data dari endpoint utama:", dashboardEndpoint);
+      const response = await fetch(dashboardEndpoint, { headers });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("✅ Data dashboard dari /dashboard:", data);
+
+        if (data) {
+          document.getElementById("totalArtikel").textContent = data.totalArtikel || 0;
+          document.getElementById("totalTanya").textContent = data.totalTanya || 0;
+          document.getElementById("totalTulisan").textContent = data.totalTulisan || 0;
+          document.getElementById("totalPeraturan").textContent = data.totalPeraturan || 0;
+          return;
+        }
+      }
+
+      console.warn("⚠️ Gagal memuat /dashboard, mencoba fallback manual...");
+      await loadDashboardDataFallback();
+    } catch (error) {
+      console.error("❌ Error memuat /dashboard:", error);
+      Swal.fire("Error", "Tidak dapat memuat data dashboard dari server.", "error");
+      await loadDashboardDataFallback();
+    }
+  }
+
+  // ===== FALLBACK JIKA /dashboard ERROR =====
+  async function loadDashboardDataFallback() {
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    try {
       const [artikelRes, tanyaRes, tulisanRes, peraturanRes] = await Promise.all([
         fetch(`${apiBase}/articles`, { headers }),
         fetch(`${apiBase}/questions`, { headers }),
@@ -73,19 +107,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("totalTanya").textContent = tanyaData.length || 0;
       document.getElementById("totalTulisan").textContent = tulisanData.length || 0;
       document.getElementById("totalPeraturan").textContent = peraturanData.length || 0;
+
+      console.log("✅ Fallback berhasil, data dimuat manual.");
     } catch (error) {
-      console.error("❌ Gagal memuat data dashboard:", error);
-      Swal.fire("Gagal", "Tidak dapat memuat data dashboard.", "error");
+      console.error("❌ Fallback gagal:", error);
     }
   }
 
   // ===== MUAT DATA PENGGUNA =====
   async function loadUsers() {
     const tbody = document.getElementById("userTableBody");
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
     try {
-      const res = await fetch(`${apiBase}/users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(`${apiBase}/users`, { headers });
+      if (!res.ok) {
+        tbody.innerHTML = `<tr><td colspan="4">Tidak dapat memuat data pengguna (login mungkin diperlukan).</td></tr>`;
+        return;
+      }
+
       const data = await res.json();
 
       if (!Array.isArray(data) || data.length === 0) {
@@ -120,6 +160,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     // === Hapus pengguna ===
     if (target.classList.contains("btn-delete")) {
       const id = target.dataset.id;
+
+      if (!token) {
+        Swal.fire("Akses Ditolak", "Silakan login untuk menghapus pengguna.", "warning");
+        return;
+      }
+
       Swal.fire({
         title: "Hapus Pengguna?",
         text: "Data pengguna ini akan dihapus secara permanen.",
@@ -151,6 +197,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (target.classList.contains("btn-edit")) {
       const id = target.dataset.id;
       const currentRole = target.dataset.role;
+
+      if (!token) {
+        Swal.fire("Akses Ditolak", "Silakan login untuk mengedit pengguna.", "warning");
+        return;
+      }
 
       Swal.fire({
         title: "Edit Role Pengguna",
