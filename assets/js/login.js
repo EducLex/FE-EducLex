@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // ✅ Simpan token
+        // ✅ Simpan token & user
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
@@ -173,6 +173,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (token) {
     if (loginLink) loginLink.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "block";
+
+    // 🚫 Jika user sudah login dan mencoba buka login.html → arahkan ke index
+    const currentPage = window.location.pathname.split("/").pop();
+    if (currentPage === "login.html") {
+      window.location.href = "index.html";
+    }
   } else {
     if (loginLink) loginLink.style.display = "block";
     if (logoutBtn) logoutBtn.style.display = "none";

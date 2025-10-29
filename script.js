@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (loginLink) loginLink.style.display = "none";
   if (logoutBtn) logoutBtn.style.display = "none";
 
+  // === Jika sudah login ===
   if (token) {
-    // ✅ Sudah login
-    toggleButton(loginLink, false); // sembunyikan login
-    toggleButton(logoutBtn, true);  // tampilkan logout
+    toggleButton(loginLink, false);
+    toggleButton(logoutBtn, true);
 
     if (logoutBtn) {
       logoutBtn.onclick = (e) => {
@@ -83,21 +83,50 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // === Redirect tombol "Mulai Jelajahi" ===
+  // === Proteksi semua link/tombol agar wajib login ===
+  document.querySelectorAll(".require-login").forEach(link => {
+    link.addEventListener("click", function (e) {
+      if (!localStorage.getItem("token")) {
+        e.preventDefault();
+
+        // jika SweetAlert tersedia
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            icon: "warning",
+            title: "Login Diperlukan",
+            text: "Silakan login terlebih dahulu untuk mengakses fitur ini.",
+            confirmButtonText: "Login Sekarang"
+          }).then(result => {
+            if (result.isConfirmed) {
+              window.location.href = "login.html";
+            }
+          });
+        } else {
+          // fallback ke alert custom
+          showAlert("⚠️ Kamu harus login dulu untuk mengakses fitur ini.");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1000);
+        }
+      }
+    });
+  });
+
+  // === Redirect tombol "Mulai Jelajahi" (untuk keamanan tambahan) ===
   const ctaBtn = document.querySelector(".cta-btn");
   if (ctaBtn) {
     ctaBtn.addEventListener("click", function (e) {
       e.preventDefault();
       if (!token) {
-        window.location.href = "login.html"; // belum login → login dulu
+        window.location.href = "login.html";
       } else {
-        window.location.href = "artikel.html"; // sudah login → ke artikel
+        window.location.href = "artikel.html";
       }
     });
   }
 });
 
-// Animasi tombol smooth (fade-in/out)
+// === Animasi tombol smooth ===
 function toggleButton(element, show) {
   if (!element) return;
   if (show) {
@@ -115,8 +144,7 @@ function toggleButton(element, show) {
   }
 }
 
-// === kode lama registrasi, login, alert, artikel, chat, simulasi tetap dipertahankan ===
-
+/* ==================== LOGIN DAN REGISTER ==================== */
 // Register
 const regForm = document.getElementById("registerForm");
 if (regForm) {
@@ -154,7 +182,7 @@ if (loginForm) {
   });
 }
 
-// === Custom Alert Modal ===
+/* ==================== CUSTOM ALERT ==================== */
 function showAlert(message) {
   const modal = document.getElementById("custom-alert");
   const msgBox = document.getElementById("alert-message");
@@ -188,7 +216,7 @@ window.onclick = function (event) {
   }
 };
 
-// Artikel hukum populer (dummy data)
+/* ==================== ARTIKEL POPULER (Dummy) ==================== */
 const artikel = [
   { title: "Perlindungan Remaja dari Cybercrime", content: "Remaja perlu tahu bagaimana hukum melindungi mereka di dunia digital." },
   { title: "Hak dan Kewajiban Remaja di Sekolah", content: "Kenali aturan dasar yang melindungi hak belajar dan disiplin." },
@@ -205,7 +233,7 @@ if (artikelContainer) {
   });
 }
 
-// Chat sederhana (dummy jawaban jaksa)
+/* ==================== CHAT SEDERHANA ==================== */
 function sendMessage() {
   const input = document.getElementById("chat-input");
   const msg = input ? input.value.trim() : "";
@@ -223,7 +251,7 @@ function sendMessage() {
   if (input) input.value = "";
 }
 
-// Simulasi Kirim Pertanyaan
+/* ==================== SIMULASI PERTANYAAN ==================== */
 function kirimPertanyaan(event) {
   event.preventDefault();
 
@@ -244,7 +272,7 @@ function kirimPertanyaan(event) {
   return false;
 }
 
-// Simulasi kasus
+/* ==================== SIMULASI KASUS ==================== */
 function chooseSimulasi(pilihan) {
   const result = document.getElementById("simulasi-result");
   if (result) {

@@ -1612,3 +1612,108 @@ footer p:last-child {
     font-size: 1rem;
   }
 }
+
+footer a:hover {
+  transform: scale(1.1);
+  background: #f1f1f1;
+  transition: all 0.3s ease;
+}
+
+/* ===== HERO SECTION DENGAN BACKGROUND FOTO ===== */
+.hero {
+  position: relative;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  background: url("assets/img/kejati.JPG") no-repeat center center/cover;
+  background-attachment: fixed; /* biar parallax halus */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Lapisan gelap transparan di atas gambar */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45); /* gelap transparan */
+  z-index: 1;
+}
+
+/* Teks di depan overlay */
+.hero-text {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  padding: 20px;
+}
+
+.hero-text h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  color: #fff5f0;
+}
+
+.hero-text p {
+  font-size: 1.3rem;
+  color: #f8e9e2;
+  margin-bottom: 1.5rem;
+}
+
+.cta-btn {
+  background: #8d6e63;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cta-btn:hover {
+  background: #4e342e;
+  transform: scale(1.05);
+}
+
+/* ==================== GLOBAL FONT FIX ==================== */
+/* Menyatukan seluruh font agar seragam di seluruh website */
+:root {
+  --font-primary: 'Poppins', sans-serif;
+  --font-secondary: 'Open Sans', sans-serif;
+}
+
+/* Semua teks di seluruh halaman default ke font utama */
+body, p, a, li, span, input, button, textarea, label, 
+h1, h2, h3, h4, h5, h6, .logo, .hero-text, .nav-links a, footer, .btn, .card, .tulisan-card {
+  font-family: var(--font-primary) !important;
+  letter-spacing: 0.3px;
+}
+
+/* Menjaga heading tetap tegas dan konsisten */
+h1, h2, h3, .logo {
+  font-weight: 700;
+  color: #3e2723;
+}
+
+/* Supaya teks paragraf tetap nyaman dibaca */
+p, li, span, a, label {
+  font-weight: 400;
+}
+
+/* Tombol dan elemen interaktif tetap pakai font utama */
+button, .btn, .btn-login, .cta-btn {
+  font-family: var(--font-primary) !important;
+  font-weight: 600;
+}
+
+/* Footer juga diseragamkan */
+footer {
+  font-family: var(--font-primary) !important;
+  letter-spacing: 0.4px;
+}
