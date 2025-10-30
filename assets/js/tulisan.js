@@ -1,18 +1,25 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const tulisanBaru = document.getElementById("tulisanBaru");
 
-  // === Fungsi buat card dengan tampilan elegan ===
-  function buatCard({ _id, penulis, kategori, judul, isi }) {
+  // === Fungsi buat card dengan ikon PDF + tombol Lihat & Unduh ===
+  function buatCard({ _id, penulis, kategori, judul, isi, fileUrl }) {
     const card = document.createElement("article");
     card.classList.add("tulisan-card");
 
+    // Link PDF default jika file belum ada
+    const pdfLink = fileUrl || "https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg";
+
     card.innerHTML = `
-      <img src="assets/pdf-icon.png" alt="PDF" class="pdf-icon">
+      <div class="pdf-preview">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" alt="PDF" class="pdf-icon">
+      </div>
+
       <div class="card-body">
         <p class="kategori">${kategori}</p>
         <h2>${judul}</h2>
-        <p>${isi.substring(0, 90)}...</p>
+        <p>${isi.substring(0, 100)}...</p>
       </div>
+
       <div class="card-actions">
         <a href="#" class="btn-detail"
            data-id="${_id || ''}"
@@ -22,8 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
            data-isi="${isi}">
            👁️ Lihat
         </a>
-        <button class="btn-edit" data-id="${_id || ''}">✏️ Edit</button>
-        <button class="btn-hapus" data-id="${_id || ''}">🗑️ Hapus</button>
+        <a href="${pdfLink}" download class="btn-unduh">⬇️ Unduh</a>
       </div>
     `;
     return card;
