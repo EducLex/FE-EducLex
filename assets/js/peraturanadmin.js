@@ -1,44 +1,34 @@
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("peraturanContainer");
 
-  // 🔍 Pastikan elemen container ditemukan
+  // Pastikan elemen ada
   if (!container) {
     console.error("❌ Elemen #peraturanContainer tidak ditemukan di HTML.");
     return;
   }
 
-  // ✅ Fungsi untuk menampilkan daftar peraturan
+  // ✅ Fungsi untuk menampilkan peraturan
   function tampilkanPeraturan(data) {
     container.innerHTML = ""; // bersihkan isi sebelumnya
-
-    if (data.length === 0) {
-      container.innerHTML = "<p>Tidak ada data peraturan yang tersedia.</p>";
-      return;
-    }
-
     data.forEach(item => {
       const card = document.createElement("div");
       card.classList.add("peraturan-card");
-
       card.innerHTML = `
-        <div class="card-content">
-          <h3>${item.judul || "Tanpa Judul"}</h3>
-          <p>${item.deskripsi || "Tidak ada deskripsi yang tersedia."}</p>
-          <small><strong>Sumber:</strong> ${item.sumber || "Tidak diketahui"}</small>
-        </div>
+        <h3>${item.judul || "Tanpa Judul"}</h3>
+        <p>${item.deskripsi || "Tidak ada deskripsi."}</p>
+        <small>Sumber: ${item.sumber || "Tidak diketahui"}</small>
       `;
-
       container.appendChild(card);
     });
   }
 
-  // ✅ Fungsi untuk mengambil data dari backend
+  // ✅ Fungsi untuk fetch data
   async function ambilPeraturan() {
     try {
       const response = await fetch("http://localhost:8080/peraturan");
-
+      
       if (!response.ok) {
-        throw new Error(`HTTP Error! Status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const hasil = await response.json();
@@ -46,13 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
       tampilkanPeraturan(hasil);
     } catch (error) {
       console.error("❌ Gagal mengambil data peraturan:", error);
-      container.innerHTML = `
-        <p style="color: red;">Gagal memuat data peraturan.<br>
-        Pastikan server backend sedang berjalan.</p>
-      `;
+      container.innerHTML = "<p style='color:red;'>Gagal memuat data peraturan. Periksa server backend!</p>";
     }
   }
 
-  // 🔄 Jalankan fetch ketika halaman dimuat
+  // Jalankan fetch saat halaman dimuat
   ambilPeraturan();
 });

@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peraturan Hukum | EducLex</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- ======== Navbar Section ======== -->
 <header>
   <nav class="navbar">
-    <div class="logo"><strong>EducLex</strong></div>
+    <div class="logo">EducLex</div>
     <ul class="nav-links">
       <li><a href="index.html">Beranda</a></li>
-      <li><a href="artikel.html">Artikel</a></li>
-      <li><a href="tanya.html">Tanya Jaksa</a></li>
-      <li><a href="tulisan.html">Tulisan Jaksa</a></li>
-      <li><a href="peraturan.html" class="active">Peraturan</a></li>
+      <li><a href="artikeladmin.html">Artikel</a></li>
+      <li><a href="tanyaadmin.html">Tanya Jaksa</a></li>
+      <li><a href="tulisanadmin.html">Tulisan Jaksa</a></li>
+      <li><a href="peraturanadmin.html" class="active">Peraturan</a></li>
     </ul>
     <div class="auth-nav">
       <span class="user-icon">👤</span>
@@ -27,13 +26,29 @@
   </nav>
 </header>
 
-<!-- ======== Main Content ======== -->
 <main class="simulasi-container">
   <h1>Peraturan & Pasal Hukum</h1>
   <p class="intro">Berikut adalah daftar peraturan perundang-undangan yang relevan dengan kasus sehari-hari.</p>
 
-  <!-- ✅ Daftar peraturan untuk user -->
+  <!-- ✅ Daftar Peraturan (ID disesuaikan dengan JS) -->
   <div id="peraturanContainer"></div>
+
+  <!-- ✅ Form Tambah Peraturan Baru -->
+  <section class="form-tambah">
+    <h2>➕ Tambah Peraturan Baru</h2>
+    <form id="formPeraturan">
+      <div class="form-group">
+        <label for="judul">Judul Kasus</label>
+        <input type="text" id="judul" name="judul" placeholder="Contoh: Kasus Pelanggaran Lalu Lintas" required>
+      </div>
+      <div class="form-group">
+        <label for="pasal">Pasal/Peraturan</label>
+        <textarea id="pasal" name="pasal" placeholder="Tuliskan pasal hukum yang relevan..." rows="3" required></textarea>
+      </div>
+      <button type="button" class="btn-tambah" onclick="tambahPeraturan()">➕ Tambahkan Peraturan</button>
+    </form>
+  </section>
+
 </main>
 
 <!-- ======== Footer Section ======== -->
@@ -70,23 +85,28 @@
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Media Sosial</h3>
       <div style="margin-top:10px; display:flex; justify-content:center; gap:12px;">
+
         <!-- Facebook -->
         <a href="https://www.facebook.com/KejaksaanTinggiJawaBarat" target="_blank" title="Facebook"
           style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="20" height="20">
         </a>
+
         <!-- Instagram -->
         <a href="https://www.instagram.com/kejati_jabar" target="_blank" title="Instagram"
           style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
           <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="20" height="20">
         </a>
+
         <!-- X (Twitter) -->
         <a href="https://x.com/kejati_jabar" target="_blank" title="X (Twitter)"
           style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
           <img src="https://cdn-icons-png.flaticon.com/512/5969/5969020.png" alt="X Twitter" width="18" height="18">
         </a>
+
       </div>
     </div>
+
   </div>
 
   <hr style="margin:40px auto; width:85%; border:0.5px solid rgba(255,255,255,0.2);">
@@ -97,8 +117,8 @@
   </p>
 </footer>
 
-<!-- ✅ Hubungkan ke JS user -->
-<script src="assets/js/peraturan.js" defer></script>
+<!-- ✅ Perbaiki path JS -->
+<script src="assets/js/peraturanadmin.js" defer></script>
 
 </body>
 </html>

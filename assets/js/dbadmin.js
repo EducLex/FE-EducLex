@@ -39,11 +39,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ===== SIDEBAR NAVIGATION =====
   const navLinks = {
     dashboardLink: "dbadmin.html",
-    artikelLink: "artikel.html",
-    tanyaLink: "tanya.html",
-    tulisanLink: "tulisan.html",
-    peraturanLink: "peraturan.html",
-    penggunaLink: "pengguna.html",
+    artikelLink: "artikeladmin.html",
+    tanyaLink: "tanyaadmin.html",
+    tulisanLink: "tulisanadmin.html",
+    peraturanLink: "peraturanadmin.html",
+    penggunaLink: "penggunaadmin.html",
   };
 
   Object.entries(navLinks).forEach(([id, url]) => {

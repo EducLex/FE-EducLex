@@ -61,7 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
-        localStorage.setItem("user", JSON.stringify({ username }));
+
+        // 🔹 Simpan data user dan role (fallback ke 'user' jika tidak ada)
+        const userRole = data.role || (username.toLowerCase().includes("admin") ? "admin" : "user");
+        localStorage.setItem("user", JSON.stringify({ username, role: userRole }));
 
         // 🔹 Update UI login/logout di navbar
         if (loginLink && logoutBtn) {
@@ -69,9 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
           logoutBtn.style.display = "block";
         }
 
-        // ✅ Redirect ke beranda setelah login berhasil
+        // ✅ Tentukan halaman tujuan berdasarkan role
         const redirectToHome = () => {
-          window.location.href = "index.html";
+          if (userRole === "admin") {
+            window.location.href = "dbadmin.html";
+          } else {
+            window.location.href = "index.html";
+          }
         };
 
         // 🔹 Alert sukses
@@ -134,10 +141,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
               if (res.ok && data.token) {
                 localStorage.setItem("token", data.token);
-                localStorage.setItem("user", JSON.stringify(data.user));
+
+                // Tentukan role (default: user)
+                const userRole = data.user?.role || "user";
+                localStorage.setItem("user", JSON.stringify({ ...data.user, role: userRole }));
 
                 const redirectToHome = () => {
-                  window.location.href = "index.html";
+                  if (userRole === "admin") {
+                    window.location.href = "dbadmin.html";
+                  } else {
+                    window.location.href = "index.html";
+                  }
                 };
 
                 if (typeof Swal !== "undefined") {
@@ -174,10 +188,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (loginLink) loginLink.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "block";
 
-    // 🚫 Jika user sudah login dan mencoba buka login.html → arahkan ke index
+    // 🚫 Jika user sudah login dan mencoba buka login.html → arahkan ke sesuai role
     const currentPage = window.location.pathname.split("/").pop();
     if (currentPage === "login.html") {
-      window.location.href = "index.html";
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user.role === "admin") {
+        window.location.href = "dbadmin.html";
+      } else {
+        window.location.href = "index.html";
+      }
     }
   } else {
     if (loginLink) loginLink.style.display = "block";

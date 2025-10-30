@@ -1382,7 +1382,6 @@ footer {
   object-fit: contain;
 }
 
-
 /* === Font & Dasar === */
 body {
   font-family: 'Open Sans', sans-serif;
@@ -1957,4 +1956,199 @@ footer a img {
 }
 footer a:hover img {
   transform: scale(1.15);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* --- Tablet (≤ 992px) --- */
+@media (max-width: 992px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-text h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+  }
+
+  .cards,
+  .artikel-grid,
+  .tulisan-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .simulasi-container,
+  .tulisan-container,
+  .tanya-container,
+  .artikel-container {
+    padding: 1.5rem;
+  }
+
+  .opsi button {
+    flex: 1 1 45%;
+  }
+
+  .auth-container {
+    margin: 3rem auto;
+    padding: 2rem;
+  }
+}
+
+/* --- Mobile Landscape (≤ 768px) --- */
+@media (max-width: 768px) {
+  /* Navbar collapse jadi vertikal */
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo {
+    margin-bottom: 0.8rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .auth-nav {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  .hero {
+    height: auto;
+    padding: 3rem 1rem;
+  }
+
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .cta-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Form dan konten utama */
+  .form-section form,
+  .simulasi-box,
+  .tulisan-card,
+  .card {
+    padding: 1rem;
+  }
+
+  .form-tambah {
+    width: 90%;
+    padding: 1.2rem;
+  }
+
+  .opsi button {
+    flex: 1 1 100%;
+  }
+
+  .tulisan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .penulis {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .penulis img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .auth-container {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .dropdown-content {
+    min-width: 120px;
+    font-size: 0.9rem;
+  }
+}
+
+/* --- Mobile Portrait (≤ 480px) --- */
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9rem;
+  }
+
+  .navbar {
+    padding: 0.8rem 1rem;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  .nav-links {
+    gap: 0.4rem;
+  }
+
+  .hero-text h1 {
+    font-size: 1.7rem;
+  }
+
+  .hero-text p {
+    font-size: 0.95rem;
+  }
+
+  .cta-btn {
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .card h2,
+  .tulisan-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .card p,
+  .tulisan-card p {
+    font-size: 0.9rem;
+  }
+
+  .btn,
+  .btn-login {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .chat-box {
+    width: 95%;
+    max-width: 350px;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin: 25% auto;
+  }
+
+  .auth-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .google-btn {
+    font-size: 0.85rem;
+  }
 }

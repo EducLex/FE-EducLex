@@ -1,6 +1,6 @@
-// artikel.js (untuk halaman user)
+// artikel.js
 
-// 🔹 Data fallback jika fetch gagal
+// Data artikel bawaan (fallback jika fetch gagal)
 const artikelData = {
   1: {
     title: "Kenapa Hukum Itu Penting?",
@@ -16,7 +16,7 @@ const artikelData = {
   }
 };
 
-// 🔹 Elemen DOM modal
+// Elemen DOM untuk modal
 const modal = document.getElementById("artikelModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalContent = document.getElementById("modalContent");
@@ -24,19 +24,16 @@ const modalImage = document.getElementById("modalImage");
 const modalFile = document.getElementById("modalFile");
 const closeBtn = document.querySelector(".close");
 
-// 🔹 Elemen grid artikel
+// 🔹 Ambil elemen artikel grid
 const artikelGrid = document.querySelector(".artikel-grid");
 const apiBase = "http://localhost:8080";
 
-// ======================================================
-// 🔹 Fungsi memuat artikel dari backend
-// ======================================================
+// 🔹 Load artikel dari backend
 async function loadArtikel() {
   try {
     const response = await fetch(`${apiBase}/articles`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data = await response.json();
+    let data = await response.json();
     console.log("📥 Data artikel dari backend:", data);
 
     if (Array.isArray(data)) {
@@ -46,31 +43,21 @@ async function loadArtikel() {
     } else if (Array.isArray(data.data)) {
       renderArtikel(data.data);
     } else {
-      console.warn("⚠️ Format data tidak dikenali, menggunakan fallback.");
+      console.error("❌ Format response tidak sesuai:", data);
       renderArtikel(Object.values(artikelData));
     }
-
   } catch (error) {
-    console.error("❌ Gagal memuat artikel:", error);
-    renderArtikel(Object.values(artikelData)); // fallback
+    console.error("❌ Error fetch artikel:", error);
+    renderArtikel(Object.values(artikelData));
   }
 }
 
-// ======================================================
-// 🔹 Render daftar artikel dalam bentuk card grid
-// ======================================================
+// 🔹 Render artikel ke grid (foto + judul + isi singkat)
 function renderArtikel(list) {
   artikelGrid.innerHTML = "";
-
-  if (!list || list.length === 0) {
-    artikelGrid.innerHTML = `<p style="text-align:center; color:#777;">Belum ada artikel untuk ditampilkan.</p>`;
-    return;
-  }
-
   list.forEach((item, index) => {
     const card = document.createElement("article");
     card.classList.add("card");
-
     card.innerHTML = `
       ${item.image ? `<img src="${item.image}" alt="${item.title}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image';">` : ""}
       <div class="card-body">
@@ -79,15 +66,14 @@ function renderArtikel(list) {
         <a href="#" class="read-more" data-id="${item.id || index}">Baca Selengkapnya</a>
       </div>
     `;
-
     artikelGrid.appendChild(card);
   });
 
-  // 🔹 Event klik "Baca Selengkapnya" → buka modal
+  // Event listener modal
   document.querySelectorAll(".read-more").forEach(btn => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", function(e) {
       e.preventDefault();
-      const id = btn.getAttribute("data-id");
+      const id = this.getAttribute("data-id");
       const data = list.find(a => a.id == id) || artikelData[id];
       if (!data) return;
 
@@ -112,15 +98,30 @@ function renderArtikel(list) {
   });
 }
 
-// ======================================================
-// 🔹 Event modal close
-// ======================================================
-closeBtn.addEventListener("click", () => (modal.style.display = "none"));
-window.addEventListener("click", (e) => {
-  if (e.target === modal) modal.style.display = "none";
+// 🔹 Tutup modal
+closeBtn.addEventListener("click", () => modal.style.display = "none");
+window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+
+// 🔹 Tambah artikel baru
+const formArtikel = document.getElementById("formArtikel");
+formArtikel.addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  try {
+    const response = await fetch(`${apiBase}/articles`, { method: "POST", body: formData });
+    if (!response.ok) throw new Error(`Gagal tambah artikel: ${response.status}`);
+
+    await response.json();
+    alert("✅ Artikel berhasil ditambahkan!");
+    loadArtikel();
+    formArtikel.reset();
+  } catch (err) {
+    console.error("❌ Error tambah artikel:", err);
+    alert("Gagal menambahkan artikel.");
+  }
 });
 
-// ======================================================
-// 🔹 Jalankan otomatis saat halaman dimuat
-// ======================================================
+// 🔹 Jalankan saat halaman dimuat
 document.addEventListener("DOMContentLoaded", loadArtikel);
