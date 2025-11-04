@@ -542,3 +542,35 @@ body {
     width: 100%;
   }
 }
+
+/* === Tombol Aksi di Tabel Pengaduan === */
+.btn-reply, .btn-view {
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Tombol Jawab */
+.btn-reply {
+  background: #6D4C41; /* coklat medium */
+}
+.btn-reply:hover {
+  background: #4E342E; /* lebih gelap saat hover */
+  transform: scale(1.05);
+}
+
+/* Tombol Lihat */
+.btn-view {
+  background: #8D6E63; /* coklat muda */
+  margin-left: 6px;
+}
+.btn-view:hover {
+  background: #5D4037;
+  transform: scale(1.05);
+}
