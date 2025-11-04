@@ -7,25 +7,61 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!token) {
     jaksaNameEl.textContent = "Guest (Mode Tamu)";
   } else {
-    jaksaNameEl.textContent = "Jaksa";
+    // Jika token valid, tampilkan nama jaksa (bisa ambil dari backend jika tersedia)
+    try {
+      const res = await fetch(`${apiBase}/auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        jaksaNameEl.textContent = data.nama || "Jaksa";
+      } else {
+        jaksaNameEl.textContent = "Jaksa";
+      }
+    } catch (err) {
+      console.warn("⚠️ Tidak bisa memuat profil, menggunakan nama default.");
+      jaksaNameEl.textContent = "Jaksa";
+    }
   }
 
   // ===== LOGOUT =====
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
+    logoutBtn.addEventListener("click", async () => {
       Swal.fire({
         title: "Yakin ingin logout?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Ya, Logout",
         cancelButtonText: "Batal",
-      }).then((res) => {
+        confirmButtonColor: "#6D4C41"
+      }).then(async (res) => {
         if (res.isConfirmed) {
-          localStorage.clear();
-          Swal.fire("Logout Berhasil!", "Anda telah keluar dari sistem.", "success").then(() => {
-            window.location.href = "login.html";
-          });
+          try {
+            // Panggil endpoint logout backend (jika tersedia)
+            await fetch(`${apiBase}/auth/logout`, {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+            }).catch(() => {}); // ignore error jika endpoint belum ada
+
+            // Bersihkan semua data di localStorage dan sessionStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("userRole");
+            sessionStorage.clear();
+
+            Swal.fire({
+              icon: "success",
+              title: "Logout Berhasil!",
+              text: "Anda telah keluar dari sistem.",
+              confirmButtonColor: "#6D4C41"
+            }).then(() => {
+              // Redirect dengan force reload untuk memastikan cache bersih
+              window.location.replace("login.html");
+            });
+          } catch (error) {
+            console.error("❌ Gagal logout:", error);
+            Swal.fire("Gagal Logout", "Terjadi kesalahan saat logout.", "error");
+          }
         }
       });
     });
@@ -125,7 +161,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ===== EVENT: JAKSA MENJAWAB =====
   document.addEventListener("click", async (e) => {
-    // Klik tombol "Jawab"
     if (e.target.classList.contains("btn-reply")) {
       const id = e.target.dataset.id;
       const pertanyaan = e.target.dataset.pertanyaan;
@@ -162,7 +197,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    // Klik tombol "Lihat"
     if (e.target.classList.contains("btn-view")) {
       const isi = e.target.dataset.isi;
       const jawaban = e.target.dataset.jawaban;
@@ -179,13 +213,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
-    // Klik tombol edit tulisan
     if (e.target.classList.contains("btn-edit")) {
       const id = e.target.dataset.id;
       Swal.fire("Edit Tulisan", `Fitur edit untuk tulisan ID ${id} masih dalam pengembangan.`, "info");
     }
 
-    // Klik tombol hapus tulisan
     if (e.target.classList.contains("btn-delete")) {
       const id = e.target.dataset.id;
       Swal.fire({
