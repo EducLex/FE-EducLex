@@ -6,6 +6,86 @@
   <title>Peraturan Hukum | EducLex</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ✨ Styling tambahan khusus halaman user peraturan */
+    .peraturan-wrapper {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .peraturan-item {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      background: #fdfaf8;
+    }
+
+    .peraturan-header {
+      background: #6d4c41;
+      color: #fff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+
+    .peraturan-header:hover {
+      background: #5d4037;
+    }
+
+    .peraturan-body {
+      display: none;
+      padding: 18px 20px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .peraturan-body.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-5px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .peraturan-body ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    .peraturan-body li {
+      margin-bottom: 10px;
+    }
+
+    .peraturan-sumber {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    h1 {
+      color: #4e342e;
+      font-weight: 700;
+    }
+
+    .intro {
+      color: #5d4037;
+    }
+  </style>
 </head>
 <body>
 
@@ -29,11 +109,18 @@
 
 <!-- ======== Main Content ======== -->
 <main class="simulasi-container">
-  <h1>Peraturan & Pasal Hukum</h1>
-  <p class="intro">Berikut adalah daftar peraturan perundang-undangan yang relevan dengan kasus sehari-hari.</p>
+  <div class="peraturan-wrapper">
+    <h1>Peraturan & Perundang-Undangan</h1>
+    <p class="intro">
+      Berikut adalah kumpulan peraturan hukum dan kebijakan yang disusun oleh Kejaksaan Tinggi Jawa Barat 
+      untuk meningkatkan kesadaran hukum masyarakat. Klik pada judul untuk melihat detail isi peraturan.
+    </p>
 
-  <!-- ✅ Daftar peraturan untuk user -->
-  <div id="peraturanContainer"></div>
+    <!-- ✅ Daftar peraturan akan dimuat dari JS -->
+    <div id="peraturanContainer">
+      <p style="text-align:center; color:#777;">Memuat data peraturan...</p>
+    </div>
+  </div>
 </main>
 
 <!-- ======== Footer Section ======== -->
@@ -99,6 +186,16 @@
 
 <!-- ✅ Hubungkan ke JS user -->
 <script src="assets/js/peraturan.js" defer></script>
+
+<script>
+  // ✨ Tambahan interaktif kecil: buka/tutup isi peraturan
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("peraturan-header")) {
+      const body = e.target.nextElementSibling;
+      body.classList.toggle("active");
+    }
+  });
+</script>
 
 </body>
 </html>

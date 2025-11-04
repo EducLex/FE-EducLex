@@ -241,6 +241,358 @@ h1, h2, h3, .logo {
   color: #5d4037;
 }
 
+/* Tombol Ajukan */
+.btn-ajukan {
+  background: #6D4C41;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-ajukan:hover {
+  background: #8D6E63;
+}
+
+/* Modal Form Tanya */
+.modal-tanya {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content-tanya {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.label-tanya {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+  color: #4E342E;
+}
+.input-tanya {
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  border: 1.5px solid #d7ccc8;
+  border-radius: 8px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.btn-kirim-tanya {
+  background: #6D4C41;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-batal-tanya {
+  background: #BCAAA4;
+  color: #3E2723;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+/* FAQ Section */
+.faq details {
+  background: #f8f4f2;
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 10px 15px;
+  border: 1px solid #d7ccc8;
+}
+.faq summary {
+  font-weight: 600;
+  cursor: pointer;
+  color: #4E342E;
+}
+
+/* ========== Global ========== */
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f6f3;
+  color: #3e2723;
+}
+
+h1, h2 {
+  font-family: 'Poppins', sans-serif;
+  color: #4e342e;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ========== Navbar ========== */
+.navbar {
+  background-color: #6d4c41;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li a {
+  color: white;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+  background: #8d6e63;
+}
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-login {
+  background-color: #fff;
+  color: #5d4037;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  background-color: #f3e5f5;
+  color: #4e342e;
+}
+
+/* ========== Tanya Section ========== */
+.tanya-container {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.tanya-container h1 {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.tanya-container .intro {
+  text-align: center;
+  color: #5d4037;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.btn-ajukan {
+  background-color: #8d6e63;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-ajukan:hover {
+  background-color: #6d4c41;
+  transform: scale(1.05);
+}
+
+/* ========== Daftar Pertanyaan ========== */
+.daftar-section {
+  margin: 40px 0;
+}
+
+.daftar-section h2 {
+  border-left: 5px solid #8d6e63;
+  padding-left: 10px;
+  font-size: 1.4em;
+  margin-bottom: 15px;
+}
+
+.daftar-pertanyaan {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.daftar-pertanyaan .card {
+  background-color: #f8f5f2;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid #8d6e63;
+}
+
+/* ========== FAQ Section ========== */
+.faq-section h2 {
+  border-left: 5px solid #8d6e63;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.faq details {
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.faq summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.faq p {
+  margin-top: 8px;
+  color: #4e342e;
+}
+
+/* ========== Modal Form ========== */
+.modal-tanya {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content-tanya {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 550px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+.label-tanya {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+  color: #5d4037;
+}
+
+.input-tanya {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+}
+
+textarea.input-tanya {
+  resize: vertical;
+}
+
+.btn-kirim-tanya,
+.btn-batal-tanya {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.btn-kirim-tanya {
+  background-color: #6d4c41;
+  color: white;
+}
+
+.btn-kirim-tanya:hover {
+  background-color: #4e342e;
+}
+
+.btn-batal-tanya {
+  background-color: #d7ccc8;
+  color: #3e2723;
+  margin-left: 10px;
+}
+
+.btn-batal-tanya:hover {
+  background-color: #bcaaa4;
+}
+
+/* ========== Animation ========== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 15px 20px;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tanya-container {
+    margin: 30px auto;
+  }
+
+  .modal-content-tanya {
+    width: 95%;
+    padding: 20px;
+  }
+}
 
 /* ==================== Buttons ==================== */
 .btn, .btn-link {

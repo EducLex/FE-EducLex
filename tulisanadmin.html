@@ -1,290 +1,155 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tulisan Jaksa | EducLex</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EducLex - Tulisan Jaksa Admin</title>
+
+  <!-- Font & Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8f5f2;
-      color: #3e2723;
-      margin: 0;
-    }
 
-    /* ===== Navbar ===== */
-    .navbar {
-      background-color: #5d4037;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 40px;
-    }
-
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-    }
-
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .nav-links a:hover,
-    .nav-links .active {
-      color: #ffcc80;
-    }
-
-    .btn-login {
-      background-color: #8d6e63;
-      padding: 8px 15px;
-      border-radius: 6px;
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* ===== Container ===== */
-    .tulisan-container {
-      max-width: 1100px;
-      margin: 50px auto;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    h1 {
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    .intro {
-      color: #5d4037;
-      font-size: 1rem;
-      margin-bottom: 35px;
-      font-weight: 600; /* ✅ Jadikan bold */
-    }
-
-    /* ===== Tombol Tambah ===== */
-    .btn-tambah {
-      background-color: #5d4037;
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-      margin-bottom: 40px;
-    }
-
-    .btn-tambah:hover {
-      background-color: #8d6e63;
-    }
-
-    /* ===== Grid Card ===== */
-    .tulisan-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-    }
-
-    /* ===== Card Style ===== */
-    .tulisan-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(93, 64, 55, 0.15);
-      overflow: hidden;
-      transition: all 0.3s ease;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .tulisan-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 18px rgba(93, 64, 55, 0.25);
-    }
-
-    .pdf-icon {
-      width: 60px;
-      margin-bottom: 10px;
-    }
-
-    .kategori {
-      color: #6d4c41;
-      font-size: 0.9rem;
-      margin: 5px 0 10px;
-      font-weight: 600;
-    }
-
-    .tulisan-card h2 {
-      font-size: 1.05rem;
-      margin-bottom: 10px;
-      color: #3e2723;
-      font-weight: 700;
-    }
-
-    .tulisan-card p {
-      font-size: 0.9rem;
-      color: #5d4037;
-      margin-bottom: 20px;
-    }
-
-    /* ===== Tombol ===== */
-    .card-actions {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .btn-detail,
-    .btn-unduh {
-      border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
-      color: white;
-      font-size: 0.9rem;
-    }
-
-    .btn-detail { background-color: #8d6e63; }
-    .btn-detail:hover { background-color: #a1887f; }
-
-    .btn-unduh { background-color: #6d4c41; }
-    .btn-unduh:hover { background-color: #5d4037; }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 768px) {
-      .tulisan-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
-
 <body>
-  <!-- Navbar -->
-  <header>
-    <nav class="navbar">
-      <div class="logo">EducLex</div>
-      <ul class="nav-links">
-        <li><a href="dbadmin.html">Dashboard</a></li>
-        <li><a href="artikeladmin.html">Artikel</a></li>
-        <li><a href="tanyaadmin.html">Tanya Jaksa</a></li>
-        <li><a href="tulisanadmin.html" class="active">Tulisan Jaksa</a></li>
-        <li><a href="peraturanadmin.html">Peraturan</a></li>
-      </ul>
-      <a href="login.html" class="btn-login">Login</a>
-    </nav>
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="logo">EducLex</div>
+    <div class="user-info">
+      <i class="fas fa-user-circle"></i> 
+      <span id="adminName">Admin</span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
   </header>
 
-  <!-- Konten -->
-  <main class="tulisan-container">
-    <h1>Tulisan Para Jaksa</h1>
-    <p class="intro">
-      <strong>Kumpulan tulisan, opini, dan edukasi hukum dari para jaksa Kejaksaan Tinggi Jawa Barat.</strong>
-    </p>
+  <!-- Layout -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="dbjaksa.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="tanyaadmin.html"><i class="fas fa-file-alt"></i> Tanya Jaksa</a></li>
+        <li><a href="tulisanadmin.html" class="active"><i class="fas fa-pen"></i> Tulisan Jaksa</a></li>
+      </ul>
+    </aside>
 
-    <button id="btnTambahTulisan" class="btn-tambah">➕ Tambah Tulisan</button>
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1>Kelola Tulisan Jaksa</h1>
 
-    <div class="tulisan-grid" id="tulisanLama">
-      <!-- Contoh Card -->
-      <article class="tulisan-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" alt="PDF" class="pdf-icon">
-        <p class="kategori">Opini</p>
-        <h2>Menumbuhkan Kesadaran Hukum di Kalangan Remaja</h2>
-        <p>Banyak remaja tidak menyadari bahwa tindakan kecil sehari-hari bisa berimplikasi hukum...</p>
-        <div class="card-actions">
-          <a href="#" class="btn-detail">👁️ Lihat</a>
-          <a href="assets/sample1.pdf" download class="btn-unduh">⬇️ Unduh</a>
-        </div>
-      </article>
+      <!-- Form Tambah Tulisan -->
+      <section class="data-section">
+        <h2>Tambah Tulisan Baru</h2>
+        <form id="formTulisan" class="form-artikel">
+          <div class="form-group">
+            <label for="namaPenulis">Nama Penulis</label>
+            <input type="text" id="namaPenulis" name="namaPenulis" placeholder="Masukkan nama penulis" required>
+          </div>
 
-      <article class="tulisan-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" alt="PDF" class="pdf-icon">
-        <p class="kategori">Edukasi</p>
-        <h2>Peran Jaksa sebagai Sahabat Hukum Masyarakat</h2>
-        <p>Selain tugas di pengadilan, jaksa juga aktif memberikan penyuluhan hukum...</p>
-        <div class="card-actions">
-          <a href="#" class="btn-detail">👁️ Lihat</a>
-          <a href="assets/sample2.pdf" download class="btn-unduh">⬇️ Unduh</a>
-        </div>
-      </article>
-    </div>
+          <div class="form-group">
+            <label for="kategoriTulisan">Kategori Tulisan</label>
+            <select id="kategoriTulisan" name="kategoriTulisan" required>
+              <option value="">-- Pilih Kategori --</option>
+              <option value="Opini Hukum">Opini Hukum</option>
+              <option value="Edukasi Hukum">Edukasi Hukum</option>
+              <option value="Kajian Kasus">Kajian Kasus</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
 
-    <div class="tulisan-grid" id="tulisanBaru"></div>
-  </main>
+          <div class="form-group">
+            <label for="judulTulisan">Judul Tulisan</label>
+            <input type="text" id="judulTulisan" name="judulTulisan" placeholder="Masukkan judul tulisan" required>
+          </div>
 
-<footer style="background-color:#5d4037; color:white; padding:40px 0; font-family:'Poppins', sans-serif;">
-  <div style="max-width:1200px; margin:auto; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:40px; text-align:center;">
+          <div class="form-group">
+            <label for="isiTulisan">Isi Tulisan</label>
+            <textarea id="isiTulisan" name="isiTulisan" rows="8" placeholder="Tulis isi tulisan di sini..." required></textarea>
+          </div>
 
-    <!-- Alamat -->
-    <div>
-      <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Alamat</h3>
-      <p style="margin-top:10px; line-height:1.6;">
-        Jl. L. L. R.E. Martadinata No.54,<br>
-        Citarum, Kec. Bandung Wetan,<br>
-        Kota Bandung, Jawa Barat 40115
-      </p>
-    </div>
+          <div class="form-group">
+            <label for="lampiranTulisan">Unggah Lampiran (Opsional)</label>
+            <input type="file" id="lampiranTulisan" name="lampiranTulisan" accept=".pdf,.doc,.docx,image/*">
+          </div>
 
-    <!-- Surel -->
-    <div>
-      <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Surel</h3>
-      <p style="margin-top:10px;">
-        <a href="mailto:penkumhumas.kejatijabar@gmail.com" style="color:white; text-decoration:none;">
-          penkumhumas.kejatijabar@gmail.com
-        </a>
-      </p>
-    </div>
+          <button type="submit" class="btn-simpan"><i class="fas fa-save"></i> Simpan Tulisan</button>
+        </form>
+      </section>
 
-    <!-- Bantuan -->
-    <div>
-      <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Bantuan</h3>
-      <p style="margin-top:10px; line-height:1.6;">Telp: (022) 4239375</p>
-    </div>
-
-    <!-- Media Sosial -->
-    <div>
-      <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Media Sosial</h3>
-      <div style="margin-top:10px; display:flex; justify-content:center; gap:12px;">
-
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/KejaksaanTinggiJawaBarat" target="_blank" title="Facebook"
-          style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
-          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="20" height="20">
-        </a>
-
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/kejati_jabar" target="_blank" title="Instagram"
-          style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
-          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="20" height="20">
-        </a>
-
-        <!-- X (Twitter) -->
-        <a href="https://x.com/kejati_jabar" target="_blank" title="X (Twitter)"
-          style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
-          <img src="https://cdn-icons-png.flaticon.com/512/5969/5969020.png" alt="X Twitter" width="18" height="18">
-        </a>
-
-      </div>
-    </div>
-
+      <!-- Daftar Tulisan -->
+      <section class="data-section" style="margin-top: 2.5rem;">
+        <h2>Daftar Tulisan Jaksa</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Penulis</th>
+              <th>Kategori</th>
+              <th>Tanggal</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabelTulisanBody">
+            <tr><td colspan="5" style="text-align:center;">Belum ada tulisan</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
   </div>
 
-  <hr style="margin:40px auto; width:85%; border:0.5px solid rgba(255,255,255,0.2);">
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <p>© 2025 EducLex | Tulisan Jaksa Admin</p>
+  </footer>
 
-  <p style="text-align:center; font-size:14px; color:#E0E0E0;">
-    © 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>
-    Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.
-  </p>
-</footer>
+  <script>
+    // Simulasi penyimpanan data tulisan
+    document.getElementById("formTulisan").addEventListener("submit", function (e) {
+      e.preventDefault();
 
-  <script src="assets/js/tulisanadmin.js"></script>
+      const judul = document.getElementById("judulTulisan").value.trim();
+      const penulis = document.getElementById("namaPenulis").value.trim();
+      const kategori = document.getElementById("kategoriTulisan").value.trim();
+
+      if (!judul || !penulis || !kategori) {
+        Swal.fire({
+          icon: "warning",
+          title: "Data Belum Lengkap!",
+          text: "Mohon isi semua bidang yang wajib diisi.",
+          confirmButtonColor: "#6D4C41"
+        });
+        return;
+      }
+
+      const tbody = document.getElementById("tabelTulisanBody");
+      const row = document.createElement("tr");
+      const tanggal = new Date().toLocaleDateString("id-ID");
+
+      row.innerHTML = `
+        <td>${judul}</td>
+        <td>${penulis}</td>
+        <td>${kategori}</td>
+        <td>${tanggal}</td>
+        <td>
+          <button class="btn-edit"><i class="fas fa-edit"></i></button>
+          <button class="btn-delete"><i class="fas fa-trash"></i></button>
+        </td>
+      `;
+      tbody.appendChild(row);
+
+      Swal.fire({
+        icon: "success",
+        title: "Tulisan Berhasil Disimpan!",
+        text: "Tulisan telah ditambahkan ke daftar.",
+        confirmButtonColor: "#6D4C41"
+      });
+
+      this.reset();
+    });
+  </script>
 </body>
 </html>

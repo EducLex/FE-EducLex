@@ -7,6 +7,108 @@
   <link rel="stylesheet" href="style.css">
 
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* ====== TAMBAHAN STYLE RAPIH UNTUK MODAL DAN FORM ====== */
+    .btn-ajukan {
+      background-color: #6d4c41;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-ajukan:hover {
+      background-color: #5d4037;
+    }
+
+    .modal-tanya {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .modal-content-tanya {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      padding: 25px 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      animation: fadeIn 0.3s ease-in-out;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .label-tanya {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+      color: #4e342e;
+    }
+
+    .input-tanya, textarea.input-tanya, select.input-tanya {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d7ccc8;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+      font-family: 'Open Sans', sans-serif;
+      resize: none;
+    }
+
+    .btn-kirim-tanya {
+      background-color: #6d4c41;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-batal-tanya {
+      background-color: #d7ccc8;
+      color: #3e2723;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .btn-kirim-tanya:hover {
+      background-color: #5d4037;
+    }
+    .btn-batal-tanya:hover {
+      background-color: #bcaaa4;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .modal-content-tanya {
+        padding: 20px;
+      }
+    }
+
+  </style>
 </head>
 <body>
 
@@ -35,6 +137,11 @@
     Berikut kumpulan pertanyaan hukum dari masyarakat yang telah dijawab oleh Jaksa Kejaksaan Tinggi Jawa Barat.
   </p>
 
+  <!-- Tombol Ajukan Pertanyaan -->
+  <div style="text-align:center; margin:30px 0;">
+    <button id="btnAjukan" class="btn-ajukan">+ Ajukan Pertanyaan / Pengaduan</button>
+  </div>
+
   <!-- Daftar Pertanyaan -->
   <section class="daftar-section">
     <h2>Daftar Tanya Jawab</h2>
@@ -62,6 +169,33 @@
     </div>
   </section>
 </main>
+
+<!-- ======== Modal Ajukan Pertanyaan ======== -->
+<div id="modalTanya" class="modal-tanya">
+  <div class="modal-content-tanya">
+    <h2>Ajukan Pertanyaan / Pengaduan</h2>
+    <p style="margin-bottom:10px;">Silakan isi formulir di bawah ini untuk bertanya atau menyampaikan pengaduan kepada Jaksa.</p>
+
+    <label for="namaUser" class="label-tanya">Nama Lengkap</label>
+    <input type="text" id="namaUser" class="input-tanya" placeholder="Masukkan nama Anda...">
+
+    <label for="jenis" class="label-tanya">Jenis</label>
+    <select id="jenis" class="input-tanya">
+      <option value="pertanyaan">Pertanyaan Umum</option>
+      <option value="pengaduan">Pengaduan Masyarakat</option>
+      <option value="hukum_pidana">Hukum Pidana</option>
+      <option value="hukum_perdata">Hukum Perdata</option>
+    </select>
+
+    <label for="isiTanya" class="label-tanya">Isi Pertanyaan / Pengaduan</label>
+    <textarea id="isiTanya" class="input-tanya" rows="5" placeholder="Tuliskan pertanyaan atau pengaduan Anda di sini..."></textarea>
+
+    <div style="text-align:right; margin-top:1rem;">
+      <button id="kirimTanya" class="btn-kirim-tanya">Kirim</button>
+      <button id="tutupModal" class="btn-batal-tanya">Batal</button>
+    </div>
+  </div>
+</div>
 
 <!-- ======== Footer ======== -->
 <footer style="background-color:#5d4037; color:white; padding:40px 0; font-family:'Poppins', sans-serif;">
@@ -118,7 +252,49 @@
   </p>
 </footer>
 
-<!-- Script untuk Fetch Data Tanya -->
+<!-- Script -->
+<script>
+  const modal = document.getElementById("modalTanya");
+  const btnAjukan = document.getElementById("btnAjukan");
+  const btnTutup = document.getElementById("tutupModal");
+  const btnKirim = document.getElementById("kirimTanya");
+
+  btnAjukan.onclick = () => modal.style.display = "flex";
+  btnTutup.onclick = () => modal.style.display = "none";
+
+  btnKirim.onclick = () => {
+    const nama = document.getElementById("namaUser").value.trim();
+    const jenis = document.getElementById("jenis").value;
+    const isi = document.getElementById("isiTanya").value.trim();
+
+    if (!nama || !isi) {
+      Swal.fire({
+        icon: "warning",
+        title: "Lengkapi Formulir!",
+        text: "Nama dan isi pertanyaan/pengaduan wajib diisi.",
+        confirmButtonColor: "#6D4C41"
+      });
+      return;
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Terkirim!",
+      text: "Pertanyaan/pengaduan Anda telah dikirim ke Jaksa.",
+      confirmButtonColor: "#6D4C41"
+    });
+
+    modal.style.display = "none";
+    document.getElementById("namaUser").value = "";
+    document.getElementById("isiTanya").value = "";
+  };
+
+  // Tutup modal jika klik di luar box
+  window.onclick = (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  };
+</script>
+
 <script src="assets/js/tanya.js"></script>
 </body>
 </html>

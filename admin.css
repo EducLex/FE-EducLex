@@ -361,3 +361,184 @@ body {
     padding: 1.5rem;
   }
 }
+
+
+/* === Tanya Jaksa Admin === */
+
+/* Bagian tabel pengaduan */
+.data-table th, .data-table td {
+  text-align: left;
+  padding: 12px 15px;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.status.proses {
+  background: #ffe0b2;
+  color: #6d4c41;
+  border: 1px solid #d7ccc8;
+}
+
+.status.selesai {
+  background: #c8e6c9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.btn-detail {
+  background: #6D4C41;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.btn-detail:hover {
+  background: #4E342E;
+  transform: scale(1.05);
+}
+
+/* === Bagian Diskusi === */
+#diskusiSection {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  padding: 1.8rem;
+  margin-top: 2rem;
+  border-top: 5px solid #8D6E63;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#judulDiskusi {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #4E342E;
+  margin-bottom: 1.2rem;
+}
+
+/* Kotak chat */
+.diskusi-box {
+  background: #fdfaf8;
+  border: 1.5px solid #e0d7d2;
+  border-radius: 12px;
+  padding: 1rem;
+  max-height: 360px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Pesan dari user */
+.pesan {
+  padding: 10px 14px;
+  border-radius: 12px;
+  line-height: 1.5;
+  max-width: 85%;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.pesan strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.pesan.user {
+  background: #fff3e0;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+.pesan.jaksa {
+  background: #d7ccc8;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+}
+
+/* Form kirim balasan */
+.form-balasan {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-balasan textarea {
+  flex: 1;
+  resize: none;
+  border: 1.5px solid #d7ccc8;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-family: 'Open Sans', sans-serif;
+  transition: all 0.3s ease;
+  background: #fcf9f8;
+}
+
+.form-balasan textarea:focus {
+  border-color: #8D6E63;
+  box-shadow: 0 0 6px rgba(141, 110, 99, 0.3);
+  outline: none;
+}
+
+.btn-kirim {
+  background: #6D4C41;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-kirim:hover {
+  background: #4E342E;
+  transform: scale(1.05);
+}
+
+/* === Scrollbar lembut untuk chat === */
+.diskusi-box::-webkit-scrollbar {
+  width: 8px;
+}
+.diskusi-box::-webkit-scrollbar-track {
+  background: #f3ece7;
+  border-radius: 10px;
+}
+.diskusi-box::-webkit-scrollbar-thumb {
+  background: #bcaaa4;
+  border-radius: 10px;
+}
+.diskusi-box::-webkit-scrollbar-thumb:hover {
+  background: #8d6e63;
+}
+
+/* === Responsif === */
+@media (max-width: 768px) {
+  #diskusiSection {
+    padding: 1.2rem;
+  }
+  .form-balasan {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-kirim {
+    width: 100%;
+  }
+}

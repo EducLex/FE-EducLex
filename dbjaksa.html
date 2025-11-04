@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EducLex - Dashboard Jaksa</title>
+
+  <!-- Font & Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3119/3119338.png" type="image/png" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="logo">EducLex</div>
+    <div class="user-info">
+      <i class="fas fa-user-tie"></i>
+      <span id="jaksaName">Jaksa</span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="dbjaksa.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="tanyaadmin.html"><i class="fas fa-comments"></i> Tanya Jaksa</a></li>
+        <li><a href="tulisanadmin.html"><i class="fas fa-pen"></i> Tulisan Jaksa</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1>Dashboard Jaksa</h1>
+
+      <!-- Statistik Cards -->
+      <div class="stats-cards">
+        <div class="card stat">
+          <h3>💬 Pertanyaan Belum Dijawab</h3>
+          <p id="totalBelumDijawab">0</p>
+        </div>
+        <div class="card stat">
+          <h3>✅ Pertanyaan Terjawab</h3>
+          <p id="totalTerjawab">0</p>
+        </div>
+        <div class="card stat">
+          <h3>✍️ Tulisan Jaksa</h3>
+          <p id="totalTulisanJaksa">0</p>
+        </div>
+      </div>
+
+      <!-- Tabel Pertanyaan -->
+      <section class="data-section">
+        <h2>Daftar Pertanyaan & Pengaduan Masyarakat</h2>
+        <table class="data-table" id="tanyaTable">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Kategori</th>
+              <th>Pertanyaan / Pengaduan</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tanyaTableBody">
+            <tr>
+              <td>Anonim</td>
+              <td>Pengaduan</td>
+              <td>Bagaimana cara melaporkan penipuan online?</td>
+              <td><span class="badge pending">Menunggu Jawaban</span></td>
+              <td>
+                <button class="btn-reply"><i class="fas fa-reply"></i> Jawab</button>
+                <button class="btn-view"><i class="fas fa-eye"></i> Lihat</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Tambahan: Form Jawaban Jaksa -->
+        <div id="formJawabanJaksa" class="hidden">
+          <h3>💬 Jawab Pengaduan</h3>
+          <form id="jawabanForm">
+            <textarea id="jawabanText" placeholder="Tulis jawaban Anda di sini..." rows="4" required></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn-simpan"><i class="fas fa-paper-plane"></i> Kirim Jawaban</button>
+              <button type="button" id="batalJawab" class="btn-batal"><i class="fas fa-times"></i> Batal</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Tabel Tulisan Jaksa -->
+      <section class="data-section">
+        <h2>Tulisan Jaksa Terbaru</h2>
+        <table class="data-table" id="tulisanTable">
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Tanggal</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tulisanTableBody">
+            <tr>
+              <td>Pencegahan Cyber Crime di Kalangan Remaja</td>
+              <td>30 Okt 2025</td>
+              <td><span class="badge published">Dipublikasikan</span></td>
+              <td>
+                <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn-delete"><i class="fas fa-trash"></i> Hapus</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <p>© 2025 EducLex | Dashboard Jaksa</p>
+  </footer>
+
+  <!-- Script -->
+  <script src="assets/js/dbjaksa.js"></script>
+
+  <!-- Inline Style tambahan (untuk form jawaban) -->
+  <style>
+    #formJawabanJaksa {
+      margin-top: 1.5rem;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    #formJawabanJaksa h3 {
+      margin-bottom: 1rem;
+      color: #4e342e;
+    }
+
+    #jawabanText {
+      width: 100%;
+      font-family: "Open Sans", sans-serif;
+      font-size: 1rem;
+      border: 1px solid #d7ccc8;
+      border-radius: 8px;
+      padding: 0.8rem;
+      resize: vertical;
+    }
+
+    .form-actions {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-simpan {
+      background: #6d4c41;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-simpan:hover {
+      background: #5d4037;
+    }
+
+    .btn-batal {
+      background: #bdbdbd;
+      border: none;
+      color: #333;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</body>
+</html>
