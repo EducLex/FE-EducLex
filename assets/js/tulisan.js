@@ -1,71 +1,73 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const tulisanBaru = document.getElementById("tulisanBaru");
+  const apiBase = "http://localhost:8080"; // Ganti sesuai backend kamu
+  const container = document.getElementById("tulisanBaru");
 
-  // === Fungsi buat card dengan ikon PDF + tombol Lihat & Unduh ===
-  function buatCard({ _id, penulis, kategori, judul, isi, fileUrl }) {
-    const card = document.createElement("article");
-    card.classList.add("tulisan-card");
-
-    const pdfLink = fileUrl || "https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg";
-
-    card.innerHTML = `
-      <div class="pdf-preview">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg" 
-             alt="PDF" class="pdf-icon">
-      </div>
-
-      <div class="card-body">
-        <p class="kategori">${kategori}</p>
-        <h2>${judul}</h2>
-        <p>${isi.substring(0, 100)}...</p>
-      </div>
-
-      <div class="card-actions">
-        <a href="#" class="btn-detail"
-           data-judul="${judul}"
-           data-penulis="${penulis}"
-           data-kategori="${kategori}"
-           data-isi="${isi}">
-           👁️ Lihat
-        </a>
-        <a href="${pdfLink}" download class="btn-unduh">⬇️ Unduh</a>
-      </div>
-    `;
-    return card;
-  }
-
-  // === Ambil data tulisan dari backend ===
-  async function fetchTulisan() {
+  // Fungsi utama untuk ambil data tulisan dari backend
+  async function ambilTulisan() {
     try {
-      const res = await fetch("http://localhost:8080/tulisan");
+      const res = await fetch(`${apiBase}/tulisan`);
+      if (!res.ok) throw new Error("Gagal mengambil data dari server.");
       const data = await res.json();
 
-      if (!Array.isArray(data)) throw new Error("Data tulisan tidak valid");
-      tulisanBaru.innerHTML = "";
-      data.forEach((t) => tulisanBaru.appendChild(buatCard(t)));
+      // Jika belum ada data dari backend, gunakan dummy data
+      if (!Array.isArray(data) || data.length === 0) {
+        console.warn("Belum ada data dari backend, menampilkan dummy data...");
+        tampilkanTulisan(dummyData);
+      } else {
+        tampilkanTulisan(data);
+      }
     } catch (err) {
-      console.error("❌ Gagal memuat tulisan:", err);
-      Swal.fire("Gagal", "Tidak dapat memuat tulisan dari server.", "error");
+      console.error("❌ Gagal mengambil data tulisan:", err);
+      // Jika fetch gagal (misal server mati), tampilkan dummy
+      tampilkanTulisan(dummyData);
     }
   }
 
-  await fetchTulisan();
+  // ==== Data Dummy untuk Tampilan Awal ====
+  const dummyData = [
+    {
+      judul: "Laporan kerja bulanan BPKAD",
+      kategori: "Transparansi Pengelolaan Keuangan Daerah",
+      file_url: "assets/pdf/contoh1.pdf",
+    },
+    {
+      judul: "Pengeluaran Tahunan BPKAD",
+      kategori: "Transparansi Pengelolaan Keuangan Daerah",
+      file_url: "assets/pdf/contoh2.pdf",
+    },
+    {
+      judul: "Panduan Etika Media Sosial bagi Remaja",
+      kategori: "Edukasi Hukum Digital",
+      file_url: "assets/pdf/panduan_etika.pdf",
+    },
+  ];
 
-  // === Event untuk lihat detail tulisan ===
-  document.body.addEventListener("click", (e) => {
-    if (e.target.classList.contains("btn-detail")) {
-      e.preventDefault();
-      const { judul, penulis, kategori, isi } = e.target.dataset;
-      Swal.fire({
-        title: judul,
-        html: `
-          <p><strong>${penulis}</strong> | <em>${kategori}</em></p>
-          <hr>
-          <p style="text-align:left">${isi}</p>
-        `,
-        width: 700,
-        confirmButtonText: "Tutup",
-      });
+  // ==== Fungsi Render ke Halaman ====
+  function tampilkanTulisan(data) {
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
+      container.innerHTML = `<p style="text-align:center;">Belum ada tulisan dari Jaksa.</p>`;
+      return;
     }
-  });
+
+    data.forEach((t) => {
+      const card = document.createElement("div");
+      card.className = "tulisan-card";
+      card.innerHTML = `
+        <img src="assets/img/pdf.png" alt="PDF Icon" class="pdf-icon">
+        <p class="kategori">${t.kategori || "-"}</p>
+        <h2>${t.judul}</h2>
+        <div class="card-actions">
+          <a href="${t.file_url}" target="_blank" class="btn-detail">👁️ Lihat</a>
+          <a href="${t.file_url}" download class="btn-unduh">⬇️ Unduh</a>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // ==== Jalankan saat halaman dibuka ====
+  await ambilTulisan();
 });

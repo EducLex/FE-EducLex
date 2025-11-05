@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EducLex - Tambah Jaksa</title>
+
+  <!-- Font & Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="logo">EducLex</div>
+    <div class="user-info">
+      <i class="fas fa-user-circle"></i> 
+      <span id="adminName">Admin</span>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="dbadmin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="artikeladmin.html"><i class="fas fa-file-alt"></i> Artikel</a></li>
+        <li><a href="peraturanadmin.html"><i class="fas fa-gavel"></i> Peraturan</a></li>
+        <li><a href="tambahjaksa.html" id="jaksaLink"><i class="fas fa-user-tie"></i> Tambah Jaksa</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1>Kelola Data Jaksa</h1>
+
+      <!-- Form Tambah Jaksa -->
+      <section class="data-section">
+        <h2>Tambah Jaksa Baru</h2>
+        <form id="formJaksa" class="form-artikel">
+          <div class="form-group">
+            <label for="nama">Nama Jaksa</label>
+            <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap jaksa" required>
+          </div>
+
+          <div class="form-group">
+            <label for="nip">NIP Jaksa</label>
+            <input type="text" id="nip" name="nip" placeholder="Masukkan NIP Jaksa" required>
+          </div>
+
+          <div class="form-group">
+            <label for="jabatan">Jabatan</label>
+            <input type="text" id="jabatan" name="jabatan" placeholder="Contoh: Kasi Intelijen" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Jaksa</label>
+            <input type="email" id="email" name="email" placeholder="Masukkan email jaksa" required>
+          </div>
+
+          <div class="form-group">
+            <label for="foto">Unggah Foto Jaksa</label>
+            <input type="file" id="foto" name="foto" accept="image/*">
+          </div>
+
+          <button type="submit" class="btn-simpan"><i class="fas fa-save"></i> Simpan Data Jaksa</button>
+        </form>
+      </section>
+
+      <!-- Daftar Jaksa -->
+      <section class="data-section" style="margin-top: 2.5rem;">
+        <h2>Daftar Jaksa</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>NIP</th>
+              <th>Jabatan</th>
+              <th>Email</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabelJaksaBody">
+            <tr><td colspan="5" style="text-align:center;">Belum ada data jaksa</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="admin-footer">
+    <p>© 2025 EducLex | Manajemen Jaksa</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const tabelJaksaBody = document.getElementById("tabelJaksaBody");
+    const formJaksa = document.getElementById("formJaksa");
+
+    // 🔹 Data dummy awal
+    let dataJaksa = [
+      { nama: "Budi Santoso, S.H.", nip: "19781231 200501 1 001", jabatan: "Kasi Intelijen", email: "budi.santoso@kejati.go.id" },
+      { nama: "Rina Wulandari, S.H., M.H.", nip: "19850615 201003 2 002", jabatan: "Jaksa Fungsional", email: "rina.wulandari@kejati.go.id" }
+    ];
+
+    // 🔹 Render data ke tabel
+    function renderTabel() {
+      tabelJaksaBody.innerHTML = "";
+      if (dataJaksa.length === 0) {
+        tabelJaksaBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Belum ada data jaksa</td></tr>';
+        return;
+      }
+
+      dataJaksa.forEach((jaksa, index) => {
+        const row = `
+          <tr>
+            <td>${jaksa.nama}</td>
+            <td>${jaksa.nip}</td>
+            <td>${jaksa.jabatan}</td>
+            <td>${jaksa.email}</td>
+            <td>
+              <button class="btn-edit" onclick="editJaksa(${index})"><i class="fas fa-edit"></i></button>
+              <button class="btn-delete" onclick="hapusJaksa(${index})"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+        tabelJaksaBody.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
+    // 🔹 Tambah data jaksa baru
+    formJaksa.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const nama = document.getElementById("nama").value.trim();
+      const nip = document.getElementById("nip").value.trim();
+      const jabatan = document.getElementById("jabatan").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (!nama || !nip || !jabatan || !email) {
+        Swal.fire("Peringatan", "Semua field wajib diisi!", "warning");
+        return;
+      }
+
+      dataJaksa.push({ nama, nip, jabatan, email });
+      renderTabel();
+      Swal.fire({
+        icon: "success",
+        title: "Data Jaksa Ditambahkan!",
+        text: "Data jaksa baru berhasil disimpan.",
+        confirmButtonColor: "#6D4C41"
+      });
+      this.reset();
+    });
+
+    // 🔹 Hapus data jaksa
+    function hapusJaksa(index) {
+      Swal.fire({
+        title: "Yakin ingin menghapus?",
+        text: "Data jaksa akan dihapus secara permanen.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#6D4C41",
+        confirmButtonText: "Ya, hapus!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dataJaksa.splice(index, 1);
+          renderTabel();
+          Swal.fire("Dihapus!", "Data jaksa telah dihapus.", "success");
+        }
+      });
+    }
+
+    // 🔹 Edit data jaksa (dummy)
+    function editJaksa(index) {
+      const jaksa = dataJaksa[index];
+      Swal.fire({
+        title: "Edit Data Jaksa",
+        html: `
+          <input id="editNama" class="swal2-input" value="${jaksa.nama}">
+          <input id="editNip" class="swal2-input" value="${jaksa.nip}">
+          <input id="editJabatan" class="swal2-input" value="${jaksa.jabatan}">
+          <input id="editEmail" class="swal2-input" value="${jaksa.email}">
+        `,
+        confirmButtonText: "Simpan",
+        preConfirm: () => {
+          jaksa.nama = document.getElementById("editNama").value;
+          jaksa.nip = document.getElementById("editNip").value;
+          jaksa.jabatan = document.getElementById("editJabatan").value;
+          jaksa.email = document.getElementById("editEmail").value;
+        }
+      }).then(() => {
+        renderTabel();
+        Swal.fire("Tersimpan!", "Data jaksa berhasil diperbarui.", "success");
+      });
+    }
+
+    // 🔹 Jalankan saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", renderTabel);
+  </script>
+</body>
+</html>

@@ -3,12 +3,14 @@
 // 🔹 Data fallback jika fetch gagal
 const artikelData = {
   1: {
+    id: 1,
     title: "Kenapa Hukum Itu Penting?",
     content: "Hukum berfungsi menjaga keteraturan sosial, melindungi hak setiap orang, serta memberikan rasa aman.",
     image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Law_book.jpg",
     file: "assets/files/hukum-penting.pdf"
   },
   2: {
+    id: 2,
     title: "Hak Remaja dalam Hukum",
     content: "Remaja memiliki hak hukum yang wajib dilindungi, antara lain hak atas pendidikan dan perlindungan dari kekerasan.",
     image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Child_rights.jpg",
@@ -29,7 +31,7 @@ const artikelGrid = document.querySelector(".artikel-grid");
 const apiBase = "http://localhost:8080";
 
 // ======================================================
-// 🔹 Fungsi memuat artikel dari backend
+// 🔹 Fungsi GET semua artikel
 // ======================================================
 async function loadArtikel() {
   try {
@@ -49,10 +51,76 @@ async function loadArtikel() {
       console.warn("⚠️ Format data tidak dikenali, menggunakan fallback.");
       renderArtikel(Object.values(artikelData));
     }
-
   } catch (error) {
     console.error("❌ Gagal memuat artikel:", error);
     renderArtikel(Object.values(artikelData)); // fallback
+  }
+}
+
+// ======================================================
+// 🔹 Fungsi GET detail artikel by ID
+// ======================================================
+async function getArtikelById(id) {
+  try {
+    const response = await fetch(`${apiBase}/articles/${id}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`❌ Gagal mengambil artikel ID ${id}:`, error);
+    return artikelData[id]; // fallback
+  }
+}
+
+// ======================================================
+// 🔹 Fungsi POST artikel baru
+// ======================================================
+async function createArtikel(newData) {
+  try {
+    const response = await fetch(`${apiBase}/articles`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newData),
+    });
+    if (!response.ok) throw new Error(`Gagal menambah artikel`);
+    console.log("✅ Artikel berhasil ditambahkan");
+    await loadArtikel();
+  } catch (error) {
+    console.error("❌ Gagal menambah artikel:", error);
+  }
+}
+
+// ======================================================
+// 🔹 Fungsi PUT (update artikel)
+// ======================================================
+async function updateArtikel(id, updatedData) {
+  try {
+    const response = await fetch(`${apiBase}/articles/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    });
+    if (!response.ok) throw new Error(`Gagal memperbarui artikel`);
+    console.log(`✅ Artikel ID ${id} berhasil diperbarui`);
+    await loadArtikel();
+  } catch (error) {
+    console.error(`❌ Gagal memperbarui artikel ID ${id}:`, error);
+  }
+}
+
+// ======================================================
+// 🔹 Fungsi DELETE artikel
+// ======================================================
+async function deleteArtikel(id) {
+  if (!confirm("Yakin ingin menghapus artikel ini?")) return;
+  try {
+    const response = await fetch(`${apiBase}/articles/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error(`Gagal menghapus artikel`);
+    console.log(`🗑️ Artikel ID ${id} berhasil dihapus`);
+    await loadArtikel();
+  } catch (error) {
+    console.error(`❌ Gagal menghapus artikel ID ${id}:`, error);
   }
 }
 
@@ -76,7 +144,10 @@ function renderArtikel(list) {
       <div class="card-body">
         <h2>${item.title || "Tanpa Judul"}</h2>
         <p>${item.content?.substring(0, 150) || "Tidak ada konten"}...</p>
-        <a href="#" class="read-more" data-id="${item.id || index}">Baca Selengkapnya</a>
+        <div class="card-buttons">
+          <a href="#" class="read-more" data-id="${item.id || index}">Baca Selengkapnya</a>
+          <button class="btn-delete" data-id="${item.id || index}">🗑️</button>
+        </div>
       </div>
     `;
 
@@ -85,10 +156,10 @@ function renderArtikel(list) {
 
   // 🔹 Event klik "Baca Selengkapnya" → buka modal
   document.querySelectorAll(".read-more").forEach(btn => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", async (e) => {
       e.preventDefault();
       const id = btn.getAttribute("data-id");
-      const data = list.find(a => a.id == id) || artikelData[id];
+      const data = await getArtikelById(id);
       if (!data) return;
 
       modalTitle.textContent = data.title;
@@ -108,6 +179,15 @@ function renderArtikel(list) {
       }
 
       modal.style.display = "block";
+    });
+  });
+
+  // 🔹 Event hapus artikel
+  document.querySelectorAll(".btn-delete").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = btn.getAttribute("data-id");
+      deleteArtikel(id);
     });
   });
 }

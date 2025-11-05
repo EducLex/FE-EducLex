@@ -594,6 +594,15 @@ textarea.input-tanya {
   }
 }
 
+.pdf-icon {
+  width: 65px;
+  margin-bottom: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 /* ==================== Buttons ==================== */
 .btn, .btn-link {
   display: inline-block;
