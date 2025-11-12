@@ -1,23 +1,28 @@
 const apiBase = "http://localhost:8080/questions";
 
-// 🔹 Ambil semua pertanyaan yang sudah dijawab atau sedang diproses oleh jaksa
+// =======================
+// 🔹 AMBIL SEMUA PERTANYAAN PUBLIK
+// =======================
 async function getPertanyaanPublik() {
   try {
     const res = await fetch(apiBase, { credentials: "include" });
     if (!res.ok) throw new Error("Gagal mengambil data pertanyaan");
     const data = await res.json();
 
-    // Filter agar tampil semua pertanyaan publik (dengan status apapun)
-    return data.filter((q) => q.tipe !== "internal");
+    // Filter agar hanya menampilkan pertanyaan publik (bukan internal)
+    return Array.isArray(data) ? data.filter((q) => q.tipe !== "internal") : [];
   } catch (err) {
     console.error("❌ Error fetch pertanyaan:", err);
     return [];
   }
 }
 
-// 🔹 Render daftar pertanyaan / pengaduan di halaman publik
+// =======================
+// 🔹 RENDER SEMUA PERTANYAAN DI HALAMAN PUBLIK
+// =======================
 async function renderPertanyaanPublik() {
   const container = document.getElementById("daftar-pertanyaan");
+  if (!container) return;
   container.innerHTML = "<p>⏳ Memuat pertanyaan...</p>";
 
   const list = await getPertanyaanPublik();
@@ -28,36 +33,44 @@ async function renderPertanyaanPublik() {
     return;
   }
 
-  list.forEach((item) => {
+  for (const item of list) {
     const card = document.createElement("div");
     card.classList.add("pertanyaan-card");
 
-    // Status Warna
+    // Tentukan warna status
     let statusColor = "#795548";
     if (item.status === "Belum Dijawab") statusColor = "#b71c1c";
     else if (item.status === "Sedang Diproses") statusColor = "#f57c00";
     else if (item.status === "Sudah Dijawab") statusColor = "#2e7d32";
 
-    // Render thread diskusi jika ada
+    // 🔹 Ambil thread diskusi per pertanyaan
     let threadHTML = "";
-    if (item.diskusi && item.diskusi.length > 0) {
-      threadHTML = `
-        <div class="diskusi-thread">
-          <h4>Diskusi Lanjutan:</h4>
-          ${item.diskusi
-            .map(
-              (d) => `
-              <div class="balasan">
-                <strong>${d.pengirim}:</strong>
-                <p>${d.pesan}</p>
-              </div>`
-            )
-            .join("")}
-        </div>
-      `;
+    try {
+      const resDiskusi = await fetch(`${apiBase}/${item.id}/diskusi`, { credentials: "include" });
+      if (resDiskusi.ok) {
+        const diskusi = await resDiskusi.json();
+        if (Array.isArray(diskusi) && diskusi.length > 0) {
+          threadHTML = `
+            <div class="diskusi-thread">
+              <h4>Diskusi Lanjutan:</h4>
+              ${diskusi
+                .map(
+                  (d) => `
+                <div class="balasan">
+                  <strong>${d.pengirim || "Pengguna"}:</strong>
+                  <p>${d.pesan}</p>
+                </div>`
+                )
+                .join("")}
+            </div>
+          `;
+        }
+      }
+    } catch (err) {
+      console.warn("⚠️ Tidak bisa mengambil diskusi untuk ID:", item.id, err);
     }
 
-    // Render Kartu Pertanyaan
+    // 🔹 Susun HTML kartu pertanyaan
     card.innerHTML = `
       <div class="pertanyaan-header">
         <strong>${item.nama || "Anonim"}</strong> 
@@ -65,6 +78,7 @@ async function renderPertanyaanPublik() {
           ${item.status || "Belum Dijawab"}
         </span>
       </div>
+
       <p class="pertanyaan-teks">${item.pertanyaan}</p>
 
       ${
@@ -75,9 +89,15 @@ async function renderPertanyaanPublik() {
 
       ${threadHTML}
 
-      <button class="btn-diskusi" onclick="bukaFormDiskusi('${item.id}')">
-        💭 Tambah Diskusi
-      </button>
+      <div class="aksi">
+        <button class="btn-diskusi" onclick="bukaFormDiskusi('${item.id}')">
+          💭 Tambah Diskusi
+        </button>
+        <button class="btn-hapus" onclick="hapusPertanyaanUser('${item.id}')">
+          🗑️ Hapus
+        </button>
+      </div>
+
       <div class="form-diskusi" id="formDiskusi-${item.id}" style="display:none;">
         <textarea id="pesanDiskusi-${item.id}" placeholder="Ketik tanggapan atau pertanyaan lanjutan..."></textarea>
         <button class="btn-kirim" onclick="kirimDiskusi('${item.id}')">Kirim</button>
@@ -85,10 +105,12 @@ async function renderPertanyaanPublik() {
     `;
 
     container.appendChild(card);
-  });
+  }
 }
 
-// 🔹 Kirim pertanyaan baru dari user
+// =======================
+// 🔹 KIRIM PERTANYAAN BARU
+// =======================
 async function kirimPertanyaan(event) {
   event.preventDefault();
 
@@ -136,13 +158,16 @@ async function kirimPertanyaan(event) {
   return false;
 }
 
-// 🔹 Tampilkan form diskusi di bawah pertanyaan
+// =======================
+// 🔹 DISKUSI LANJUTAN
+// =======================
 function bukaFormDiskusi(id) {
   const form = document.getElementById(`formDiskusi-${id}`);
-  form.style.display = form.style.display === "none" ? "block" : "none";
+  if (form) {
+    form.style.display = form.style.display === "none" ? "block" : "none";
+  }
 }
 
-// 🔹 Kirim pesan diskusi lanjutan
 async function kirimDiskusi(id) {
   const pesan = document.getElementById(`pesanDiskusi-${id}`).value.trim();
   if (!pesan) {
@@ -179,4 +204,44 @@ async function kirimDiskusi(id) {
   }
 }
 
+// =======================
+// 🔹 HAPUS PERTANYAAN (oleh user jika diizinkan)
+// =======================
+async function hapusPertanyaanUser(id) {
+  Swal.fire({
+    title: "Yakin ingin menghapus?",
+    text: "Pertanyaan ini akan dihapus dari sistem.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#8D6E63",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, hapus",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`${apiBase}/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Gagal menghapus pertanyaan");
+
+        Swal.fire({
+          icon: "success",
+          title: "Terhapus!",
+          text: "Pertanyaan berhasil dihapus.",
+          confirmButtonColor: "#6D4C41",
+        });
+
+        renderPertanyaanPublik();
+      } catch (err) {
+        console.error("❌ Error hapus:", err);
+        Swal.fire("Error", "Tidak dapat menghapus pertanyaan!", "error");
+      }
+    }
+  });
+}
+
+// =======================
+// 🔹 INIT PAGE
+// =======================
 document.addEventListener("DOMContentLoaded", renderPertanyaanPublik);

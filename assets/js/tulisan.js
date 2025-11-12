@@ -25,22 +25,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ==== Data Dummy untuk Tampilan Awal ====
   const dummyData = [
-    {
-      judul: "Laporan kerja bulanan BPKAD",
-      kategori: "Transparansi Pengelolaan Keuangan Daerah",
-      file_url: "assets/pdf/contoh1.pdf",
-    },
-    {
-      judul: "Pengeluaran Tahunan BPKAD",
-      kategori: "Transparansi Pengelolaan Keuangan Daerah",
-      file_url: "assets/pdf/contoh2.pdf",
-    },
-    {
-      judul: "Panduan Etika Media Sosial bagi Remaja",
-      kategori: "Edukasi Hukum Digital",
-      file_url: "assets/pdf/panduan_etika.pdf",
-    },
-  ];
+  {
+    judul: "Pedoman Penegakan Hukum di Era Digital",
+    kategori: "Edukasi dan Literasi Hukum Digital",
+    file_url: "assets/pdf/pedoman_penegakan_hukum.pdf",
+  },
+  {
+    judul: "Hak dan Kewajiban Pengguna Media Sosial Menurut UU ITE",
+    kategori: "Undang-Undang dan Regulasi",
+    file_url: "assets/pdf/hak_kewajiban_pengguna_medsos.pdf",
+  },
+  {
+    judul: "Peran Jaksa dalam Meningkatkan Kesadaran Hukum Masyarakat",
+    kategori: "Edukasi Hukum dan Sosialisasi",
+    file_url: "assets/pdf/peran_jaksa_kesadaran_hukum.pdf",
+  },
+];
 
   // ==== Fungsi Render ke Halaman ====
   function tampilkanTulisan(data) {
