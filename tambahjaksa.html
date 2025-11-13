@@ -34,7 +34,7 @@
         <li><a href="dbadmin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
         <li><a href="artikeladmin.html"><i class="fas fa-file-alt"></i> Artikel</a></li>
         <li><a href="peraturanadmin.html"><i class="fas fa-gavel"></i> Peraturan</a></li>
-        <li><a href="tambahjaksa.html" id="jaksaLink"><i class="fas fa-user-tie"></i> Tambah Jaksa</a></li>
+        <li><a href="tambahjaksa.html" id="jaksaLink" class="active"><i class="fas fa-user-tie"></i> Tambah Jaksa</a></li>
       </ul>
     </aside>
 
@@ -58,7 +58,16 @@
 
           <div class="form-group">
             <label for="jabatan">Jabatan</label>
-            <input type="text" id="jabatan" name="jabatan" placeholder="Contoh: Kasi Intelijen" required>
+            <select id="jabatan" name="jabatan" required>
+              <option value="" disabled selected>Pilih jabatan jaksa</option>
+              <option value="Pembinaan">Pembinaan</option>
+              <option value="Intelijen">Intelijen</option>
+              <option value="Pidana Umum">Pidana Umum</option>
+              <option value="Pidana Khusus">Pidana Khusus</option>
+              <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
+              <option value="Pidana Militer">Pidana Militer</option>
+              <option value="Asisten Pengawasan">Asisten Pengawasan</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -71,7 +80,9 @@
             <input type="file" id="foto" name="foto" accept="image/*">
           </div>
 
-          <button type="submit" class="btn-simpan"><i class="fas fa-save"></i> Simpan Data Jaksa</button>
+          <button type="submit" class="btn-simpan">
+            <i class="fas fa-save"></i> Simpan Data Jaksa
+          </button>
         </form>
       </section>
 
@@ -102,110 +113,6 @@
   </footer>
 
   <!-- Script -->
-  <script>
-    const tabelJaksaBody = document.getElementById("tabelJaksaBody");
-    const formJaksa = document.getElementById("formJaksa");
-
-    // 🔹 Data dummy awal
-    let dataJaksa = [
-      { nama: "Budi Santoso, S.H.", nip: "19781231 200501 1 001", jabatan: "Kasi Intelijen", email: "budi.santoso@kejati.go.id" },
-      { nama: "Rina Wulandari, S.H., M.H.", nip: "19850615 201003 2 002", jabatan: "Jaksa Fungsional", email: "rina.wulandari@kejati.go.id" }
-    ];
-
-    // 🔹 Render data ke tabel
-    function renderTabel() {
-      tabelJaksaBody.innerHTML = "";
-      if (dataJaksa.length === 0) {
-        tabelJaksaBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Belum ada data jaksa</td></tr>';
-        return;
-      }
-
-      dataJaksa.forEach((jaksa, index) => {
-        const row = `
-          <tr>
-            <td>${jaksa.nama}</td>
-            <td>${jaksa.nip}</td>
-            <td>${jaksa.jabatan}</td>
-            <td>${jaksa.email}</td>
-            <td>
-              <button class="btn-edit" onclick="editJaksa(${index})"><i class="fas fa-edit"></i></button>
-              <button class="btn-delete" onclick="hapusJaksa(${index})"><i class="fas fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-        tabelJaksaBody.insertAdjacentHTML("beforeend", row);
-      });
-    }
-
-    // 🔹 Tambah data jaksa baru
-    formJaksa.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const nama = document.getElementById("nama").value.trim();
-      const nip = document.getElementById("nip").value.trim();
-      const jabatan = document.getElementById("jabatan").value.trim();
-      const email = document.getElementById("email").value.trim();
-
-      if (!nama || !nip || !jabatan || !email) {
-        Swal.fire("Peringatan", "Semua field wajib diisi!", "warning");
-        return;
-      }
-
-      dataJaksa.push({ nama, nip, jabatan, email });
-      renderTabel();
-      Swal.fire({
-        icon: "success",
-        title: "Data Jaksa Ditambahkan!",
-        text: "Data jaksa baru berhasil disimpan.",
-        confirmButtonColor: "#6D4C41"
-      });
-      this.reset();
-    });
-
-    // 🔹 Hapus data jaksa
-    function hapusJaksa(index) {
-      Swal.fire({
-        title: "Yakin ingin menghapus?",
-        text: "Data jaksa akan dihapus secara permanen.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#6D4C41",
-        confirmButtonText: "Ya, hapus!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dataJaksa.splice(index, 1);
-          renderTabel();
-          Swal.fire("Dihapus!", "Data jaksa telah dihapus.", "success");
-        }
-      });
-    }
-
-    // 🔹 Edit data jaksa (dummy)
-    function editJaksa(index) {
-      const jaksa = dataJaksa[index];
-      Swal.fire({
-        title: "Edit Data Jaksa",
-        html: `
-          <input id="editNama" class="swal2-input" value="${jaksa.nama}">
-          <input id="editNip" class="swal2-input" value="${jaksa.nip}">
-          <input id="editJabatan" class="swal2-input" value="${jaksa.jabatan}">
-          <input id="editEmail" class="swal2-input" value="${jaksa.email}">
-        `,
-        confirmButtonText: "Simpan",
-        preConfirm: () => {
-          jaksa.nama = document.getElementById("editNama").value;
-          jaksa.nip = document.getElementById("editNip").value;
-          jaksa.jabatan = document.getElementById("editJabatan").value;
-          jaksa.email = document.getElementById("editEmail").value;
-        }
-      }).then(() => {
-        renderTabel();
-        Swal.fire("Tersimpan!", "Data jaksa berhasil diperbarui.", "success");
-      });
-    }
-
-    // 🔹 Jalankan saat halaman dimuat
-    document.addEventListener("DOMContentLoaded", renderTabel);
-  </script>
+  <script src="tambahjaksa.js"></script>
 </body>
 </html>
