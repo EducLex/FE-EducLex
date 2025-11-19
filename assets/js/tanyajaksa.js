@@ -1,241 +1,114 @@
 const apiBase = "http://localhost:8080/questions";
 
 // =======================
-// 🔹 DATA DUMMY (Fallback jika server mati)
+// 🔹 Ambil Semua Pertanyaan
 // =======================
-const dummyData = [
-  {
-    id: "1",
-    nama: "Andi Prasetyo",
-    pertanyaan: "Apa sanksi jika menyebarkan berita hoaks di media sosial?",
-    jawaban: "Penyebaran hoaks dapat dijerat dengan UU ITE Pasal 28 ayat (1).",
-    kategori: "Pertanyaan",
-    tanggal: "2025-10-15T08:00:00Z",
-  },
-  {
-    id: "2",
-    nama: "Sinta Rahma",
-    pertanyaan: "Laporan penggelapan dana oleh rekan kerja, bagaimana prosedurnya?",
-    jawaban: "",
-    kategori: "Pengaduan",
-    tanggal: "2025-10-16T09:00:00Z",
-  },
-  {
-    id: "3",
-    nama: "Anonim",
-    pertanyaan: "Apakah pelanggaran lalu lintas bisa dikategorikan pidana?",
-    jawaban: "Beberapa pelanggaran lalu lintas bisa termasuk pidana, tergantung jenis pelanggaran.",
-    kategori: "Pertanyaan",
-    tanggal: "2025-10-17T07:00:00Z",
-  }
-];
-
-// =======================
-// 🔹 FETCH & RENDER DATA
-// =======================
-async function getSemuaPertanyaan() {
+async function ambilSemuaPertanyaan() {
   try {
     const res = await fetch(apiBase, { credentials: "include" });
-    if (!res.ok) throw new Error("Server offline");
-    const data = await res.json();
-    return data;
+    if (!res.ok) throw new Error("Gagal mengambil data pertanyaan");
+    return await res.json();
   } catch (err) {
-    console.warn("⚠️ Gagal fetch dari server, menggunakan dummy data...");
-    return dummyData;
+    console.error("❌ Error:", err);
+    return [];
   }
 }
 
-async function renderPertanyaanAdmin() {
-  const tbody = document.getElementById("tabelPertanyaanBody");
-  if (!tbody) return;
-  tbody.innerHTML = "<tr><td colspan='5'>⏳ Memuat data...</td></tr>";
+// =======================
+// 🔹 Render di Dashboard Jaksa
+// =======================
+async function renderPertanyaanJaksa() {
+  const tableBody = document.getElementById("tabel-pertanyaan");
+  if (!tableBody) return;
+  tableBody.innerHTML = "<tr><td colspan='6'>⏳ Memuat data...</td></tr>";
 
-  const data = await getSemuaPertanyaan();
-  const pertanyaanList = data.filter((q) => q.kategori !== "Pengaduan");
+  const data = await ambilSemuaPertanyaan();
+  tableBody.innerHTML = "";
 
-  if (!pertanyaanList.length) {
-    tbody.innerHTML = "<tr><td colspan='5'>Belum ada pertanyaan masuk.</td></tr>";
+  if (!data.length) {
+    tableBody.innerHTML = "<tr><td colspan='6'>Belum ada pertanyaan.</td></tr>";
     return;
   }
 
-  tbody.innerHTML = "";
-  pertanyaanList.forEach((q) => {
-    const statusLabel = q.jawaban
-      ? `<span class='status status-selesai'>Sudah Dijawab</span>`
-      : `<span class='status status-belum'>Belum Dijawab</span>`;
+  data
+    .filter((item) => item.tipe === "publik" || !item.tipe)
+    .forEach((item) => {
+      const row = document.createElement("tr");
 
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${q.nama || "Anonim"}</td>
-      <td>${q.pertanyaan}</td>
-      <td>${statusLabel}</td>
-      <td>${new Date(q.tanggal || Date.now()).toLocaleDateString("id-ID")}</td>
-      <td class="aksi">
-        <button class="btn-edit" onclick="bukaModal('${q.nama}','${q.pertanyaan}','pertanyaan','${q.id}')">
-          <i class="fas fa-reply"></i>
-        </button>
-        <button class="btn-info" onclick="bukaDiskusi('${q.id}','${q.nama}')">
-          <i class="fas fa-comments"></i>
-        </button>
-        <button class="btn-delete" onclick="hapusPertanyaanServer('${q.id}')">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
+      const tanggal = item.tanggal
+        ? new Date(item.tanggal).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
+        : "-";
+
+      row.innerHTML = `
+        <td>${item.nama || "Anonim"}</td>
+        <td>${item.pertanyaan}</td>
+        <td><strong style="color:${item.status === "Belum Dijawab" ? "red" : "green"};">${item.status}</strong></td>
+        <td>${tanggal}</td>
+        <td>
+          <button class="btn-edit" onclick="jawabPertanyaan('${item.id}')">Jawab</button>
+          <button class="btn-delete" onclick="hapusPertanyaan('${item.id}')">Hapus</button>
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+    });
+}
+
+// =======================
+// 🔹 Jawab Pertanyaan
+// =======================
+async function jawabPertanyaan(id) {
+  const { value: text } = await Swal.fire({
+    title: "Tulis Jawaban",
+    input: "textarea",
+    inputLabel: "Jawaban Jaksa",
+    inputPlaceholder: "Ketik jawaban di sini...",
+    inputAttributes: { "aria-label": "Tulis jawaban di sini" },
+    showCancelButton: true,
+    confirmButtonText: "Kirim Jawaban",
+    confirmButtonColor: "#6D4C41",
   });
-}
 
-async function renderPengaduanAdmin() {
-  const tbody = document.querySelector("#tab-pengaduan tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "<tr><td colspan='6'>⏳ Memuat data...</td></tr>";
-
-  const data = await getSemuaPertanyaan();
-  const pengaduanList = data.filter((q) => q.kategori === "Pengaduan");
-
-  if (!pengaduanList.length) {
-    tbody.innerHTML = "<tr><td colspan='6'>Belum ada pengaduan masuk.</td></tr>";
-    return;
-  }
-
-  tbody.innerHTML = "";
-  pengaduanList.forEach((q) => {
-    const statusLabel = q.jawaban
-      ? `<span class='status status-selesai'>Sudah Ditangani</span>`
-      : `<span class='status status-belum'>Belum Ditangani</span>`;
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${q.nama || "Anonim"}</td>
-      <td>${q.subkategori || "Umum"}</td>
-      <td>${q.pertanyaan}</td>
-      <td>${statusLabel}</td>
-      <td>${new Date(q.tanggal || Date.now()).toLocaleDateString("id-ID")}</td>
-      <td class="aksi">
-        <button class="btn-edit" onclick="bukaModal('${q.nama}','${q.pertanyaan}','pengaduan','${q.id}')">
-          <i class="fas fa-reply"></i>
-        </button>
-        <button class="btn-info" onclick="bukaDiskusi('${q.id}','${q.nama}')">
-          <i class="fas fa-comments"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// =======================
-// 🔹 MODAL JAWABAN
-// =======================
-let currentQuestionId = null;
-
-function bukaModal(nama, pertanyaan, jenis, id = null) {
-  currentQuestionId = id;
-  document.getElementById("namaUser").textContent = nama;
-  document.getElementById("pertanyaanUser").textContent = pertanyaan;
-  document.getElementById("jenisForm").textContent =
-    jenis === "pengaduan" ? "Pengaduan Masyarakat" : "Pertanyaan Umum";
-  document.getElementById("modalJawaban").style.display = "flex";
-}
-
-function tutupModal() {
-  document.getElementById("modalJawaban").style.display = "none";
-}
-
-async function kirimJawaban() {
-  const jawaban = document.getElementById("jawabanJaksa").value.trim();
-  if (!jawaban) {
-    Swal.fire({ icon: "warning", title: "Jawaban Kosong!", text: "Silakan isi jawaban terlebih dahulu." });
-    return;
-  }
-
-  Swal.fire({ icon: "success", title: "Terkirim!", text: "Respon telah dikirim ke masyarakat." });
-  document.getElementById("jawabanJaksa").value = "";
-  tutupModal();
-
-  if (currentQuestionId) {
-    try {
-      await fetch(`${apiBase}/${currentQuestionId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jawaban }),
-        credentials: "include",
-      });
-      renderPertanyaanAdmin();
-      renderPengaduanAdmin();
-    } catch (err) {
-      console.error("❌ Error kirim jawaban:", err);
-    }
-  }
-}
-
-// =======================
-// 🔹 DISKUSI LANJUTAN
-// =======================
-async function bukaDiskusi(id, nama) {
-  document.getElementById("modalDiskusi").style.display = "flex";
-  document.getElementById("chatBox").innerHTML = `<p>⏳ Memuat diskusi...</p>`;
-  document.getElementById("chatInput").dataset.id = id;
+  if (!text) return;
 
   try {
-    const res = await fetch(`${apiBase}/${id}/diskusi`, { credentials: "include" });
-    if (!res.ok) throw new Error("Gagal mengambil diskusi");
-    const messages = await res.json();
-
-    if (!messages.length) {
-      document.getElementById("chatBox").innerHTML = `<p><b>${nama}:</b> Mohon tindak lanjut kasus saya.</p>`;
-      return;
-    }
-
-    document.getElementById("chatBox").innerHTML = messages
-      .map(
-        (msg) =>
-          `<p><b>${msg.pengirim === "jaksa" ? "Jaksa" : msg.nama || "Pengguna"}:</b> ${msg.pesan}</p>`
-      )
-      .join("");
-  } catch (err) {
-    console.error("❌ Error ambil diskusi:", err);
-    document.getElementById("chatBox").innerHTML = `<p>❌ Gagal memuat diskusi.</p>`;
-  }
-}
-
-function tutupDiskusi() {
-  document.getElementById("modalDiskusi").style.display = "none";
-}
-
-async function kirimPesan() {
-  const input = document.getElementById("chatInput");
-  const id = input.dataset.id;
-  const pesan = input.value.trim();
-
-  if (!pesan) return;
-
-  try {
-    await fetch(`${apiBase}/${id}/diskusi`, {
-      method: "POST",
+    const res = await fetch(`${apiBase}/${id}`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pengirim: "jaksa", pesan }),
+      body: JSON.stringify({
+        jawaban: text,
+        status: "Sudah Dijawab",
+      }),
       credentials: "include",
     });
 
-    const chat = document.getElementById("chatBox");
-    chat.innerHTML += `<p><b>Jaksa:</b> ${pesan}</p>`;
-    input.value = "";
-    chat.scrollTop = chat.scrollHeight;
+    if (!res.ok) throw new Error("Gagal mengirim jawaban");
+
+    Swal.fire({
+      icon: "success",
+      title: "Terkirim!",
+      text: "Jawaban berhasil dikirim.",
+      confirmButtonColor: "#6D4C41",
+    });
+
+    renderPertanyaanJaksa();
   } catch (err) {
-    console.error("❌ Error kirim pesan:", err);
-    Swal.fire("Error", "Pesan gagal dikirim ke server.", "error");
+    console.error("❌ Error:", err);
+    Swal.fire("Error", "Tidak bisa mengirim jawaban!", "error");
   }
 }
 
 // =======================
-// 🔹 HAPUS DATA
+// 🔹 Hapus Pertanyaan
 // =======================
-async function hapusPertanyaanServer(id) {
+async function hapusPertanyaan(id) {
   Swal.fire({
     title: "Yakin ingin menghapus?",
-    text: "Data ini akan dihapus dari server.",
+    text: "Pertanyaan ini akan dihapus permanen.",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#8D6E63",
@@ -244,22 +117,26 @@ async function hapusPertanyaanServer(id) {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        await fetch(`${apiBase}/${id}`, { method: "DELETE", credentials: "include" });
-        Swal.fire({ icon: "success", title: "Terhapus!", text: "Data berhasil dihapus dari server." });
-        renderPertanyaanAdmin();
-        renderPengaduanAdmin();
+        const res = await fetch(`${apiBase}/${id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Gagal menghapus pertanyaan");
+
+        Swal.fire({
+          icon: "success",
+          title: "Terhapus!",
+          text: "Pertanyaan berhasil dihapus.",
+          confirmButtonColor: "#6D4C41",
+        });
+
+        renderPertanyaanJaksa();
       } catch (err) {
         console.error("❌ Error hapus:", err);
-        Swal.fire("Error", "Gagal menghapus data dari server!", "error");
+        Swal.fire("Error", "Tidak dapat menghapus pertanyaan!", "error");
       }
     }
   });
 }
 
-// =======================
-// 🔹 INIT PAGE
-// =======================
-document.addEventListener("DOMContentLoaded", () => {
-  renderPertanyaanAdmin();
-  renderPengaduanAdmin();
-});
+document.addEventListener("DOMContentLoaded", renderPertanyaanJaksa);

@@ -1,233 +1,265 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EducLex - Tanya Jaksa Admin</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EducLex - Tanya Jaksa Admin</title>
 
-  <!-- Font & Style -->
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css">
+    <!-- Font & Style -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin.css" />
 
-  <!-- SweetAlert -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- FontAwesome -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</head>
-<body>
-  <!-- Header -->
-  <header class="admin-header">
-    <div class="logo">EducLex</div>
-    <div class="user-info">
-      <i class="fas fa-user-circle"></i> 
-      <span id="adminName">Admin Jaksa</span>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
+    <!-- FontAwesome -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="logo">EducLex</div>
+      <div class="user-info">
+        <i class="fas fa-user-circle"></i>
+        <span id="adminName">Admin Jaksa</span>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <!-- Layout -->
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <ul>
+          <li>
+            <a href="dbjaksa.html"
+              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="tanyajaksa.html" class="active"
+              ><i class="fas fa-comments"></i> Tanya Jaksa</a
+            >
+          </li>
+          <li>
+            <a href="tulisanjaksa.html"
+              ><i class="fas fa-pen"></i> Tulisan Jaksa</a
+            >
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <h1>Kelola Pertanyaan & Pengaduan Masyarakat</h1>
+
+        <!-- Tabs -->
+        <div class="tabs-container" style="margin-bottom: 1.5rem">
+          <button class="tab-btn active" data-tab="pertanyaan">
+            Pertanyaan
+          </button>
+          <button class="tab-btn" data-tab="pengaduan">
+            Pengaduan Masyarakat
+          </button>
+        </div>
+
+        <!-- === TAB PERTANYAAN === -->
+        <section id="tab-pertanyaan" class="data-section">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 1rem;
+            "
+          >
+            <h2>Daftar Pertanyaan</h2>
+            <div>
+              <select id="filterStatus">
+                <option value="semua">Semua</option>
+                <option value="belum">Belum Dijawab</option>
+                <option value="proses">Sedang Diproses</option>
+                <option value="selesai">Sudah Dijawab</option>
+              </select>
+              <input
+                type="text"
+                id="searchPertanyaan"
+                placeholder="Cari pertanyaan..."
+              />
+            </div>
+          </div>
+
+          <table class="data-table" style="margin-top: 1.5rem">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Pertanyaan</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tabelPertanyaanBody">
+              <tr>
+                <td>Ayu Rania</td>
+                <td>Apakah mencuri sandal bisa dipenjara?</td>
+                <td>
+                  <span style="color: #b71c1c; font-weight: 600"
+                    >Belum Dijawab</span
+                  >
+                </td>
+                <td>31 Oktober 2025</td>
+                <td class="aksi">
+                  <button class="btn-jawab">
+                    <i class="fas fa-reply"></i> Jawab
+                  </button>
+                  <button class="btn-edit">
+                    <i class="fas fa-pen"></i> Edit
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- === TAB PENGADUAN === -->
+        <section id="tab-pengaduan" class="data-section" style="display: none">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <h2>Daftar Pengaduan Masyarakat</h2>
+            <input
+              type="text"
+              id="searchPengaduan"
+              placeholder="Cari pengaduan..."
+            />
+          </div>
+
+          <table class="data-table" style="margin-top: 1.5rem">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Kategori</th>
+                <th>Isi Pengaduan</th>
+                <th>Status Penanganan</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Budi Santoso</td>
+                <td>Penipuan Online</td>
+                <td>Saya menjadi korban penipuan di marketplace...</td>
+                <td>
+                  <span style="color: #b71c1c; font-weight: 600"
+                    >Belum Ditangani</span
+                  >
+                </td>
+                <td>2 November 2025</td>
+                <td class="aksi">
+                  <button class="btn-jawab">
+                    <i class="fas fa-reply"></i> Jawab
+                  </button>
+                  <button class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Modal Form Jawaban -->
+        <div id="modalJawaban" style="display: none" class="modal-container">
+          <div class="modal-content">
+            <h2>Respon Jaksa</h2>
+            <p><strong>Jenis:</strong> <span id="jenisForm"></span></p>
+            <p><strong>Nama:</strong> <span id="namaUser"></span></p>
+            <p>
+              <strong>Pertanyaan/Pengaduan:</strong>
+              <span id="pertanyaanUser"></span>
+            </p>
+
+            <label for="jawabanJaksa"><b>Tulis Jawaban / Tanggapan:</b></label>
+            <textarea
+              id="jawabanJaksa"
+              rows="5"
+              placeholder="Ketik jawaban atau tanggapan..."
+            ></textarea>
+
+            <div style="text-align: right; margin-top: 1rem">
+              <button class="btn-simpan" id="btnKirimJawaban">
+                <i class="fas fa-paper-plane"></i> Kirim
+              </button>
+              <button class="btn-delete" id="btnTutupModal">Tutup</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Diskusi -->
+        <div id="modalDiskusi" style="display: none" class="modal-container">
+          <div class="modal-content">
+            <h2>Diskusi Lanjutan</h2>
+            <div
+              id="chatBox"
+              style="
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                height: 250px;
+                overflow-y: auto;
+                padding: 10px;
+                background: #fafafa;
+                margin-bottom: 10px;
+              "
+            >
+              <p>
+                <b>Budi Santoso:</b> Mohon tindak lanjut kasus saya, Pak Jaksa.
+              </p>
+              <p>
+                <b>Jaksa:</b> Baik, kami akan memverifikasi data Anda terlebih
+                dahulu.
+              </p>
+            </div>
+            <textarea
+              id="chatInput"
+              rows="2"
+              placeholder="Ketik pesan..."
+              style="width: 100%; padding: 8px"
+            ></textarea>
+            <div style="text-align: right; margin-top: 0.5rem">
+              <button class="btn-simpan" id="btnKirimPesan">
+                <i class="fas fa-paper-plane"></i> Kirim Pesan
+              </button>
+              <button class="btn-delete" id="btnTutupDiskusi">Tutup</button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-  </header>
 
-  <!-- Layout -->
-  <div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <ul>
-        <li><a href="dbjaksa.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li><a href="tanyajaksa.html" class="active"><i class="fas fa-comments"></i> Tanya Jaksa</a></li>
-        <li><a href="tulisanjaksa.html"><i class="fas fa-pen"></i> Tulisan Jaksa</a></li>
-      </ul>
-    </aside>
+    <footer class="admin-footer">
+      <p>© 2025 EducLex | Tanya Jaksa Admin</p>
+    </footer>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <h1>Kelola Pertanyaan & Pengaduan Masyarakat</h1>
-
-      <!-- Tabs -->
-      <div class="tabs-container" style="margin-bottom: 1.5rem;">
-        <button class="tab-btn active" onclick="tampilkanTab('pertanyaan')">Pertanyaan</button>
-        <button class="tab-btn" onclick="tampilkanTab('pengaduan')">Pengaduan Masyarakat</button>
-      </div>
-
-      <!-- === TAB PERTANYAAN === -->
-      <section id="tab-pertanyaan" class="data-section">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-          <h2>Daftar Pertanyaan</h2>
-          <div>
-            <select id="filterStatus">
-              <option value="semua">Semua</option>
-              <option value="belum">Belum Dijawab</option>
-              <option value="proses">Sedang Diproses</option>
-              <option value="selesai">Sudah Dijawab</option>
-            </select>
-            <input type="text" id="searchPertanyaan" placeholder="Cari pertanyaan...">
-          </div>
-        </div>
-
-        <table class="data-table" style="margin-top: 1.5rem;">
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Pertanyaan</th>
-              <th>Status</th>
-              <th>Tanggal</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="tabelPertanyaanBody">
-            <tr>
-              <td>Ayu Rania</td>
-              <td>Apakah mencuri sandal bisa dipenjara?</td>
-              <td><span style="color:#b71c1c; font-weight:600;">Belum Dijawab</span></td>
-              <td>31 Oktober 2025</td>
-              <td>
-                <button class="btn-edit" onclick="bukaModal('Ayu Rania','Apakah mencuri sandal bisa dipenjara?','pertanyaan')"><i class="fas fa-reply"></i> Jawab</button>
-                <button class="btn-delete" onclick="hapusPertanyaan(this)"><i class="fas fa-trash-alt"></i> Hapus</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- === TAB PENGADUAN === -->
-      <section id="tab-pengaduan" class="data-section" style="display:none;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>Daftar Pengaduan Masyarakat</h2>
-          <input type="text" id="searchPengaduan" placeholder="Cari pengaduan...">
-        </div>
-
-        <table class="data-table" style="margin-top: 1.5rem;">
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Kategori</th>
-              <th>Isi Pengaduan</th>
-              <th>Status Penanganan</th>
-              <th>Tanggal</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Budi Santoso</td>
-              <td>Penipuan Online</td>
-              <td>Saya menjadi korban penipuan di marketplace...</td>
-              <td><span style="color:#b71c1c; font-weight:600;">Belum Ditangani</span></td>
-              <td>2 November 2025</td>
-              <td>
-                <button class="btn-edit" onclick="bukaModal('Budi Santoso','Saya menjadi korban penipuan di marketplace...','pengaduan')"><i class="fas fa-reply"></i> Tanggapi</button>
-                <button class="btn-info" onclick="bukaDiskusi('Budi Santoso')"><i class="fas fa-comments"></i> Diskusi</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- Modal Form Jawaban -->
-      <div id="modalJawaban" style="display:none;" class="modal-container">
-        <div class="modal-content">
-          <h2>Respon Jaksa</h2>
-          <p><strong>Jenis:</strong> <span id="jenisForm"></span></p>
-          <p><strong>Nama:</strong> <span id="namaUser"></span></p>
-          <p><strong>Pertanyaan/Pengaduan:</strong> <span id="pertanyaanUser"></span></p>
-
-          <label for="jawabanJaksa"><b>Tulis Jawaban / Tanggapan:</b></label>
-          <textarea id="jawabanJaksa" rows="5" placeholder="Ketik jawaban atau tanggapan..."></textarea>
-
-          <div style="text-align:right; margin-top:1rem;">
-            <button class="btn-simpan" onclick="kirimJawaban()"><i class="fas fa-paper-plane"></i> Kirim</button>
-            <button class="btn-delete" onclick="tutupModal()">Tutup</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Diskusi -->
-      <div id="modalDiskusi" style="display:none;" class="modal-container">
-        <div class="modal-content">
-          <h2>Diskusi Lanjutan</h2>
-          <div id="chatBox" style="border:1px solid #ccc; border-radius:8px; height:250px; overflow-y:auto; padding:10px; background:#fafafa; margin-bottom:10px;">
-            <p><b>Budi Santoso:</b> Mohon tindak lanjut kasus saya, Pak Jaksa.</p>
-            <p><b>Jaksa:</b> Baik, kami akan memverifikasi data Anda terlebih dahulu.</p>
-          </div>
-          <textarea id="chatInput" rows="2" placeholder="Ketik pesan..." style="width:100%; padding:8px;"></textarea>
-          <div style="text-align:right; margin-top:0.5rem;">
-            <button class="btn-simpan" onclick="kirimPesan()"><i class="fas fa-paper-plane"></i> Kirim Pesan</button>
-            <button class="btn-delete" onclick="tutupDiskusi()">Tutup</button>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <footer class="admin-footer">
-    <p>© 2025 EducLex | Tanya Jaksa Admin</p>
-  </footer>
-
-  <script>
-    // TAB SWITCH
-    function tampilkanTab(tab) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.data-section').forEach(sec => sec.style.display = 'none');
-      document.getElementById('tab-' + tab).style.display = 'block';
-      event.target.classList.add('active');
-    }
-
-    // Buka Modal Jawaban
-    function bukaModal(nama, pertanyaan, jenis) {
-      document.getElementById("namaUser").textContent = nama;
-      document.getElementById("pertanyaanUser").textContent = pertanyaan;
-      document.getElementById("jenisForm").textContent = jenis === 'pengaduan' ? 'Pengaduan Masyarakat' : 'Pertanyaan Umum';
-      document.getElementById("modalJawaban").style.display = "flex";
-    }
-
-    function tutupModal() {
-      document.getElementById("modalJawaban").style.display = "none";
-    }
-
-    // Kirim Jawaban
-    function kirimJawaban() {
-      const jawaban = document.getElementById("jawabanJaksa").value.trim();
-      if (!jawaban) {
-        Swal.fire({ icon: "warning", title: "Jawaban Kosong!", text: "Silakan isi jawaban terlebih dahulu." });
-        return;
-      }
-      Swal.fire({ icon: "success", title: "Terkirim!", text: "Respon telah dikirim ke masyarakat." });
-      document.getElementById("jawabanJaksa").value = "";
-      tutupModal();
-    }
-
-    // Pengaduan Diskusi
-    function bukaDiskusi(nama) {
-      document.getElementById("modalDiskusi").style.display = "flex";
-    }
-    function tutupDiskusi() {
-      document.getElementById("modalDiskusi").style.display = "none";
-    }
-    function kirimPesan() {
-      const input = document.getElementById("chatInput");
-      const chat = document.getElementById("chatBox");
-      if (input.value.trim()) {
-        chat.innerHTML += `<p><b>Jaksa:</b> ${input.value}</p>`;
-        input.value = "";
-        chat.scrollTop = chat.scrollHeight;
-      }
-    }
-
-    function hapusPertanyaan(btn) {
-      Swal.fire({
-        title: "Yakin ingin menghapus?",
-        text: "Pertanyaan ini akan dihapus secara permanen.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#8D6E63",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, hapus"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const row = btn.closest("tr");
-          row.remove();
-          Swal.fire({ icon: "success", title: "Terhapus!", text: "Data berhasil dihapus." });
-        }
-      });
-    }
-  </script>
-</body>
+    <!-- External JS -->
+    <script src="tanyajaksa.js"></script>
+  </body>
 </html>

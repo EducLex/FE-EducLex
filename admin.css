@@ -574,3 +574,109 @@ body {
   background: #5D4037;
   transform: scale(1.05);
 }
+
+/* === Tombol Aksi di Tabel (Jawab, Edit, Hapus) === */
+.data-table .aksi button {
+  background-color: #6d4c41; /* coklat sedang */
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  margin-right: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.data-table .aksi button:hover {
+  background-color: #5d4037; /* sedikit lebih gelap */
+  transform: translateY(-1px);
+}
+
+/* Warna berbeda per fungsi (opsional) */
+.btn-jawab {
+  background-color: #8d6e63; /* coklat muda */
+}
+
+.btn-edit {
+  background-color: #6d4c41; /* coklat sedang */
+}
+
+.btn-delete {
+  background-color: #4e342e; /* coklat tua */
+}
+
+.btn-jawab:hover {
+  background-color: #795548;
+}
+
+.btn-edit:hover {
+  background-color: #5d4037;
+}
+
+.btn-delete:hover {
+  background-color: #3e2723;
+}
+
+/* Pastikan ikon di tombol sejajar */
+.data-table .aksi i {
+  font-size: 13px;
+}
+
+/* === Tombol Aksi di Tabel (Jawab, Edit, Hapus) === */
+.data-table td button {
+  background-color: #6d4c41; /* coklat sedang */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  margin-right: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600; /* huruf bold */
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.data-table td button:hover {
+  background-color: #5d4037; /* sedikit lebih gelap */
+  transform: translateY(-1px);
+}
+
+/* Warna khusus tiap fungsi (gradasi coklat elegan) */
+.btn-jawab {
+  background-color: #8d6e63; /* coklat muda */
+}
+
+.btn-edit {
+  background-color: #6d4c41; /* coklat sedang */
+}
+
+.btn-delete {
+  background-color: #4e342e; /* coklat tua */
+}
+
+.btn-jawab:hover {
+  background-color: #795548;
+}
+
+.btn-edit:hover {
+  background-color: #5d4037;
+}
+
+.btn-delete:hover {
+  background-color: #3e2723;
+}
+
+/* Ikon di tombol sejajar */
+.data-table td button i {
+  font-size: 13px;
+}
