@@ -95,17 +95,17 @@
     <p>© 2025 EducLex | Artikel Admin</p>
   </footer>
 
-  <script>
-    document.getElementById("formArtikel").addEventListener("submit", function (e) {
-      e.preventDefault();
-      Swal.fire({
-        icon: "success",
-        title: "Artikel Berhasil Disimpan!",
-        text: "Artikel telah ditambahkan ke daftar.",
-        confirmButtonColor: "#6D4C41"
-      });
-      this.reset();
+<script>
+  document.getElementById("formArtikel").addEventListener("submit", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      icon: "success",
+      title: "Artikel Berhasil Disimpan!",
+      text: "Artikel telah ditambahkan ke daftar.",
+      confirmButtonColor: "#6D4C41"
     });
-  </script>
+    this.reset();
+  });
+</script>
 </body>
 </html>

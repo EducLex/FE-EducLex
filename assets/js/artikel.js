@@ -1,6 +1,6 @@
 // artikel.js (untuk halaman user)
 
-// 🔹 Data fallback jika fetch gagal
+// 🔹 Data fallback jika fetch gagal (dengan field yang sudah disesuaikan untuk konsistensi)
 const artikelData = {
   1: {
     id: 1,
@@ -41,12 +41,9 @@ async function loadArtikel() {
     const data = await response.json();
     console.log("📥 Data artikel dari backend:", data);
 
+    // Asumsikan data adalah array langsung dari backend
     if (Array.isArray(data)) {
       renderArtikel(data);
-    } else if (Array.isArray(data.articles)) {
-      renderArtikel(data.articles);
-    } else if (Array.isArray(data.data)) {
-      renderArtikel(data.data);
     } else {
       console.warn("⚠️ Format data tidak dikenali, menggunakan fallback.");
       renderArtikel(Object.values(artikelData));
@@ -57,14 +54,14 @@ async function loadArtikel() {
   }
 }
 
-// ======================================================
 // 🔹 Fungsi GET detail artikel by ID
-// ======================================================
 async function getArtikelById(id) {
   try {
     const response = await fetch(`${apiBase}/articles/${id}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
+
+    const result = await response.json();
+    return result; // Asumsikan langsung objek artikel dari backend
   } catch (error) {
     console.error(`❌ Gagal mengambil artikel ID ${id}:`, error);
     return artikelData[id]; // fallback
@@ -72,7 +69,7 @@ async function getArtikelById(id) {
 }
 
 // ======================================================
-// 🔹 Fungsi POST artikel baru
+// 🔹 Fungsi POST artikel baru (untuk keperluan admin, jika diperlukan di halaman user)
 // ======================================================
 async function createArtikel(newData) {
   try {
@@ -135,18 +132,25 @@ function renderArtikel(list) {
     return;
   }
 
-  list.forEach((item, index) => {
+  list.forEach((item) => {
     const card = document.createElement("article");
     card.classList.add("card");
 
+    // Map field backend ke field yang diharapkan (judul -> title, isi -> content, dll.)
+    const title = item.judul || item.title || "Tanpa Judul";
+    const content = item.isi || item.content || "Tidak ada konten";
+    const image = item.gambar || item.image || null;
+    const file = item.dokumen || item.file || null;
+    const id = item._id || item.id; // Gunakan _id dari backend sebagai id
+
     card.innerHTML = `
-      ${item.image ? `<img src="${item.image}" alt="${item.title}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image';">` : ""}
+      ${image ? `<img src="${image}" alt="${title}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image';">` : ""}
       <div class="card-body">
-        <h2>${item.title || "Tanpa Judul"}</h2>
-        <p>${item.content?.substring(0, 150) || "Tidak ada konten"}...</p>
+        <h2>${title}</h2>
+        <p>${content.substring(0, 150)}...</p>
         <div class="card-buttons">
-          <a href="#" class="read-more" data-id="${item.id || index}">Baca Selengkapnya</a>
-          <button class="btn-delete" data-id="${item.id || index}">🗑️</button>
+          <a href="#" class="read-more" data-id="${id}">Baca Selengkapnya</a>
+          <button class="btn-delete" data-id="${id}">🗑️</button>
         </div>
       </div>
     `;
@@ -162,18 +166,24 @@ function renderArtikel(list) {
       const data = await getArtikelById(id);
       if (!data) return;
 
-      modalTitle.textContent = data.title;
-      modalContent.innerHTML = data.content?.replace(/\n/g, "<br>") || "Konten tidak tersedia";
+      // Map field untuk modal (judul -> title, isi -> content, dll.)
+      const title = data.judul || data.title;
+      const content = data.isi || data.content;
+      const image = data.gambar || data.image;
+      const file = data.dokumen || data.file;
 
-      if (data.image) {
-        modalImage.innerHTML = `<img src="${data.image}" alt="${data.title}" style="max-width:100%; margin:15px 0; border-radius:8px;">`;
+      modalTitle.textContent = title;
+      modalContent.innerHTML = content?.replace(/\n/g, "<br>") || "Konten tidak tersedia";
+
+      if (image) {
+        modalImage.innerHTML = `<img src="${image}" alt="${title}" style="max-width:100%; margin:15px 0; border-radius:8px;">`;
       } else {
         modalImage.innerHTML = "";
       }
 
-      if (data.file) {
-        const fileName = data.file.split("/").pop();
-        modalFile.innerHTML = `<a href="${data.file}" download class="btn-download">⬇️ Unduh ${fileName}</a>`;
+      if (file) {
+        const fileName = file.split("/").pop() || "file";
+        modalFile.innerHTML = `<a href="${file}" download class="btn-download">⬇️ Unduh ${fileName}</a>`;
       } else {
         modalFile.innerHTML = "";
       }

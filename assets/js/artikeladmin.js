@@ -1,127 +1,222 @@
-// artikel.js
+const API = "http://localhost:8080";
 
-// Data artikel bawaan (fallback jika fetch gagal)
-const artikelData = {
-  1: {
-    title: "Kenapa Hukum Itu Penting?",
-    content: "Hukum berfungsi menjaga keteraturan sosial, melindungi hak setiap orang, serta memberikan rasa aman.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Law_book.jpg",
-    file: "assets/files/hukum-penting.pdf"
-  },
-  2: {
-    title: "Hak Remaja dalam Hukum",
-    content: "Remaja memiliki hak hukum yang wajib dilindungi, antara lain hak atas pendidikan dan perlindungan dari kekerasan.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Child_rights.jpg",
-    file: "assets/files/hak-remaja.pdf"
-  }
-};
-
-// Elemen DOM untuk modal
-const modal = document.getElementById("artikelModal");
-const modalTitle = document.getElementById("modalTitle");
-const modalContent = document.getElementById("modalContent");
-const modalImage = document.getElementById("modalImage");
-const modalFile = document.getElementById("modalFile");
-const closeBtn = document.querySelector(".close");
-
-// 🔹 Ambil elemen artikel grid
-const artikelGrid = document.querySelector(".artikel-grid");
-const apiBase = "http://localhost:8080";
-
-// 🔹 Load artikel dari backend
+// ======================
+// LOAD SEMUA ARTIKEL
+// ======================
 async function loadArtikel() {
   try {
-    const response = await fetch(`${apiBase}/articles`);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    let data = await response.json();
-    console.log("📥 Data artikel dari backend:", data);
+    const res = await fetch(`${API}/articles`);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
+    const data = await res.json();
+    console.log("📥 Data artikel dari backend (admin):", data); // Logging untuk debug
+
+    const tbody = document.getElementById("tabelArtikelBody");
+    tbody.innerHTML = "";
+
+    // Handling format response backend: cek nested atau array langsung
+    let articles = [];
     if (Array.isArray(data)) {
-      renderArtikel(data);
-    } else if (Array.isArray(data.articles)) {
-      renderArtikel(data.articles);
-    } else if (Array.isArray(data.data)) {
-      renderArtikel(data.data);
+      articles = data;
+    } else if (data.data && Array.isArray(data.data)) {
+      articles = data.data;
+    } else if (data.articles && Array.isArray(data.articles)) {
+      articles = data.articles;
     } else {
-      console.error("❌ Format response tidak sesuai:", data);
-      renderArtikel(Object.values(artikelData));
+      console.warn("⚠️ Format response tidak dikenali, menggunakan array kosong.");
+      articles = [];
     }
-  } catch (error) {
-    console.error("❌ Error fetch artikel:", error);
-    renderArtikel(Object.values(artikelData));
+
+    if (articles.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada artikel</td></tr>`;
+      return;
+    }
+
+    articles.forEach(a => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${a.judul || "Tanpa Judul"}</td>
+        <td>${a.created ? new Date(a.created).toLocaleDateString() : "Tidak diketahui"}</td>
+        <td>${a.penulis || "Tidak diketahui"}</td>
+        <td>
+          <button class="btn-detail" data-id="${a._id || a.id}">Detail</button>
+          <button class="btn-edit" data-id="${a._id || a.id}">Edit</button>
+          <button class="btn-delete" data-id="${a._id || a.id}">Hapus</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    // Event listener untuk detail
+    document.querySelectorAll(".btn-detail").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        openDetail(id);
+      });
+    });
+
+    // Event listener untuk edit (opsional)
+    document.querySelectorAll(".btn-edit").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        console.log("Edit artikel ID:", id); // Placeholder untuk implementasi edit
+      });
+    });
+
+    // Event listener untuk hapus
+    document.querySelectorAll(".btn-delete").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        deleteArtikel(id);
+      });
+    });
+
+  } catch (err) {
+    console.error("❌ Gagal load artikel:", err);
+    const tbody = document.getElementById("tabelArtikelBody");
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error: ${err.message}</td></tr>`;
   }
 }
 
-// 🔹 Render artikel ke grid (foto + judul + isi singkat)
-function renderArtikel(list) {
-  artikelGrid.innerHTML = "";
-  list.forEach((item, index) => {
-    const card = document.createElement("article");
-    card.classList.add("card");
-    card.innerHTML = `
-      ${item.image ? `<img src="${item.image}" alt="${item.title}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image';">` : ""}
-      <div class="card-body">
-        <h2>${item.title || "Tanpa Judul"}</h2>
-        <p>${item.content?.substring(0, 150) || "Tidak ada konten"}...</p>
-        <a href="#" class="read-more" data-id="${item.id || index}">Baca Selengkapnya</a>
-      </div>
-    `;
-    artikelGrid.appendChild(card);
-  });
+// ======================
+// DETAIL ARTIKEL
+// ======================
+async function openDetail(id) {
+  try {
+    const res = await fetch(`${API}/articles/${id}`);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
-  // Event listener modal
-  document.querySelectorAll(".read-more").forEach(btn => {
-    btn.addEventListener("click", function(e) {
-      e.preventDefault();
-      const id = this.getAttribute("data-id");
-      const data = list.find(a => a.id == id) || artikelData[id];
-      if (!data) return;
+    const data = await res.json();
+    console.log("📥 Detail artikel:", data);
 
-      modalTitle.textContent = data.title;
-      modalContent.innerHTML = data.content?.replace(/\n/g, "<br>") || "Konten tidak tersedia";
-
-      if (data.image) {
-        modalImage.innerHTML = `<img src="${data.image}" alt="${data.title}" style="max-width:100%; margin:15px 0; border-radius:8px;">`;
-      } else {
-        modalImage.innerHTML = "";
-      }
-
-      if (data.file) {
-        const fileName = data.file.split("/").pop();
-        modalFile.innerHTML = `<a href="${data.file}" download class="btn-download">⬇️ Unduh ${fileName}</a>`;
-      } else {
-        modalFile.innerHTML = "";
-      }
-
-      modal.style.display = "block";
+    Swal.fire({
+      title: data.judul || "Tanpa Judul",
+      html: `
+        <p><b>Kategori:</b> ${data.kategori || "Tidak diketahui"}</p>
+        <p><b>Penulis:</b> ${data.penulis || "Tidak diketahui"}</p>
+        ${data.gambar ? `<img src="${data.gambar}" alt="Gambar" style="max-width:100%; margin:10px 0;">` : ""}
+        <hr>
+        <p style="text-align:left">${data.isi || "Tidak ada isi"}</p>
+        ${data.dokumen ? `<a href="${data.dokumen}" download>⬇️ Unduh Dokumen</a>` : ""}
+      `,
+      width: 600,
     });
-  });
+
+  } catch (err) {
+    console.error("❌ Gagal fetch detail:", err);
+    Swal.fire("Error", `Gagal mengambil detail artikel: ${err.message}`, "error");
+  }
 }
 
-// 🔹 Tutup modal
-closeBtn.addEventListener("click", () => modal.style.display = "none");
-window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
-
-// 🔹 Tambah artikel baru
-const formArtikel = document.getElementById("formArtikel");
-formArtikel.addEventListener("submit", async function(e) {
+// ======================
+// TAMBAH ARTIKEL
+// ======================
+document.getElementById("formArtikel").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const formData = new FormData(this);
+  const gambarInput = document.getElementById("gambar");
+  const dokumenInput = document.getElementById("dokumen");
+
+  // Handle gambar (convert to base64)
+  let gambar = null;
+  if (gambarInput.files[0]) {
+    try {
+      gambar = await toBase64(gambarInput.files[0]);
+    } catch (err) {
+      console.error("❌ Gagal convert gambar:", err);
+      Swal.fire("Error", "Gagal memproses gambar", "error");
+      return;
+    }
+  }
+
+  // Handle dokumen (convert to base64)
+  let dokumen = null;
+  if (dokumenInput.files[0]) {
+    try {
+      dokumen = await toBase64(dokumenInput.files[0]);
+    } catch (err) {
+      console.error("❌ Gagal convert dokumen:", err);
+      Swal.fire("Error", "Gagal memproses dokumen", "error");
+      return;
+    }
+  }
+
+  const payload = {
+    judul: document.getElementById("judul").value.trim(),
+    isi: document.getElementById("isi").value.trim(),
+    penulis: "Jaksa A",
+    kategori: "Edukasi Hukum",
+    gambar: gambar,
+    dokumen: dokumen
+  };
+
+  // Validasi sederhana
+  if (!payload.judul || !payload.isi) {
+    Swal.fire("Error", "Judul dan isi artikel wajib diisi!", "error");
+    return;
+  }
 
   try {
-    const response = await fetch(`${apiBase}/articles`, { method: "POST", body: formData });
-    if (!response.ok) throw new Error(`Gagal tambah artikel: ${response.status}`);
+    const res = await fetch(`${API}/articles`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-    await response.json();
-    alert("✅ Artikel berhasil ditambahkan!");
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(`HTTP ${res.status}: ${errorData.message || "Gagal tambah artikel"}`);
+    }
+
+    const newArtikel = await res.json();
+    console.log("✅ Artikel berhasil ditambahkan:", newArtikel);
+
+    Swal.fire("Berhasil!", "Artikel berhasil ditambahkan dan tersimpan ke database!", "success");
+    this.reset();
     loadArtikel();
-    formArtikel.reset();
+
   } catch (err) {
-    console.error("❌ Error tambah artikel:", err);
-    alert("Gagal menambahkan artikel.");
+    console.error("❌ Gagal menambahkan artikel:", err);
+    Swal.fire("Error", `Gagal menambahkan artikel: ${err.message}`, "error");
   }
 });
 
-// 🔹 Jalankan saat halaman dimuat
+// ======================
+// HAPUS ARTIKEL
+// ======================
+async function deleteArtikel(id) {
+  if (!confirm("Yakin ingin menghapus artikel ini?")) return;
+
+  try {
+    const res = await fetch(`${API}/articles/${id}`, {
+      method: "DELETE"
+    });
+
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+    console.log(`🗑️ Artikel ID ${id} berhasil dihapus`);
+    Swal.fire("Berhasil!", "Artikel berhasil dihapus!", "success");
+    loadArtikel();
+
+  } catch (err) {
+    console.error(`❌ Gagal menghapus artikel ID ${id}:`, err);
+    Swal.fire("Error", `Gagal menghapus artikel: ${err.message}`, "error");
+  }
+}
+
+// Fungsi helper untuk convert file ke base64
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+// ======================
+// Jalankan saat halaman load
+// ======================
 document.addEventListener("DOMContentLoaded", loadArtikel);
