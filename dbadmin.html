@@ -79,24 +79,7 @@
             </tr>
           </thead>
           <tbody id="userTableBody">
-            <tr>
-              <td>Rania</td>
-              <td>rania@example.com</td>
-              <td>User</td>
-              <td class="aksi-buttons">
-                <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
-                <button class="btn-delete"><i class="fas fa-trash-alt"></i> Hapus</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Budi</td>
-              <td>budi@example.com</td>
-              <td>Admin</td>
-              <td class="aksi-buttons">
-                <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
-                <button class="btn-delete"><i class="fas fa-trash-alt"></i> Hapus</button>
-              </td>
-            </tr>
+            <!-- Data akan diisi oleh JavaScript -->
           </tbody>
         </table>
       </section>
@@ -108,8 +91,73 @@
     <p>© 2025 EducLex | Dashboard Admin</p>
   </footer>
 
-  <!-- Script -->
+  <!-- Script Utama -->
   <script src="assets/js/dbadmin.js" type="text/javascript"></script>
+
+  <!-- 🔹 LOGIKA LOGOUT LANGSUNG DI HALAMAN INI 🔹 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (!logoutBtn) return;
+
+      logoutBtn.addEventListener("click", async () => {
+        const result = await Swal.fire({
+          title: "Logout?",
+          text: "Apakah Anda yakin ingin keluar dari akun admin?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Logout",
+          cancelButtonText: "Batal",
+          reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+          try {
+            // Kirim request ke backend untuk logout
+            const res = await fetch("http://localhost:8080/auth/logout", {
+              method: "POST",
+              credentials: "include"
+            });
+
+            // Hapus data lokal
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+
+            if (res.ok) {
+              await Swal.fire({
+                icon: "success",
+                title: "Berhasil Logout!",
+                text: "Sesi admin telah diakhiri.",
+                timer: 1500,
+                showConfirmButton: false
+              });
+            } else {
+              // Tetap logout lokal meski backend gagal
+              console.warn("Gagal komunikasi dengan server, tapi sesi lokal dihapus.");
+            }
+
+            // Redirect ke login
+            window.location.href = "login.html";
+
+          } catch (error) {
+            console.error("Error saat logout:", error);
+            // Tetap logout lokal & redirect
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+            await Swal.fire({
+              icon: "warning",
+              title: "Logout Sebagian",
+              text: "Koneksi gagal, tapi sesi lokal dihapus.",
+              confirmButtonText: "Oke"
+            });
+            window.location.href = "login.html";
+          }
+        }
+      });
+    });
+  </script>
 
   <!-- Inline style kecil untuk memastikan ikon aksi terlihat rapi -->
   <style>
@@ -137,7 +185,7 @@
     .aksi-buttons .btn-edit:hover { background: rgba(109,76,65,0.06); }
     .aksi-buttons .btn-delete:hover { background: rgba(198,40,40,0.06); }
 
-    /* Pastikan stats cards responsif tetap rapi */
+    /* Responsif */
     @media (max-width: 992px) {
       .stats-cards {
         grid-template-columns: repeat(2, 1fr);

@@ -2513,3 +2513,224 @@ footer a:hover img {
     font-size: 0.85rem;
   }
 }
+
+/* ==================== AUTH FORGOT & RESET PASSWORD ==================== */
+
+/* Container tambahan jika ingin spasi lebih baik */
+.auth-container {
+  position: relative;
+}
+
+/* Form Links - Lupa Password */
+.form-links {
+  text-align: center;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+.form-links a {
+  font-size: 0.9rem; /* Diperkecil sesuai permintaan */
+  color: #8d6e63;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.form-links a:hover {
+  color: #5d4037;
+  text-decoration: underline;
+}
+
+/* Semua form container tambahan */
+#forgot-password-container,
+#reset-password-container {
+  padding: 1rem 0;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Heading tambahan */
+#forgot-password-container h2,
+#reset-password-container h2 {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  color: #4e342e;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+/* Input group untuk forgot & reset */
+#forgot-password-container .input-group,
+#reset-password-container .input-group {
+  position: relative;
+  margin-bottom: 1.2rem;
+}
+
+#forgot-password-container input[type="email"],
+#reset-password-container input[type="password"] {
+  width: 100%;
+  padding: 0.9rem 2.5rem 0.9rem 1rem;
+  border: 1px solid #d7ccc8;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+#forgot-password-container input[type="email"]:focus,
+#reset-password-container input[type="password"]:focus {
+  border-color: #8d6e63;
+  box-shadow: 0 0 8px rgba(141, 110, 99, 0.3);
+  transform: scale(1.01);
+}
+
+/* Ikon pada input email/password */
+#forgot-password-container .icon,
+#reset-password-container .icon {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #8d6e63;
+}
+
+/* Tombol pada form forgot/reset */
+#forgot-password-container button,
+#reset-password-container button {
+  background: #8d6e63;
+  color: #fff;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+#forgot-password-container button:hover,
+#reset-password-container button:hover {
+  background: #5d4037;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(93, 64, 55, 0.2);
+}
+
+/* Tombol Kembali */
+#back-to-login,
+#back-to-forgot {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background: #bcaaa4;
+  color: #3e2723;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+#back-to-login:hover,
+#back-to-forgot:hover {
+  background: #a1887f;
+  transform: translateY(-1px);
+}
+
+/* Alert saat proses berhasil/gagal */
+.alert {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, height 0.3s ease;
+}
+
+.alert.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-left: 4px solid #4caf50;
+  opacity: 1;
+  height: auto;
+}
+
+.alert.error {
+  background: #ffebee;
+  color: #c62828;
+  border-left: 4px solid #f44336;
+  opacity: 1;
+  height: auto;
+}
+
+.alert.warning {
+  background: #fff8e1;
+  color: #ff8f00;
+  border-left: 4px solid #ffc107;
+  opacity: 1;
+  height: auto;
+}
+
+.alert.info {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-left: 4px solid #2196f3;
+  opacity: 1;
+  height: auto;
+}
+
+/* Efek muncul alert */
+#alert-container .alert {
+  opacity: 1;
+  height: auto;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsif: Lebih kecil di mobile */
+@media (max-width: 480px) {
+  #forgot-password-container h2,
+  #reset-password-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-links a {
+    font-size: 0.85rem;
+  }
+
+  #forgot-password-container input[type="email"],
+  #reset-password-container input[type="password"] {
+    font-size: 0.95rem;
+    padding: 0.8rem 2.2rem 0.8rem 1rem;
+  }
+
+  #forgot-password-container button,
+  #reset-password-container button,
+  #back-to-login,
+  #back-to-forgot {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+

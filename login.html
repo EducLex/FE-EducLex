@@ -30,31 +30,70 @@
 
 <main>
   <div class="auth-container">
-    <h1>Login</h1>
-    <form id="loginForm">
-      <div class="input-group">
-        <input type="text" id="loginUsername" placeholder="Username" required>
-        <span class="icon">👤</span>
-      </div>
-      <div class="input-group">
-        <input type="password" id="loginPassword" placeholder="Password" required>
-        <span class="icon">🔒</span>
-      </div>
-      <button type="submit">Masuk</button>
-    </form>
+    <!-- Form Login -->
+    <div id="login-form-container">
+      <h1>Login</h1>
+      <form id="loginForm">
+        <div class="input-group">
+          <input type="text" id="loginUsername" placeholder="Username" required>
+          <span class="icon">👤</span>
+        </div>
+        <div class="input-group">
+          <input type="password" id="loginPassword" placeholder="Password" required>
+          <span class="icon">🔒</span>
+        </div>
+        <button type="submit">Masuk</button>
+      </form>
 
-    <!-- Divider -->
-    <div class="divider">
-      <span>atau</span>
+      <!-- Link Lupa Password -->
+      <div class="form-links">
+        <a href="#" id="forgot-password-link">Lupa Password?</a>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>atau</span>
+      </div>
+
+      <!-- Tombol Google -->
+      <button type="button" class="google-btn">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+        Login dengan Google
+      </button>
+
+      <p>Belum punya akun? <a href="regis.html" id="toRegister">Daftar</a></p>
     </div>
 
-    <!-- Tombol Google -->
-    <button type="button" class="google-btn">
-      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
-      Login dengan Google
-    </button>
+    <!-- Form Lupa Password -->
+    <div id="forgot-password-container" style="display:none;">
+      <h2>Lupa Password</h2>
+      <form id="forgotPasswordForm">
+        <div class="input-group">
+          <input type="email" id="forgotEmail" placeholder="Email Anda" required>
+          <span class="icon">✉️</span>
+        </div>
+        <button type="submit">Kirim Tautan Reset</button>
+      </form>
+      <button id="back-to-login">Kembali ke Login</button>
+    </div>
 
-    <p>Belum punya akun? <a href="regis.html" id="toRegister">Daftar</a></p>
+    <!-- Form Reset Password -->
+    <div id="reset-password-container" style="display:none;">
+      <h2>Reset Password</h2>
+      <form id="resetPasswordForm">
+        <input type="hidden" id="resetToken">
+        <div class="input-group">
+          <input type="password" id="newPassword" placeholder="Password Baru" required>
+          <span class="icon">🔑</span>
+        </div>
+        <div class="input-group">
+          <input type="password" id="confirmNewPassword" placeholder="Konfirmasi Password Baru" required>
+          <span class="icon">🔒</span>
+        </div>
+        <button type="submit">Ubah Password</button>
+      </form>
+      <button id="back-to-forgot">Kembali</button>
+    </div>
   </div>
 </main>
 

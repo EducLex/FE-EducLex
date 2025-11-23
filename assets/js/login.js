@@ -1,9 +1,23 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const loginFormEl = document.getElementById("loginForm");
+  const forgotPasswordFormEl = document.getElementById("forgotPasswordForm");
+  const resetPasswordFormEl = document.getElementById("resetPasswordForm");
   const alertContainer = document.getElementById("alert-container");
   const apiBase = "http://localhost:8080";
-  const loginLink = document.getElementById("loginLink");
-  const logoutBtn = document.getElementById("logoutBtn");
+
+  // 🔹 DOM Elements untuk navigasi form
+  const loginContainer = document.getElementById("login-form-container");
+  const forgotContainer = document.getElementById("forgot-password-container");
+  const resetContainer = document.getElementById("reset-password-container");
+
+  // 🔹 Tombol navigasi
+  const forgotPasswordLink = document.getElementById("forgot-password-link");
+  const backToLoginBtn = document.getElementById("back-to-login");
+  const backToForgotBtn = document.getElementById("back-to-forgot");
+
+  // 🔹 Cek apakah ada tombol login di navbar (untuk disembunyikan setelah login)
+  const loginLinkNavbar = document.querySelector('.btn-login');
+  const userIcon = document.querySelector('.user-icon');
 
   // 🔹 Fungsi alert
   function showAlert(message, type = "info") {
@@ -21,13 +35,79 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => (alertContainer.innerHTML = ""), 4000);
   }
 
+  // 🔹 Fungsi untuk menyembunyikan tombol login & tampilkan user icon
+  function hideLoginButton() {
+    if (loginLinkNavbar) loginLinkNavbar.style.display = "none";
+    if (userIcon) userIcon.style.display = "inline-block";
+  }
+
+  // =============================== 🔹 NAVIGASI FORM ===============================
+  if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      loginContainer.style.display = "none";
+      forgotContainer.style.display = "block";
+    });
+  }
+
+  if (backToLoginBtn) {
+    backToLoginBtn.addEventListener("click", () => {
+      loginContainer.style.display = "block";
+      forgotContainer.style.display = "none";
+      resetContainer.style.display = "none";
+    });
+  }
+
+  if (backToForgotBtn) {
+    backToForgotBtn.addEventListener("click", () => {
+      forgotContainer.style.display = "block";
+      resetContainer.style.display = "none";
+    });
+  }
+
+  // =============================== 🔹 CEK STATUS LOGIN (SETIAP HALAMAN) ===============================
+  async function checkLoginStatus() {
+    try {
+      const res = await fetch(`${apiBase}/auth/status`, {
+        credentials: "include"
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.loggedIn && data.user) {
+          // Simpan ke localStorage
+          localStorage.setItem("token", data.token || "google-session");
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          // Sembunyikan tombol login
+          hideLoginButton();
+
+          // Jika di login.html, redirect ke halaman utama
+          const currentPage = window.location.pathname.split("/").pop();
+          if (currentPage === "login.html") {
+            const userRole = data.user.role || "user";
+            if (userRole === "admin") {
+              window.location.href = "dbadmin.html";
+            } else {
+              window.location.href = "index.html";
+            }
+          }
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn("Tidak bisa cek status login:", err);
+    }
+    return false;
+  }
+
   // =============================== 🔹 LOGIN BIASA ===============================
   if (loginFormEl) {
     loginFormEl.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const username = document.getElementById("loginUsername").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
+      const username = document.getElementById("loginUsername")?.value.trim();
+      const password = document.getElementById("loginPassword")?.value.trim();
 
       if (!username || !password) {
         showAlert("Username dan password wajib diisi!", "warning");
@@ -35,8 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        console.log("🔄 Mengirim login ke:", `${apiBase}/auth/login`);
-
         const response = await fetch(`${apiBase}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -57,22 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // ✅ Simpan token & user
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
-
-        // 🔹 Simpan data user dan role (fallback ke 'user' jika tidak ada)
+        // Simpan data
+        if (data.token) localStorage.setItem("token", data.token);
         const userRole = data.role || (username.toLowerCase().includes("admin") ? "admin" : "user");
         localStorage.setItem("user", JSON.stringify({ username, role: userRole }));
 
-        // 🔹 Update UI login/logout di navbar
-        if (loginLink && logoutBtn) {
-          loginLink.style.display = "none";
-          logoutBtn.style.display = "block";
-        }
+        // Sembunyikan tombol login
+        hideLoginButton();
 
-        // ✅ Tentukan halaman tujuan berdasarkan role
         const redirectToHome = () => {
           if (userRole === "admin") {
             window.location.href = "dbadmin.html";
@@ -81,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         };
 
-        // 🔹 Alert sukses
         if (typeof Swal !== "undefined") {
           Swal.fire({
             icon: "success",
@@ -98,10 +167,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
       } catch (error) {
         console.error("❌ Error fetch:", error);
-        showAlert(
-          "Tidak bisa terhubung ke server! Pastikan backend berjalan di http://localhost:8080",
-          "error"
-        );
+        showAlert("Tidak bisa terhubung ke server! Pastikan backend berjalan di http://localhost:8080", "error");
+      }
+    });
+  }
+
+  // =============================== 🔹 LUPA PASSWORD ===============================
+  if (forgotPasswordFormEl) {
+    forgotPasswordFormEl.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const email = document.getElementById("forgotEmail")?.value.trim();
+      if (!email) {
+        showAlert("Email wajib diisi!", "warning");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${apiBase}/jaksa/auth/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showAlert("Tautan reset password telah dikirim ke email Anda.", "success");
+          loginContainer.style.display = "none";
+          forgotContainer.style.display = "none";
+          resetContainer.style.display = "block";
+        } else {
+          showAlert(data.message || "Gagal mengirim email reset.", "error");
+        }
+      } catch (error) {
+        console.error("❌ Error forgot password:", error);
+        showAlert("Tidak bisa terhubung ke server.", "error");
+      }
+    });
+  }
+
+  // =============================== 🔹 RESET PASSWORD ===============================
+  if (resetPasswordFormEl) {
+    resetPasswordFormEl.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const token = document.getElementById("resetToken")?.value.trim();
+      const newPassword = document.getElementById("newPassword")?.value.trim();
+      const confirmNewPassword = document.getElementById("confirmNewPassword")?.value.trim();
+
+      if (!token || !newPassword || !confirmNewPassword) {
+        showAlert("Semua field wajib diisi!", "warning");
+        return;
+      }
+      if (newPassword !== confirmNewPassword) {
+        showAlert("Password tidak cocok!", "error");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${apiBase}/jaksa/auth/reset-password-jaksa`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, newPassword })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          showAlert("Password berhasil diubah!", "success");
+          setTimeout(() => {
+            loginContainer.style.display = "block";
+            resetContainer.style.display = "none";
+          }, 1500);
+        } else {
+          showAlert(data.message || "Gagal mengubah password.", "error");
+        }
+      } catch (error) {
+        console.error("❌ Error reset password:", error);
+        showAlert("Tidak bisa terhubung ke server.", "error");
       }
     });
   }
@@ -110,96 +250,28 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".google-btn").forEach((btn) => {
     if (!btn) return;
 
-    btn.addEventListener("click", async () => {
-      try {
-        console.log("🔹 Memulai login Google...");
-        
-        // Buka popup Google login
-        const popup = window.open(
-          `${apiBase}/auth/google/login`,
-          "_blank",
-          "width=600,height=600"
-        );
-
-        if (!popup) {
-          showAlert("❌ Gagal membuka jendela login Google. Periksa pop-up blocker!", "error");
-          return;
-        }
-
-        // Pantau popup sampai tertutup
-        const timer = setInterval(async () => {
-          if (popup.closed) {
-            clearInterval(timer);
-
-            // Setelah popup ditutup, cek apakah login Google berhasil
-            try {
-              const res = await fetch(`${apiBase}/auth/google/status`, {
-                credentials: "include",
-              });
-
-              const data = await res.json();
-
-              if (res.ok && data.token) {
-                localStorage.setItem("token", data.token);
-
-                // Tentukan role (default: user)
-                const userRole = data.user?.role || "user";
-                localStorage.setItem("user", JSON.stringify({ ...data.user, role: userRole }));
-
-                const redirectToHome = () => {
-                  if (userRole === "admin") {
-                    window.location.href = "dbadmin.html";
-                  } else {
-                    window.location.href = "index.html";
-                  }
-                };
-
-                if (typeof Swal !== "undefined") {
-                  Swal.fire({
-                    icon: "success",
-                    title: "Login Google Berhasil 🎉",
-                    text: `Selamat datang, ${data.user?.name || "Pengguna"}!`,
-                    timer: 1800,
-                    showConfirmButton: false,
-                  }).then(redirectToHome);
-                } else {
-                  showAlert("Login Google berhasil!", "success");
-                  setTimeout(redirectToHome, 1500);
-                }
-              } else {
-                showAlert("Login Google dibatalkan atau gagal.", "warning");
-              }
-            } catch (err) {
-              console.error("❌ Gagal memeriksa status Google:", err);
-              showAlert("Gagal memverifikasi login Google.", "error");
-            }
-          }
-        }, 1000);
-      } catch (err) {
-        console.error("❌ Error Google login:", err);
-        showAlert("Gagal memulai login dengan Google!", "error");
-      }
+    btn.addEventListener("click", () => {
+      // 🔹 Redirect ke endpoint Google — backend akan handle OAuth flow
+      window.location.href = `${apiBase}/auth/google/login`;
     });
   });
 
-  // =============================== 🔹 CEK STATUS LOGIN ===============================
-  const token = localStorage.getItem("token");
-  if (token) {
-    if (loginLink) loginLink.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "block";
+  // =============================== 🔹 CEK JIKA DARI GOOGLE CALLBACK ===============================
+  // Misal: login.html?google=success
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("google")) {
+    // Bersihkan URL tanpa reload
+    history.replaceState(null, "", window.location.pathname);
 
-    // 🚫 Jika user sudah login dan mencoba buka login.html → arahkan ke sesuai role
-    const currentPage = window.location.pathname.split("/").pop();
-    if (currentPage === "login.html") {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      if (user.role === "admin") {
-        window.location.href = "dbadmin.html";
-      } else {
-        window.location.href = "index.html";
-      }
-    }
-  } else {
-    if (loginLink) loginLink.style.display = "block";
-    if (logoutBtn) logoutBtn.style.display = "none";
+    // Cek status login setelah Google sukses
+    await checkLoginStatus();
+  }
+
+  // =============================== 🔹 CEK LOGIN SAAT HALAMAN DIMUAT ===============================
+  const isLoggedIn = await checkLoginStatus();
+  if (!isLoggedIn) {
+    // Jika belum login, pastikan tombol login muncul
+    if (loginLinkNavbar) loginLinkNavbar.style.display = "block";
+    if (userIcon) userIcon.style.display = "none";
   }
 });

@@ -1,110 +1,110 @@
+// assets/js/peraturan.js
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("peraturanContainer");
+  const API_BASE = "http://localhost:8080";
 
-  // 🔍 Pastikan elemen container ditemukan
   if (!container) {
     console.error("❌ Elemen #peraturanContainer tidak ditemukan di HTML.");
     return;
   }
 
-  // ✅ Fungsi lama untuk menampilkan daftar peraturan (dipertahankan)
-  function tampilkanPeraturan(data) {
-    container.innerHTML = ""; // bersihkan isi sebelumnya
-
-    if (data.length === 0) {
-      container.innerHTML = "<p>Tidak ada data peraturan yang tersedia.</p>";
-      return;
-    }
-
-    data.forEach(item => {
-      const card = document.createElement("div");
-      card.classList.add("peraturan-card");
-
-      card.innerHTML = `
-        <div class="card-content">
-          <h3>${item.judul || "Tanpa Judul"}</h3>
-          <p>${item.deskripsi || "Tidak ada deskripsi yang tersedia."}</p>
-          <small><strong>Sumber:</strong> ${item.sumber || "Tidak diketahui"}</small>
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
-  }
-
-  // ✅ Fungsi baru untuk menampilkan daftar peraturan dengan tampilan collapsible (versi modern)
-  function tampilkanPeraturanModern(data) {
-    container.innerHTML = ""; // bersihkan isi sebelumnya
+  // === Fungsi untuk render data peraturan ===
+  function renderPeraturan(data) {
+    container.innerHTML = "";
 
     if (!Array.isArray(data) || data.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:#777;'>Belum ada peraturan yang tersedia.</p>";
+      container.innerHTML = `<p style="text-align:center; color:#777;">Belum ada peraturan yang tersedia.</p>`;
       return;
     }
 
     data.forEach(item => {
-      const peraturanItem = document.createElement("div");
-      peraturanItem.classList.add("peraturan-item");
+      const div = document.createElement("div");
+      div.style.marginBottom = "1.5rem";
+      div.style.paddingLeft = "1rem";
+      div.style.borderLeft = "3px solid #8d6e63";
 
-      // Header (judul peraturan)
-      const header = document.createElement("div");
-      header.classList.add("peraturan-header");
-      header.textContent = item.judul || "Tanpa Judul";
+      const judul = document.createElement("h3");
+      judul.textContent = item.judulKasus || "Tanpa Judul";
+      judul.style.fontFamily = "'Poppins', sans-serif";
+      judul.style.fontWeight = "700";
+      judul.style.color = "#4e342e";
+      judul.style.marginBottom = "0.5rem";
 
-      // Body (isi peraturan dan sumber)
-      const body = document.createElement("div");
-      body.classList.add("peraturan-body");
-
-      // Jika isi berupa array (misalnya daftar pasal/peraturan), tampilkan sebagai list
-      let isiPeraturan = "";
-      if (Array.isArray(item.peraturan) && item.peraturan.length > 0) {
-        isiPeraturan = `
-          <ol>
-            ${item.peraturan.map(p => `<li>${p}</li>`).join("")}
-          </ol>
-        `;
+      const isi = document.createElement("div");
+      if (Array.isArray(item.isi)) {
+        const ol = document.createElement("ol");
+        item.isi.forEach(p => {
+          const li = document.createElement("li");
+          li.textContent = p;
+          ol.appendChild(li);
+        });
+        isi.appendChild(ol);
       } else {
-        isiPeraturan = `<p>${item.deskripsi || "Tidak ada isi peraturan yang tersedia."}</p>`;
+        isi.textContent = item.isi || "Tidak ada isi.";
       }
+      isi.style.marginBottom = "0.5rem";
 
-      body.innerHTML = `
-        ${isiPeraturan}
-        <div class="peraturan-sumber"><strong>Sumber:</strong> ${item.sumber || "Tidak diketahui"}</div>
-      `;
+      const tanggal = document.createElement("small");
+      tanggal.textContent = new Date(item.tanggal).toLocaleDateString("id-ID");
+      tanggal.style.color = "#6d4c41";
 
-      // Tambahkan interaksi klik untuk membuka/tutup body
-      header.addEventListener("click", () => {
-        body.classList.toggle("active");
-      });
-
-      peraturanItem.appendChild(header);
-      peraturanItem.appendChild(body);
-      container.appendChild(peraturanItem);
+      div.appendChild(judul);
+      div.appendChild(isi);
+      div.appendChild(tanggal);
+      container.appendChild(div);
     });
   }
 
-  // ✅ Fungsi untuk mengambil data dari backend
-  async function ambilPeraturan() {
+  // === Fetch data dari backend ===
+  async function fetchPeraturan() {
     try {
-      const response = await fetch("http://localhost:8080/peraturan");
+      console.log("🔍 Mengirim request ke:", `${API_BASE}/peraturan`);
+
+      const response = await fetch(`${API_BASE}/peraturan`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+        // credentials: "include" — hanya jika pakai session/cookie
+      });
+
+      console.log("📡 Status respons:", response.status);
 
       if (!response.ok) {
-        throw new Error(`HTTP Error! Status: ${response.status}`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const hasil = await response.json();
-      console.log("✅ Data peraturan berhasil diambil:", hasil);
+      const data = await response.json();
+      console.log("✅ Data berhasil diterima:", data);
 
-      // Gunakan tampilan baru agar sesuai dengan desain modern user
-      tampilkanPeraturanModern(hasil);
+      // Validasi struktur data
+      if (!Array.isArray(data)) {
+        throw new Error("Respons bukan array. Pastikan backend mengembalikan array objek.");
+      }
+
+      renderPeraturan(data);
+
     } catch (error) {
       console.error("❌ Gagal mengambil data peraturan:", error);
+
       container.innerHTML = `
-        <p style="color: red;">Gagal memuat data peraturan.<br>
-        Pastikan server backend sedang berjalan.</p>
+        <div style="text-align:center; padding:2rem; background:#fff3e6; border-radius:12px; margin:1rem; font-family:'Poppins', sans-serif;">
+          <h3 style="color:#c62828; margin-bottom:1rem;">⚠️ Gagal Memuat Data</h3>
+          <p style="color:#5d4037; line-height:1.6; font-size:0.95rem;">
+            Error: <code>${error.message}</code>
+          </p>
+          <p style="margin-top:1rem; font-size:0.9rem;">
+            Pastikan endpoint <strong>http://localhost:8080/peraturan</strong> mengembalikan JSON array.
+          </p>
+          <button onclick="location.reload()" style="
+            background:#8d6e63; color:white; border:none; padding:0.5rem 1rem;
+            border-radius:8px; cursor:pointer; margin-top:1rem; font-weight:600;
+          ">Coba Lagi</button>
+        </div>
       `;
     }
   }
 
-  // 🔄 Jalankan fetch ketika halaman dimuat
-  ambilPeraturan();
+  // Jalankan fetch
+  fetchPeraturan();
 });

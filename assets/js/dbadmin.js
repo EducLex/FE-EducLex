@@ -1,49 +1,28 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const apiBase = "http://localhost:8080";
   const dashboardEndpoint = `${apiBase}/dashboard`;
+  const usersEndpoint = `${apiBase}/users`;
   const token = localStorage.getItem("token");
 
-  // ===== CEK LOGIN (DIPERBARUI) =====
-  if (!token) {
-    console.warn("⚠️ Tidak ada token. Menjalankan dashboard dalam mode tamu.");
-    const adminNameEl = document.getElementById("adminName");
-    if (adminNameEl) adminNameEl.textContent = "Guest (Mode Tamu)";
-  } else {
-    const adminNameEl = document.getElementById("adminName");
-    if (adminNameEl) adminNameEl.textContent = "Admin";
-  }
-
-  // ===== LOGOUT =====
-  document.getElementById("logoutBtn").addEventListener("click", () => {
+  // ===== CEK LOGIN =====
+  const adminNameEl = document.getElementById("adminName");
+  if (adminNameEl) {
     if (!token) {
-      Swal.fire("Info", "Anda belum login, tidak ada sesi yang perlu diakhiri.", "info");
-      return;
+      console.warn("⚠ Tidak ada token. Menjalankan dashboard dalam mode tamu.");
+      adminNameEl.textContent = "Guest (Mode Tamu)";
+    } else {
+      adminNameEl.textContent = "Admin";
     }
-
-    Swal.fire({
-      title: "Apakah Anda yakin ingin logout?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Ya, Logout",
-      cancelButtonText: "Batal",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.clear();
-        Swal.fire("Logout Berhasil!", "Anda telah keluar dari sistem.", "success").then(() => {
-          window.location.href = "login.html";
-        });
-      }
-    });
-  });
+  }
 
   // ===== SIDEBAR NAVIGATION =====
   const navLinks = {
     dashboardLink: "dbadmin.html",
     artikelLink: "artikeladmin.html",
-    tanyaLink: "tanyaadmin.html",
+    tanyaLink: "tanyajaksa.html",
     tulisanLink: "tulisanadmin.html",
     peraturanLink: "peraturanadmin.html",
-    penggunaLink: "penggunaadmin.html",
+    tambahjaksaLink: "tambahjaksa.html",
   };
 
   Object.entries(navLinks).forEach(([id, url]) => {
@@ -56,71 +35,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // ===== MUAT DATA DASHBOARD UTAMA (/dashboard) =====
-  async function loadDashboardData() {
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  // ===== HELPER: Buat header dengan token =====
+  function getAuthHeaders() {
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
 
+  // ===== MUAT DATA DASHBOARD =====
+  async function loadDashboardData() {
     try {
       console.log("🔄 Fetch data dari endpoint utama:", dashboardEndpoint);
-      const response = await fetch(dashboardEndpoint, { headers });
+      const response = await fetch(dashboardEndpoint, { headers: getAuthHeaders() });
 
       if (response.ok) {
         const data = await response.json();
         console.log("✅ Data dashboard dari /dashboard:", data);
 
         if (data) {
-          document.getElementById("totalArtikel").textContent = data.totalArtikel || 0;
-          document.getElementById("totalTanya").textContent = data.totalTanya || 0;
-          document.getElementById("totalTulisan").textContent = data.totalTulisan || 0;
-          document.getElementById("totalPeraturan").textContent = data.totalPeraturan || 0;
-          return;
+          document.getElementById("totalArtikel")?.textContent = data.articles || 0;
+          document.getElementById("totalTanya")?.textContent = data.questions || 0;
+          document.getElementById("totalTulisan")?.textContent = data.tulisan || 0;
+          document.getElementById("totalPeraturan")?.textContent = data.peraturan || 0;
         }
+      } else {
+        console.warn("⚠ Gagal memuat /dashboard.");
       }
-
-      console.warn("⚠️ Gagal memuat /dashboard, mencoba fallback manual...");
-      await loadDashboardDataFallback();
     } catch (error) {
       console.error("❌ Error memuat /dashboard:", error);
-      Swal.fire("Error", "Tidak dapat memuat data dashboard dari server.", "error");
-      await loadDashboardDataFallback();
-    }
-  }
-
-  // ===== FALLBACK JIKA /dashboard ERROR =====
-  async function loadDashboardDataFallback() {
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-    try {
-      const [artikelRes, tanyaRes, tulisanRes, peraturanRes] = await Promise.all([
-        fetch(`${apiBase}/articles`, { headers }),
-        fetch(`${apiBase}/questions`, { headers }),
-        fetch(`${apiBase}/tulisan`, { headers }),
-        fetch(`${apiBase}/peraturan`, { headers }),
-      ]);
-
-      const artikelData = await artikelRes.json();
-      const tanyaData = await tanyaRes.json();
-      const tulisanData = await tulisanRes.json();
-      const peraturanData = await peraturanRes.json();
-
-      document.getElementById("totalArtikel").textContent = artikelData.length || 0;
-      document.getElementById("totalTanya").textContent = tanyaData.length || 0;
-      document.getElementById("totalTulisan").textContent = tulisanData.length || 0;
-      document.getElementById("totalPeraturan").textContent = peraturanData.length || 0;
-
-      console.log("✅ Fallback berhasil, data dimuat manual.");
-    } catch (error) {
-      console.error("❌ Fallback gagal:", error);
+      if (typeof Swal !== "undefined") {
+        Swal.fire("Error", "Tidak dapat memuat data dashboard dari server.", "error");
+      } else {
+        alert("Gagal memuat data dashboard. Periksa konsol.");
+      }
     }
   }
 
   // ===== MUAT DATA PENGGUNA =====
   async function loadUsers() {
     const tbody = document.getElementById("userTableBody");
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    if (!tbody) return;
 
     try {
-      const res = await fetch(`${apiBase}/users`, { headers });
+      const res = await fetch(usersEndpoint, { headers: getAuthHeaders() });
+
       if (!res.ok) {
         tbody.innerHTML = `<tr><td colspan="4">Tidak dapat memuat data pengguna (login mungkin diperlukan).</td></tr>`;
         return;
@@ -141,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <td>${user.email || "-"}</td>
             <td>${user.role || "User"}</td>
             <td>
-              <button class="btn-edit" data-id="${user._id}" data-role="${user.role}">Edit</button>
+              <button class="btn-edit" data-id="${user._id}" data-role="${user.role || "user"}">Edit</button>
               <button class="btn-delete" data-id="${user._id}">Hapus</button>
             </td>
           </tr>`
@@ -162,35 +118,61 @@ document.addEventListener("DOMContentLoaded", async () => {
       const id = target.dataset.id;
 
       if (!token) {
-        Swal.fire("Akses Ditolak", "Silakan login untuk menghapus pengguna.", "warning");
+        if (typeof Swal !== "undefined") {
+          Swal.fire("Akses Ditolak", "Silakan login untuk menghapus pengguna.", "warning");
+        } else {
+          alert("Akses ditolak. Silakan login.");
+        }
         return;
       }
 
-      Swal.fire({
-        title: "Hapus Pengguna?",
-        text: "Data pengguna ini akan dihapus secara permanen.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Hapus",
-        cancelButtonText: "Batal",
-      }).then(async (res) => {
-        if (res.isConfirmed) {
-          try {
-            const del = await fetch(`${apiBase}/users/${id}`, {
-              method: "DELETE",
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            if (del.ok) {
+      if (typeof Swal === "undefined") {
+        const confirmDelete = confirm("Hapus pengguna ini?");
+        if (!confirmDelete) return;
+      }
+
+      const result = typeof Swal !== "undefined"
+        ? await Swal.fire({
+            title: "Hapus Pengguna?",
+            text: "Data pengguna ini akan dihapus secara permanen.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Hapus",
+            cancelButtonText: "Batal",
+          })
+        : { isConfirmed: true };
+
+      if (result.isConfirmed) {
+        try {
+          const del = await fetch(`${apiBase}/users/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders(),
+          });
+
+          if (del.ok) {
+            if (typeof Swal !== "undefined") {
               Swal.fire("Berhasil!", "Pengguna telah dihapus.", "success");
-              loadUsers();
             } else {
-              Swal.fire("Gagal", "Tidak dapat menghapus pengguna.", "error");
+              alert("Pengguna berhasil dihapus.");
             }
-          } catch (err) {
+            loadUsers();
+          } else {
+            const errText = await del.text();
+            if (typeof Swal !== "undefined") {
+              Swal.fire("Gagal", errText || "Tidak dapat menghapus pengguna.", "error");
+            } else {
+              alert("Gagal menghapus pengguna.");
+            }
+          }
+        } catch (err) {
+          console.error("❌ Error hapus pengguna:", err);
+          if (typeof Swal !== "undefined") {
             Swal.fire("Error", "Terjadi kesalahan koneksi.", "error");
+          } else {
+            alert("Kesalahan koneksi saat menghapus.");
           }
         }
-      });
+      }
     }
 
     // === Edit role pengguna ===
@@ -199,31 +181,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       const currentRole = target.dataset.role;
 
       if (!token) {
-        Swal.fire("Akses Ditolak", "Silakan login untuk mengedit pengguna.", "warning");
+        if (typeof Swal !== "undefined") {
+          Swal.fire("Akses Ditolak", "Silakan login untuk mengedit pengguna.", "warning");
+        } else {
+          alert("Akses ditolak. Silakan login.");
+        }
         return;
       }
 
-      Swal.fire({
-        title: "Edit Role Pengguna",
-        html: `
-          <label for="newRole">Pilih Role Baru:</label>
-          <select id="newRole" class="swal2-select">
-            <option value="user" ${currentRole === "user" ? "selected" : ""}>User</option>
-            <option value="admin" ${currentRole === "admin" ? "selected" : ""}>Admin</option>
-          </select>
-        `,
-        showCancelButton: true,
-        confirmButtonText: "Update",
-        cancelButtonText: "Batal",
-      }).then(async (res) => {
-        if (res.isConfirmed) {
-          const newRole = document.getElementById("newRole").value;
+      if (typeof Swal !== "undefined") {
+        const { value: newRole } = await Swal.fire({
+          title: "Edit Role Pengguna",
+          input: "select",
+          inputOptions: {
+            user: "User",
+            admin: "Admin",
+          },
+          inputPlaceholder: "Pilih role",
+          inputValue: currentRole,
+          showCancelButton: true,
+          confirmButtonText: "Update",
+          cancelButtonText: "Batal",
+        });
+
+        if (newRole) {
           try {
             const update = await fetch(`${apiBase}/users/${id}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                ...getAuthHeaders(),
               },
               body: JSON.stringify({ role: newRole }),
             });
@@ -232,13 +219,39 @@ document.addEventListener("DOMContentLoaded", async () => {
               Swal.fire("Berhasil!", "Role pengguna telah diperbarui.", "success");
               loadUsers();
             } else {
-              Swal.fire("Gagal", "Tidak dapat memperbarui data pengguna.", "error");
+              const errText = await update.text();
+              Swal.fire("Gagal", errText || "Tidak dapat memperbarui data pengguna.", "error");
             }
           } catch (err) {
+            console.error("❌ Error update role:", err);
             Swal.fire("Error", "Koneksi ke server gagal.", "error");
           }
         }
-      });
+      } else {
+        // Fallback tanpa SweetAlert
+        const newRole = prompt("Masukkan role baru (user/admin):", currentRole);
+        if (newRole && ["user", "admin"].includes(newRole)) {
+          try {
+            const update = await fetch(`${apiBase}/users/${id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                ...getAuthHeaders(),
+              },
+              body: JSON.stringify({ role: newRole }),
+            });
+
+            if (update.ok) {
+              alert("Role berhasil diperbarui!");
+              loadUsers();
+            } else {
+              alert("Gagal memperbarui role.");
+            }
+          } catch (err) {
+            alert("Kesalahan koneksi.");
+          }
+        }
+      }
     }
   });
 

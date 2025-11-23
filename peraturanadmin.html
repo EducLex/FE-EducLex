@@ -54,7 +54,7 @@
           <div id="peraturanContainer">
             <div class="form-group peraturan-item">
               <label for="peraturan">Peraturan </label>
-              <textarea id="peraturan1" name="peraturan[]" rows="4" placeholder="Masukkan isi peraturan..." required></textarea>
+              <textarea id="peraturan"name="peraturan[]" rows="4" placeholder="Masukkan isi peraturan..." required></textarea>
             </div>
           </div>
 
@@ -93,6 +93,7 @@
     <p>© 2025 EducLex | Peraturan Admin</p>
   </footer>
 
+  <!-- Script Tambah & Simpan Peraturan -->
   <script>
     // === Tambah Peraturan Dinamis ===
     let peraturanCount = 1;
@@ -128,7 +129,7 @@
         </td>
       `;
 
-      // Hapus baris placeholder “Belum ada data”
+      // Hapus placeholder jika ada
       if (tabel.children[0] && tabel.children[0].children.length === 1) {
         tabel.innerHTML = "";
       }
@@ -142,7 +143,6 @@
         confirmButtonColor: "#6D4C41"
       });
 
-      // Reset form
       this.reset();
       document.getElementById("peraturanContainer").innerHTML = `
         <div class="form-group peraturan-item">
@@ -151,6 +151,67 @@
         </div>
       `;
       peraturanCount = 1;
+    });
+  </script>
+
+  <!-- 🔹 LOGIKA LOGOUT 🔹 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (!logoutBtn) return;
+
+      logoutBtn.addEventListener("click", async () => {
+        const result = await Swal.fire({
+          title: "Logout?",
+          text: "Apakah Anda yakin ingin keluar dari akun admin?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Logout",
+          cancelButtonText: "Batal",
+          reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+          try {
+            // Logout dari backend
+            const res = await fetch("http://localhost:8080/auth/logout", {
+              method: "POST",
+              credentials: "include"
+            });
+
+            // Hapus data lokal
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+
+            // Notifikasi sukses
+            await Swal.fire({
+              icon: "success",
+              title: "Berhasil Logout!",
+              text: "Sesi admin telah diakhiri.",
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            // Redirect ke login
+            window.location.href = "login.html";
+
+          } catch (error) {
+            console.error("Error saat logout:", error);
+            // Tetap logout lokal
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+            await Swal.fire({
+              icon: "warning",
+              title: "Logout Sebagian",
+              text: "Koneksi gagal, tapi sesi lokal dihapus.",
+              confirmButtonText: "Oke"
+            });
+            window.location.href = "login.html";
+          }
+        }
+      });
     });
   </script>
 </body>
