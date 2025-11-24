@@ -100,6 +100,12 @@
       <li><a href="tulisan.html">Tulisan Jaksa</a></li>
       <li><a href="peraturan.html" class="active">Peraturan</a></li>
     </ul>
+    <!-- 🔹 Dropdown Akun -->
+    <div class="dropdown">
+      <button class="dropbtn">👤 User </button>
+      <div class="dropdown-content" id="userMenu">
+      </div>
+    </div>
   </nav>
 </header>
 
@@ -184,11 +190,36 @@
 <script src="assets/js/peraturan.js" defer></script>
 
 <script>
-  // ✨ Tambahan interaktif kecil: buka/tutup isi peraturan
+  // ✨ Interaksi buka/tutup peraturan
   document.addEventListener("click", (e) => {
     if (e.target.classList.contains("peraturan-header")) {
       const body = e.target.nextElementSibling;
       body.classList.toggle("active");
+    }
+  });
+
+  // ✅ Logika login/logout sederhana (tanpa dropdown)
+  document.addEventListener("DOMContentLoaded", () => {
+    const loginLink = document.querySelector(".btn-login");
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Jika sudah login, ganti teks menjadi "Logout"
+      loginLink.textContent = "Logout";
+      loginLink.href = "#";
+      loginLink.onclick = (e) => {
+        e.preventDefault();
+        if (confirm("Yakin ingin logout?")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          alert("Anda telah logout.");
+          window.location.href = "login.html";
+        }
+      };
+    } else {
+      // Jika belum login, pastikan link ke login.html
+      loginLink.textContent = "Login";
+      loginLink.href = "login.html";
     }
   });
 </script>

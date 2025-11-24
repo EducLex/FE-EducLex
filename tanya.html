@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tanya Jaksa | EducLex</title>
   <link rel="stylesheet" href="style.css">
-
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
-  <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
@@ -107,7 +104,6 @@
         padding: 20px;
       }
     }
-
   </style>
 </head>
 <body>
@@ -123,6 +119,13 @@
       <li><a href="tulisan.html">Tulisan Jaksa</a></li>
       <li><a href="peraturan.html">Peraturan</a></li>
     </ul>
+      <!-- 🔹 Dropdown Akun -->
+      <div class="dropdown">
+        <button class="dropbtn">👤 User </button>
+        <div class="dropdown-content" id="userMenu">
+        </div>
+      </div>
+    </div>
   </nav>
 </header>
 
@@ -196,7 +199,6 @@
 <!-- ======== Footer ======== -->
 <footer style="background-color:#5d4037; color:white; padding:40px 0; font-family:'Poppins', sans-serif;">
   <div style="max-width:1200px; margin:auto; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:40px; text-align:center;">
-
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Alamat</h3>
       <p style="margin-top:10px; line-height:1.6;">
@@ -205,7 +207,6 @@
         Kota Bandung, Jawa Barat 40115
       </p>
     </div>
-
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Surel</h3>
       <p style="margin-top:10px;">
@@ -214,12 +215,10 @@
         </a>
       </p>
     </div>
-
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Bantuan</h3>
       <p style="margin-top:10px; line-height:1.6;">Telp: (022) 4239375</p>
     </div>
-
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Media Sosial</h3>
       <div style="margin-top:10px; display:flex; justify-content:center; gap:12px;">
@@ -237,19 +236,59 @@
         </a>
       </div>
     </div>
-
   </div>
-
   <hr style="margin:40px auto; width:85%; border:0.5px solid rgba(255,255,255,0.2);">
-
   <p style="text-align:center; font-size:14px; color:#E0E0E0;">
     © 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>
     Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.
   </p>
 </footer>
 
-<!-- Script -->
 <script>
+  // ✅ Logika login/logout
+  document.addEventListener("DOMContentLoaded", () => {
+    const loginLink = document.getElementById("loginLink");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      loginLink.style.display = "none";
+      logoutBtn.style.display = "block";
+      logoutBtn.onclick = (e) => {
+        e.preventDefault();
+        if (confirm("Yakin ingin logout?")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          alert("Anda telah logout.");
+          window.location.href = "login.html";
+        }
+      };
+    } else {
+      loginLink.style.display = "block";
+      logoutBtn.style.display = "none";
+      loginLink.onclick = () => {
+        window.location.href = "login.html";
+      };
+    }
+
+    // Dropdown toggle
+    document.querySelector('.dropbtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.querySelector('.dropdown').classList.toggle('show');
+    });
+
+    // Tutup dropdown saat klik di luar
+    document.addEventListener('click', function(e) {
+      const dropdown = document.querySelector('.dropdown');
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+  });
+</script>
+
+<script>
+  // Modal logic
   const modal = document.getElementById("modalTanya");
   const btnAjukan = document.getElementById("btnAjukan");
   const btnTutup = document.getElementById("tutupModal");
@@ -285,7 +324,6 @@
     document.getElementById("isiTanya").value = "";
   };
 
-  // Tutup modal jika klik di luar box
   window.onclick = (e) => {
     if (e.target === modal) modal.style.display = "none";
   };

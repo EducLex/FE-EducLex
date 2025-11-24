@@ -4,167 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tulisan Jaksa | EducLex</title>
+  <!-- Gunakan style.css global -->
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8f5f2;
-      color: #3e2723;
-      margin: 0;
-    }
-
-    /* ===== Navbar ===== */
-    .navbar {
-      background-color: #5d4037;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 40px;
-    }
-
-    .logo {
-      font-weight: 700;
-      font-size: 1.3rem;
-    }
-
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-    }
-
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .nav-links a:hover,
-    .nav-links .active {
-      color: #ffcc80;
-    }
-
-    .btn-login {
-      background-color: #8d6e63;
-      padding: 8px 15px;
-      border-radius: 6px;
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* ===== Container ===== */
-    .tulisan-container {
-      max-width: 1100px;
-      margin: 50px auto;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    h1 {
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    .intro {
-      color: #5d4037;
-      font-size: 1rem;
-      margin-bottom: 35px;
-      font-weight: 600;
-    }
-
-    /* ===== Grid Card ===== */
-    .tulisan-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-    }
-
-    /* ===== Card Style ===== */
-    .tulisan-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(93, 64, 55, 0.15);
-      overflow: hidden;
-      transition: all 0.3s ease;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .tulisan-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 18px rgba(93, 64, 55, 0.25);
-    }
-
-    .pdf-icon {
-      width: 65px;
-      margin-bottom: 12px;
-    }
-
-    .kategori {
-      color: #6d4c41;
-      font-size: 0.9rem;
-      margin: 5px 0 10px;
-      font-weight: 600;
-    }
-
-    .tulisan-card h2 {
-      font-size: 1.05rem;
-      margin-bottom: 10px;
-      color: #3e2723;
-      font-weight: 700;
-    }
-
-    /* ===== Tombol ===== */
-    .card-actions {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .btn-detail,
-    .btn-unduh {
-      border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
-      color: white;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .btn-detail {
-      background-color: #8d6e63;
-    }
-
-    .btn-detail:hover {
-      background-color: #a1887f;
-    }
-
-    .btn-unduh {
-      background-color: #6d4c41;
-    }
-
-    .btn-unduh:hover {
-      background-color: #5d4037;
-    }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 768px) {
-      .tulisan-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 </head>
-
 <body>
   <!-- Navbar -->
   <header>
@@ -177,6 +21,12 @@
         <li><a href="tulisan.html" class="active">Tulisan Jaksa</a></li>
         <li><a href="peraturan.html">Peraturan</a></li>
       </ul>
+      <!-- 🔹 Dropdown Akun -->
+      <div class="dropdown">
+        <button class="dropbtn">👤 User </button>
+        <div class="dropdown-content" id="userMenu">
+        </div>
+      </div>
     </nav>
   </header>
 
@@ -186,63 +36,85 @@
     <p class="intro">
       <strong>Kumpulan tulisan, opini, dan edukasi hukum dari para jaksa Kejaksaan Tinggi Jawa Barat.</strong>
     </p>
-
     <div class="tulisan-grid" id="tulisanBaru"></div>
   </main>
 
   <!-- Footer -->
-  <footer style="background-color:#5d4037; color:white; padding:40px 0; font-family:'Poppins', sans-serif;">
-    <div style="max-width:1200px; margin:auto; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:40px; text-align:center;">
-
+    <footer class="educlex-footer bold-footer">
+    <div class="footer-container">
       <div>
-        <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Alamat</h3>
-        <p style="margin-top:10px; line-height:1.6;">
-          Jl. L. L. R.E. Martadinata No.54,<br>
-          Citarum, Kec. Bandung Wetan,<br>
-          Kota Bandung, Jawa Barat 40115
-        </p>
+        <h3>Alamat</h3>
+        <p>Jl. L. L. R.E. Martadinata No.54,<br>Citarum, Kec. Bandung Wetan,<br>Kota Bandung, Jawa Barat 40115</p>
       </div>
-
       <div>
-        <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Surel</h3>
-        <p style="margin-top:10px;">
-          <a href="mailto:penkumhumas.kejatijabar@gmail.com" style="color:white; text-decoration:none;">
-            penkumhumas.kejatijabar@gmail.com
-          </a>
-        </p>
+        <h3>Surel</h3>
+        <p><a href="mailto:penkumhumas.kejatijabar@gmail.com">penkumhumas.kejatijabar@gmail.com</a></p>
       </div>
-
       <div>
-        <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Bantuan</h3>
-        <p style="margin-top:10px; line-height:1.6;">Telp: (022) 4239375</p>
+        <h3>Bantuan</h3>
+        <p>Telp: (022) 4239375</p>
       </div>
-
       <div>
-        <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Media Sosial</h3>
-        <div style="margin-top:10px; display:flex; justify-content:center; gap:12px;">
-          <a href="https://www.facebook.com/KejaksaanTinggiJawaBarat" target="_blank" title="Facebook"
-             style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
+        <h3>Media Sosial</h3>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/KejaksaanTinggiJawaBarat" target="_blank" title="Facebook">
             <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="20" height="20">
           </a>
-          <a href="https://www.instagram.com/kejati_jabar" target="_blank" title="Instagram"
-             style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
+          <a href="https://www.instagram.com/kejati_jabar" target="_blank" title="Instagram">
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="20" height="20">
           </a>
-          <a href="https://x.com/kejati_jabar" target="_blank" title="X (Twitter)"
-             style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
+          <a href="https://x.com/kejati_jabar" target="_blank" title="X (Twitter)">
             <img src="https://cdn-icons-png.flaticon.com/512/5969/5969020.png" alt="X Twitter" width="18" height="18">
           </a>
         </div>
       </div>
-
     </div>
-
-    <hr style="margin:40px auto; width:85%; border:0.5px solid rgba(255,255,255,0.2);">
-    <p style="text-align:center; font-size:14px; color:#E0E0E0;">
-      © 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>
-      Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.
-    </p>
+    <hr>
+    <p>© 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.</p>
   </footer>
+
+  <script>
+    // ✅ Logika login/logout
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginLink = document.getElementById("loginLink");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        loginLink.style.display = "none";
+        logoutBtn.style.display = "block";
+        logoutBtn.onclick = (e) => {
+          e.preventDefault();
+          if (confirm("Yakin ingin logout?")) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            alert("Anda telah logout.");
+            window.location.href = "login.html";
+          }
+        };
+      } else {
+        loginLink.style.display = "block";
+        logoutBtn.style.display = "none";
+        loginLink.onclick = () => {
+          window.location.href = "login.html";
+        };
+      }
+
+      // Dropdown toggle
+      document.querySelector('.dropbtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelector('.dropdown').classList.toggle('show');
+      });
+
+      // Tutup dropdown saat klik di luar
+      document.addEventListener('click', function(e) {
+        const dropdown = document.querySelector('.dropdown');
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+    });
+  </script>
 
   <script src="assets/js/tulisan.js"></script>
 </body>

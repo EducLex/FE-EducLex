@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<!-- Navbar -->
 <header>
   <nav class="navbar">
     <div class="logo">EducLex</div>
@@ -19,6 +20,12 @@
       <li><a href="tulisan.html">Tulisan Jaksa</a></li>
       <li><a href="peraturan.html">Peraturan</a></li>
     </ul>
+    <!-- 🔹 Dropdown Akun -->
+    <div class="dropdown">
+      <button class="dropbtn">👤 User </button>
+      <div class="dropdown-content" id="userMenu">
+      </div>
+    </div>
   </nav>
 </header>
 
@@ -96,6 +103,51 @@
     Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.
   </p>
 </footer>
+
+<script>
+  // ✅ Logika login/logout sederhana
+  document.addEventListener("DOMContentLoaded", () => {
+    const loginLink = document.getElementById("loginLink");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // User sudah login → tampilkan Logout
+      loginLink.style.display = "none";
+      logoutBtn.style.display = "block";
+      logoutBtn.onclick = (e) => {
+        e.preventDefault();
+        if (confirm("Yakin ingin logout?")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          alert("Anda telah logout.");
+          window.location.href = "login.html";
+        }
+      };
+    } else {
+      // Belum login → tampilkan Login
+      loginLink.style.display = "block";
+      logoutBtn.style.display = "none";
+      loginLink.onclick = () => {
+        window.location.href = "login.html";
+      };
+    }
+
+    // Tutup dropdown jika klik di luar
+    document.addEventListener('click', function(event) {
+      const dropdown = document.querySelector('.dropdown');
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+
+    // Toggle dropdown saat klik tombol
+    document.querySelector('.dropbtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.querySelector('.dropdown').classList.toggle('show');
+    });
+  });
+</script>
 
 <script src="assets/js/artikel.js"></script>
 </body>
