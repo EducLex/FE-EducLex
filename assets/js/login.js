@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resetPasswordFormEl = document.getElementById("resetPasswordForm");
   const alertContainer = document.getElementById("alert-container");
   const apiBase = "http://localhost:8080";
+  // Cek origin tempat frontend dijalankan
+  console.log(window.location.origin);
 
   // 🔹 DOM Elements untuk navigasi form
   const loginContainer = document.getElementById("login-form-container");
