@@ -21,7 +21,7 @@
     <div class="logo">EducLex</div>
     <div class="user-info">
       <i class="fas fa-user-circle"></i> 
-      <span id="adminName">Admin</span>
+      <span id="adminName">Admin Jaksa </span>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
   </header>
@@ -32,7 +32,7 @@
     <aside class="sidebar">
       <ul>
         <li><a href="dbjaksa.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li><a href="tanyajaksa.html"><i class="fas fa-file-alt"></i> Tanya Jaksa</a></li>
+        <li><a href="tanyajaksa.html"><i class="fas fa-comments"></i> Tanya Jaksa</a></li>
         <li><a href="tulisanjaksa.html" class="active"><i class="fas fa-pen"></i> Tulisan Jaksa</a></li>
       </ul>
     </aside>
@@ -106,6 +106,68 @@
     <p>© 2025 EducLex | Tulisan Jaksa Admin</p>
   </footer>
 
+  <!-- ✅ LOGIKA LOGOUT — SAMA DENGAN ARTIKELADMIN.HTML & DBJAKSA.HTML ✅ -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (!logoutBtn) return;
+
+      logoutBtn.addEventListener("click", async () => {
+        const result = await Swal.fire({
+          title: "Logout?",
+          text: "Apakah Anda yakin ingin keluar dari akun admin?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Logout",
+          cancelButtonText: "Batal",
+          reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+          try {
+            // Kirim request ke backend untuk logout
+            const res = await fetch("http://localhost:8080/auth/logout", {
+              method: "POST",
+              credentials: "include"
+            });
+
+            // Hapus data lokal
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+
+            // Notifikasi sukses
+            await Swal.fire({
+              icon: "success",
+              title: "Berhasil Logout!",
+              text: "Sesi admin telah diakhiri.",
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            // Redirect ke halaman login
+            window.location.href = "login.html";
+
+          } catch (error) {
+            console.error("Error saat logout:", error);
+            // Tetap logout lokal meski error
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+            await Swal.fire({
+              icon: "warning",
+              title: "Logout Sebagian",
+              text: "Koneksi gagal, tapi sesi lokal dihapus.",
+              confirmButtonText: "Oke"
+            });
+            window.location.href = "login.html";
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Script Simpan Tulisan -->
   <script>
     // Simulasi penyimpanan data tulisan
     document.getElementById("formTulisan").addEventListener("submit", function (e) {
@@ -139,6 +201,7 @@
           <button class="btn-delete"><i class="fas fa-trash"></i></button>
         </td>
       `;
+      tbody.innerHTML = ""; // hapus placeholder
       tbody.appendChild(row);
 
       Swal.fire({

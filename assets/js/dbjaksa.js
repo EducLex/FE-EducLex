@@ -24,49 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // ===== LOGOUT =====
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-      Swal.fire({
-        title: "Yakin ingin logout?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Logout",
-        cancelButtonText: "Batal",
-        confirmButtonColor: "#6D4C41"
-      }).then(async (res) => {
-        if (res.isConfirmed) {
-          try {
-            // Panggil endpoint logout backend (jika tersedia)
-            await fetch(`${apiBase}/auth/logout`, {
-              method: "POST",
-              headers: { Authorization: `Bearer ${token}` },
-            }).catch(() => {}); // ignore error jika endpoint belum ada
-
-            // Bersihkan semua data di localStorage dan sessionStorage
-            localStorage.removeItem("token");
-            localStorage.removeItem("userRole");
-            sessionStorage.clear();
-
-            Swal.fire({
-              icon: "success",
-              title: "Logout Berhasil!",
-              text: "Anda telah keluar dari sistem.",
-              confirmButtonColor: "#6D4C41"
-            }).then(() => {
-              // Redirect dengan force reload untuk memastikan cache bersih
-              window.location.replace("login.html");
-            });
-          } catch (error) {
-            console.error("❌ Gagal logout:", error);
-            Swal.fire("Gagal Logout", "Terjadi kesalahan saat logout.", "error");
-          }
-        }
-      });
-    });
-  }
-
   // ===== MUAT DATA DASHBOARD =====
   async function loadDashboardJaksa() {
     try {
@@ -252,3 +209,62 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ===== PANGGIL DATA SAAT AWAL =====
   await loadDashboardJaksa();
 });
+
+// ===== LOGIKA LOGOUT =====
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (!logoutBtn) return;
+
+      logoutBtn.addEventListener("click", async () => {
+        const result = await Swal.fire({
+          title: "Logout?",
+          text: "Apakah Anda yakin ingin keluar dari akun jaksa?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Ya, Logout",
+          cancelButtonText: "Batal",
+          reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+          try {
+            // Kirim request ke backend untuk logout
+            const res = await fetch("http://localhost:8080/auth/logout", {
+              method: "POST",
+              credentials: "include"
+            });
+
+            // Hapus data lokal
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+
+            // Notifikasi sukses
+            await Swal.fire({
+              icon: "success",
+              title: "Berhasil Logout!",
+              text: "Sesi jaksa telah diakhiri.",
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            // Redirect ke halaman login
+            window.location.href = "login.html";
+
+          } catch (error) {
+            console.error("Error saat logout:", error);
+            // Tetap logout lokal & redirect meski error
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("role");
+            await Swal.fire({
+              icon: "warning",
+              title: "Logout Sebagian",
+              text: "Koneksi gagal, tapi sesi lokal dihapus.",
+              confirmButtonText: "Oke"
+            });
+            window.location.href = "login.html";
+          }
+        }
+      });
+    });
