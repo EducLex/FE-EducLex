@@ -150,7 +150,6 @@ function renderArtikel(list) {
         <p>${content.substring(0, 150)}...</p>
         <div class="card-buttons">
           <a href="#" class="read-more" data-id="${id}">Baca Selengkapnya</a>
-          <button class="btn-delete" data-id="${id}">🗑️</button>
         </div>
       </div>
     `;

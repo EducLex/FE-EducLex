@@ -5,11 +5,17 @@ const apiBase = "http://localhost:8080/questions";
 // =======================
 async function getPertanyaanPublik() {
   try {
-    const res = await fetch(apiBase, { credentials: "include" });
+    const res = await fetch(apiBase, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+      // ❌ credentials: "include" dihapus
+    });
+
     if (!res.ok) throw new Error("Gagal mengambil data pertanyaan");
+
     const data = await res.json();
 
-    // Filter hanya pertanyaan publik
+    // Filter hanya publik
     return Array.isArray(data)
       ? data.filter((q) => q.tipe === "publik" || !q.tipe)
       : [];
@@ -25,6 +31,7 @@ async function getPertanyaanPublik() {
 async function renderPertanyaanPublik() {
   const container = document.getElementById("daftar-pertanyaan");
   if (!container) return;
+
   container.innerHTML = "<p>⏳ Memuat pertanyaan...</p>";
 
   const list = await getPertanyaanPublik();
@@ -50,7 +57,9 @@ async function renderPertanyaanPublik() {
           ${item.status || "Belum Dijawab"}
         </span>
       </div>
+
       <p class="pertanyaan-teks">${item.pertanyaan}</p>
+
       ${
         item.jawaban
           ? `<div class="jawaban-box"><strong>💬 Jawaban Jaksa:</strong><p>${item.jawaban}</p></div>`
@@ -90,15 +99,15 @@ async function kirimPertanyaan(event) {
     pertanyaan,
     status: "Belum Dijawab",
     tipe: "publik",
-    tanggal: new Date().toISOString(), // ✅ Tambahkan tanggal agar sinkron dengan admin
+    tanggal: new Date().toISOString(),
   };
 
   try {
     const res = await fetch(apiBase, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(bodyData),
-      credentials: "include",
+      body: JSON.stringify(bodyData)
+      // ❌ credentials dihapus
     });
 
     if (!res.ok) throw new Error("Gagal mengirim pertanyaan");
@@ -112,7 +121,7 @@ async function kirimPertanyaan(event) {
     });
 
     document.getElementById("tanyaForm").reset();
-    renderPertanyaanPublik(); // refresh otomatis
+    renderPertanyaanPublik();
   } catch (err) {
     console.error("❌ Error kirim:", err);
     Swal.fire("Error", "Tidak bisa mengirim ke server!", "error");
