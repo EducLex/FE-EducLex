@@ -190,7 +190,7 @@
 <script src="assets/js/peraturan.js" defer></script>
 
 <script>
-  // ✨ Interaksi buka/tutup peraturan
+  // Interaksi buka/tutup peraturan
   document.addEventListener("click", (e) => {
     if (e.target.classList.contains("peraturan-header")) {
       const body = e.target.nextElementSibling;
@@ -198,31 +198,9 @@
     }
   });
 
-  // ✅ Logika login/logout sederhana (tanpa dropdown)
-  document.addEventListener("DOMContentLoaded", () => {
-    const loginLink = document.querySelector(".btn-login");
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      // Jika sudah login, ganti teks menjadi "Logout"
-      loginLink.textContent = "Logout";
-      loginLink.href = "#";
-      loginLink.onclick = (e) => {
-        e.preventDefault();
-        if (confirm("Yakin ingin logout?")) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          alert("Anda telah logout.");
-          window.location.href = "login.html";
-        }
-      };
-    } else {
-      // Jika belum login, pastikan link ke login.html
-      loginLink.textContent = "Login";
-      loginLink.href = "login.html";
-    }
-  });
+  // Hapus seluruh script tentang btn-login karena elemen itu TIDAK ADA
 </script>
+
 
 </body>
 </html>

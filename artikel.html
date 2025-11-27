@@ -29,13 +29,53 @@
   </nav>
 </header>
 
-<main class="artikel-container">
-  <h1>Artikel Hukum Populer</h1>
-  <p style="text-align:center; margin-bottom:30px; color:#5d4037;">Kumpulan artikel edukatif seputar hukum dan kesadaran hukum remaja.</p>
+<main class="artikel-container" style="max-width:1200px; margin:0 auto;">
+
+  <h1 style="text-align:center; margin-top:40px; color:#4e342e;">Artikel Hukum Populer</h1>
+  <p style="text-align:center; margin-bottom:30px; color:#5d4037;">
+    Kumpulan artikel edukatif seputar hukum dan kesadaran hukum remaja.
+  </p>
+
+  <!-- ================================ -->
+  <!-- 🔹 FILTER BIDANG (seperti tulisan) -->
+  <!-- ================================ -->
+  <div style="
+      background:#f5ebe3;
+      padding:20px 30px;
+      border-radius:12px;
+      width: fit-content;
+      margin:0 auto 30px auto;
+      display:flex;
+      align-items:center;
+      gap:15px;
+      border:1px solid #e0d2c5;">
+      
+      <label for="filterBidang" style="font-weight:600; color:#3e2723;">Bidang:</label>
+
+      <select id="filterBidang" style="
+          padding:10px 14px; 
+          border-radius:8px; 
+          border:1px solid #8d6e63;
+          font-size:15px;
+          color:#4e342e;
+          min-width:200px;
+      ">
+        <option value="" selected>Semua Bidang</option>
+        <option value="Pembinaan">Pembinaan</option>
+        <option value="Intelijen">Intelijen</option>
+        <option value="Pidana Umum">Pidana Umum</option>
+        <option value="Pidana Khusus">Pidana Khusus</option>
+        <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
+        <option value="Pidana Militer">Pidana Militer</option>
+        <option value="Asisten Pengawasan">Asisten Pengawasan</option>
+      </select>
+  </div>
 
   <!-- 🔹 Tempat daftar artikel -->
   <div class="artikel-grid"></div>
 </main>
+
+
 
 <!-- Modal untuk artikel detail -->
 <div id="artikelModal" class="modal">
@@ -145,6 +185,19 @@
     document.querySelector('.dropbtn').addEventListener('click', function(e) {
       e.stopPropagation();
       document.querySelector('.dropdown').classList.toggle('show');
+    });
+  });
+</script>
+<script>
+  // NEW: Trigger filter ketika dropdown berubah
+  document.addEventListener("DOMContentLoaded", () => {
+    const bidangDropdown = document.getElementById("filterBidang");
+
+    bidangDropdown.addEventListener("change", function () {
+      // Panggil fungsi filter di artikel.js
+      if (typeof filterArtikelByBidang === "function") {
+        filterArtikelByBidang(this.value);
+      }
     });
   });
 </script>

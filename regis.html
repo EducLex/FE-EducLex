@@ -5,32 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register | EducLex</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
-  <!-- 🔸 Perbaikan Font Khusus untuk Halaman Register -->
+  <!-- 🔸 Penyeragaman font agar sama seperti login.html -->
   <style>
-    /* Pastikan semua heading di halaman register bold & konsisten */
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+
     h1, h2, h3 {
       font-family: 'Poppins', sans-serif !important;
       font-weight: 700 !important;
-      color: #4e342e;
+      color: #4e342e !important;
     }
 
-    /* Pastikan tombol juga konsisten */
+    .auth-container p {
+      font-family: 'Open Sans', sans-serif;
+      color: #4e342e;
+      font-size: 15px;
+    }
+
+    /* Tombol */
     .auth-container button,
     .google-btn {
       font-family: 'Poppins', sans-serif !important;
       font-weight: 600 !important;
+      font-size: 16px;
     }
 
-    /* Placeholder & input tetap Open Sans */
+    /* Placeholder */
     .input-group input {
       font-family: 'Open Sans', sans-serif;
+      color: #3e2723;
     }
 
-    /* Link "Sudah punya akun?" */
-    .auth-container p a {
+    /* Link */
+    .auth-container a {
+      font-family: 'Poppins', sans-serif;
       font-weight: 600;
+      color: #5d4037;
+    }
+
+    /* Divider identik login.html */
+    .divider span {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: #5d4037;
     }
   </style>
 </head>
@@ -40,13 +60,6 @@
   <nav class="navbar">
     <div class="logo">EducLex</div>
     <div id="alert-container"></div>
-    <ul class="nav-links">
-      <li><a href="index.html">Beranda</a></li>
-      <li><a href="artikel.html">Artikel</a></li>
-      <li><a href="tanya.html">Tanya Jaksa</a></li>
-      <li><a href="tulisan.html">Tulisan Jaksa</a></li>
-      <li><a href="peraturan.html">Peraturan</a></li>
-    </ul>
   </nav>
 </header>
 
@@ -85,10 +98,10 @@
   </div>
 </main>
 
-<!-- Footer -->
+<!-- Footer (tidak diubah) -->
 <footer style="background-color:#5d4037; color:white; padding:40px 0; font-family:'Poppins', sans-serif;">
-  <!-- ... (isi footer tetap sama, tidak diubah) ... -->
   <div style="max-width:1200px; margin:auto; display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:40px; text-align:center;">
+
     <!-- Alamat -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Alamat</h3>
@@ -98,6 +111,7 @@
         Kota Bandung, Jawa Barat 40115
       </p>
     </div>
+
     <!-- Surel -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Surel</h3>
@@ -107,11 +121,13 @@
         </a>
       </p>
     </div>
+
     <!-- Bantuan -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Bantuan</h3>
       <p style="margin-top:10px; line-height:1.6;">Telp: (022) 4239375</p>
     </div>
+
     <!-- Media Sosial -->
     <div>
       <h3 style="font-weight:600; border-left:4px solid #8d6e63; padding-left:8px;">Media Sosial</h3>
@@ -128,7 +144,9 @@
       </div>
     </div>
   </div>
+
   <hr style="margin:40px auto; width:85%; border:0.5px solid rgba(255,255,255,0.2);">
+
   <p style="text-align:center; font-size:14px; color:#E0E0E0;">
     © 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>
     Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.

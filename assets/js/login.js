@@ -100,7 +100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        // Simpan token palsu supaya tidak butuh credentials
         localStorage.setItem("token", "dummy-token");
         const role = data.role || (username.includes("admin") ? "admin" : "user");
 
@@ -216,5 +215,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  // ==================================================================================
+  // 👉 TAMBAHAN GOOGLE LOGIN HANDLER (Redirect dari Backend Google callback)
+  // ==================================================================================
+  if (window.location.search.includes("google_success=true")) {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+      const email = urlParams.get("email");
+      const username = urlParams.get("username");
+      const role = "user";
+
+      if (token) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify({ email, username, role }));
+        hideLoginButton();
+
+        // 👉 Trigger email login (ke backend)
+        await fetch(`${apiBase}/auth/google/send-login-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+
+        // 👉 Redirect langsung ke index.html
+        window.location.href = "index.html";
+      }
+    } catch (err) {
+      console.error("Google login handler error:", err);
+    }
+  }
+
   await checkLoginStatus();
 });
+
+// Cek jika halaman ini menerima callback dari Google Login
+document.addEventListener("DOMContentLoaded", () => {
+    // Ambil isi halaman (JSON callback Google)
+    try {
+        const preTag = document.querySelector("pre"); // fetch JSON biasanya ditampilkan sebagai <pre>
+        if (preTag) {
+            const text = preTag.innerText.trim();
+            const data = JSON.parse(text);
+
+            console.log("Detected Google callback JSON:", data);
+
+            // Simpan token & user
+            if (data.token) localStorage.setItem("token", data.token);
+            if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+
+            // Redirect ke beranda
+            window.location.href = "beranda.html";
+            return;
+        }
+    } catch (err) {
+        console.warn("Tidak ada JSON callback Google.");
+    }
+});
+
+
+// Fungsi klik tombol login Google
+window.location.href =
+  `${apiBase}/auth/google/login?redirect_uri=http://127.0.0.1:5500/google-callback.html`;
+

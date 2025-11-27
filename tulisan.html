@@ -8,7 +8,37 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* Dropdown Filter */
+    .filter-section {
+      margin: 20px auto;
+      max-width: 1100px;
+      padding: 15px;
+      background: #f5ebe1;
+      border-radius: 10px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .filter-section select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #b08968;
+      font-size: 14px;
+      font-family: "Poppins";
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .filter-section label {
+      font-weight: 600;
+      color: #3b2f2f;
+    }
+  </style>
 </head>
+
 <body>
   <!-- Navbar -->
   <header>
@@ -21,11 +51,11 @@
         <li><a href="tulisan.html" class="active">Tulisan Jaksa</a></li>
         <li><a href="peraturan.html">Peraturan</a></li>
       </ul>
+
       <!-- 🔹 Dropdown Akun -->
       <div class="dropdown">
         <button class="dropbtn">👤 User </button>
-        <div class="dropdown-content" id="userMenu">
-        </div>
+        <div class="dropdown-content" id="userMenu"></div>
       </div>
     </nav>
   </header>
@@ -36,11 +66,28 @@
     <p class="intro">
       <strong>Kumpulan tulisan, opini, dan edukasi hukum dari para jaksa Kejaksaan Tinggi Jawa Barat.</strong>
     </p>
+
+    <!-- 🔹 DROPDOWN FILTER BIDANG (Tambahan Baru) -->
+    <div class="filter-section">
+      <label for="filterBidang"> Bidang:</label>
+      <select id="filterBidang">
+        <option value="" selected>Semua Bidang</option>
+        <option value="Pembinaan">Pembinaan</option>
+        <option value="Intelijen">Intelijen</option>
+        <option value="Pidana Umum">Pidana Umum</option>
+        <option value="Pidana Khusus">Pidana Khusus</option>
+        <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
+        <option value="Pidana Militer">Pidana Militer</option>
+        <option value="Asisten Pengawasan">Asisten Pengawasan</option>
+      </select>
+    </div>
+
+    <!-- Grid Tulisan -->
     <div class="tulisan-grid" id="tulisanBaru"></div>
   </main>
 
   <!-- Footer -->
-    <footer class="educlex-footer bold-footer">
+  <footer class="educlex-footer bold-footer">
     <div class="footer-container">
       <div>
         <h3>Alamat</h3>
@@ -73,49 +120,59 @@
     <p>© 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.</p>
   </footer>
 
+  <!-- ============================== -->
+  <!-- PERBAIKAN ERROR NULL STYLE ✔ -->
+  <!-- ============================== -->
   <script>
-    // ✅ Logika login/logout
     document.addEventListener("DOMContentLoaded", () => {
       const loginLink = document.getElementById("loginLink");
       const logoutBtn = document.getElementById("logoutBtn");
       const token = localStorage.getItem("token");
 
-      if (token) {
-        loginLink.style.display = "none";
-        logoutBtn.style.display = "block";
-        logoutBtn.onclick = (e) => {
-          e.preventDefault();
-          if (confirm("Yakin ingin logout?")) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            alert("Anda telah logout.");
+      // ✔ pengecekan aman agar tidak error
+      if (loginLink && logoutBtn) {
+        if (token) {
+          loginLink.style.display = "none";
+          logoutBtn.style.display = "block";
+
+          logoutBtn.onclick = (e) => {
+            e.preventDefault();
+            if (confirm("Yakin ingin logout?")) {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              alert("Anda telah logout.");
+              window.location.href = "login.html";
+            }
+          };
+        } else {
+          loginLink.style.display = "block";
+          logoutBtn.style.display = "none";
+          loginLink.onclick = () => {
             window.location.href = "login.html";
-          }
-        };
-      } else {
-        loginLink.style.display = "block";
-        logoutBtn.style.display = "none";
-        loginLink.onclick = () => {
-          window.location.href = "login.html";
-        };
+          };
+        }
       }
 
       // Dropdown toggle
-      document.querySelector('.dropbtn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        document.querySelector('.dropdown').classList.toggle('show');
-      });
+      const dropbtn = document.querySelector('.dropbtn');
+      if (dropbtn) {
+        dropbtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          document.querySelector('.dropdown').classList.toggle('show');
+        });
+      }
 
       // Tutup dropdown saat klik di luar
       document.addEventListener('click', function(e) {
         const dropdown = document.querySelector('.dropdown');
-        if (!dropdown.contains(e.target)) {
+        if (dropdown && !dropdown.contains(e.target)) {
           dropdown.classList.remove('show');
         }
       });
     });
   </script>
 
+  <!-- Tulisan.js -->
   <script src="assets/js/tulisan.js"></script>
 </body>
 </html>

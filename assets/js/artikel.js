@@ -7,16 +7,21 @@ const artikelData = {
     title: "Kenapa Hukum Itu Penting?",
     content: "Hukum berfungsi menjaga keteraturan sosial, melindungi hak setiap orang, serta memberikan rasa aman.",
     image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Law_book.jpg",
-    file: "assets/files/hukum-penting.pdf"
+    file: "assets/files/hukum-penting.pdf",
+    bidang: "Pembinaan"
   },
   2: {
     id: 2,
     title: "Hak Remaja dalam Hukum",
     content: "Remaja memiliki hak hukum yang wajib dilindungi, antara lain hak atas pendidikan dan perlindungan dari kekerasan.",
     image: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Child_rights.jpg",
-    file: "assets/files/hak-remaja.pdf"
+    file: "assets/files/hak-remaja.pdf",
+    bidang: "Intelijen"
   }
 };
+
+// 🔹 NEW: variabel global untuk menyimpan semua artikel
+let allArtikel = [];
 
 // 🔹 Elemen DOM modal
 const modal = document.getElementById("artikelModal");
@@ -41,20 +46,25 @@ async function loadArtikel() {
     const data = await response.json();
     console.log("📥 Data artikel dari backend:", data);
 
-    // Asumsikan data adalah array langsung dari backend
-    if (Array.isArray(data)) {
-      renderArtikel(data);
-    } else {
-      console.warn("⚠️ Format data tidak dikenali, menggunakan fallback.");
-      renderArtikel(Object.values(artikelData));
-    }
+    // NEW: simpan semua artikel ke variabel global
+    allArtikel = Array.isArray(data) ? data : Object.values(artikelData);
+
+    // Tampilkan semua artikel awal
+    renderArtikel(allArtikel);
+
   } catch (error) {
     console.error("❌ Gagal memuat artikel:", error);
-    renderArtikel(Object.values(artikelData)); // fallback
+
+    // NEW: simpan fallback
+    allArtikel = Object.values(artikelData);
+
+    renderArtikel(allArtikel); 
   }
 }
 
+// ======================================================
 // 🔹 Fungsi GET detail artikel by ID
+// ======================================================
 async function getArtikelById(id) {
   try {
     const response = await fetch(`${apiBase}/articles/${id}`);
@@ -69,7 +79,7 @@ async function getArtikelById(id) {
 }
 
 // ======================================================
-// 🔹 Fungsi POST artikel baru (untuk keperluan admin, jika diperlukan di halaman user)
+// 🔹 Fungsi POST artikel baru (admin)
 // ======================================================
 async function createArtikel(newData) {
   try {
@@ -136,15 +146,16 @@ function renderArtikel(list) {
     const card = document.createElement("article");
     card.classList.add("card");
 
-    // Map field backend ke field yang diharapkan (judul -> title, isi -> content, dll.)
+    // Map field backend
     const title = item.judul || item.title || "Tanpa Judul";
     const content = item.isi || item.content || "Tidak ada konten";
     const image = item.gambar || item.image || null;
     const file = item.dokumen || item.file || null;
-    const id = item._id || item.id; // Gunakan _id dari backend sebagai id
+    const id = item._id || item.id;
 
     card.innerHTML = `
       ${image ? `<img src="${image}" alt="${title}" class="card-img" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image';">` : ""}
+
       <div class="card-body">
         <h2>${title}</h2>
         <p>${content.substring(0, 150)}...</p>
@@ -157,7 +168,6 @@ function renderArtikel(list) {
     artikelGrid.appendChild(card);
   });
 
-  // 🔹 Event klik "Baca Selengkapnya" → buka modal
   document.querySelectorAll(".read-more").forEach(btn => {
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -165,7 +175,6 @@ function renderArtikel(list) {
       const data = await getArtikelById(id);
       if (!data) return;
 
-      // Map field untuk modal (judul -> title, isi -> content, dll.)
       const title = data.judul || data.title;
       const content = data.isi || data.content;
       const image = data.gambar || data.image;
@@ -190,15 +199,25 @@ function renderArtikel(list) {
       modal.style.display = "block";
     });
   });
+}
 
-  // 🔹 Event hapus artikel
-  document.querySelectorAll(".btn-delete").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const id = btn.getAttribute("data-id");
-      deleteArtikel(id);
-    });
+// ======================================================
+// 🔹 NEW: Fungsi filter artikel berdasarkan bidang
+// ======================================================
+function filterArtikelByBidang(bidang) {
+  console.log("🔍 Filter bidang:", bidang);
+
+  if (!bidang || bidang === "") {
+    renderArtikel(allArtikel);
+    return;
+  }
+
+  const filtered = allArtikel.filter(item => {
+    const b = item.bidang || item.jabatan || "";
+    return b.toLowerCase() === bidang.toLowerCase();
   });
+
+  renderArtikel(filtered);
 }
 
 // ======================================================

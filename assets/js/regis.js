@@ -13,7 +13,45 @@ if (typeof showAlert !== "function") {
   }
 }
 
-// === FORM REGISTRASI MANUAL ===
+/* =========================================================
+   🔥 FITUR BARU: CEK EMAIL REAL-TIME SAAT USER MENGETIK
+   Endpoint contoh: GET /auth/check-email?email=...
+   ========================================================= */
+
+// Element email input
+const emailInput = document.getElementById("regEmail");
+let emailValid = false;
+
+if (emailInput) {
+  emailInput.addEventListener("input", async () => {
+    const email = emailInput.value.trim();
+
+    if (!email.includes("@")) {
+      emailValid = false;
+      return;
+    }
+
+    try {
+      const check = await fetch(`http://localhost:8080/auth/check-email?email=${encodeURIComponent(email)}`);
+      const result = await check.json();
+
+      // Jika email sudah terdaftar
+      if (result.exists) {
+        emailValid = false;
+        showAlert("❌ Email ini sudah terdaftar, gunakan email lain!", "error");
+      } else {
+        emailValid = true;
+        showAlert("✅ Email tersedia, silakan lanjutkan.", "success");
+      }
+    } catch (err) {
+      console.error("❌ Gagal mengecek email:", err);
+    }
+  });
+}
+
+/* =========================================================
+   === FORM REGISTRASI MANUAL (DIPERBARUI) ===
+   ========================================================= */
 const regForm = document.getElementById("registerForm");
 if (regForm) {
   regForm.addEventListener("submit", async function (e) {
@@ -23,13 +61,28 @@ if (regForm) {
     const password = document.getElementById("regPassword").value;
     const confirmPassword = document.getElementById("regConfirmPassword").value;
 
-    // ✅ Validasi password
+    // =========================================================
+    // 🔥 CEK ULANG DUPLIKASI EMAIL SEBELUM SUBMIT
+    // =========================================================
+    try {
+      const check = await fetch(`http://localhost:8080/auth/check-email?email=${encodeURIComponent(email)}`);
+      const result = await check.json();
+
+      if (result.exists) {
+        showAlert("❌ Email sudah digunakan! Tidak bisa daftar dua kali.", "error");
+        return;
+      }
+    } catch (err) {
+      console.error("Error cek email:", err);
+    }
+
+    // Validasi password
     if (password !== confirmPassword) {
       showAlert("❌ Password dan Konfirmasi Password tidak sama!");
       return;
     }
 
-    // ✅ Validasi email
+    // Validasi email format
     if (!email.includes("@")) {
       showAlert("❌ Email tidak valid!");
       return;
@@ -69,7 +122,7 @@ if (regForm) {
 
       showAlert("✅ Registrasi berhasil! Melakukan login otomatis...", "success");
 
-      // Auto-login setelah register
+      // AUTO LOGIN
       const loginResp = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +147,7 @@ if (regForm) {
         return;
       }
 
-      // ✅ Simpan token & user
+      // Simpan token & user
       if (loginData.token) {
         localStorage.setItem("token", loginData.token);
       }
@@ -110,20 +163,20 @@ if (regForm) {
   });
 }
 
-// === TOMBOL GOOGLE REGISTER ===
+/* =========================================================
+   === TOMBOL GOOGLE REGISTER ===
+   ========================================================= */
 const googleBtn = document.getElementById("googleRegisterBtn");
 if (googleBtn) {
   googleBtn.addEventListener("click", async () => {
     try {
       showAlert("🔄 Menghubungkan ke Google...", "info");
 
-      // Arahkan langsung ke endpoint backend (OAuth flow)
       const response = await fetch("http://localhost:8080/auth/google/regis", {
         method: "GET",
         credentials: "include",
       });
 
-      // Jika server redirect, arahkan browser ke sana
       if (response.redirected) {
         window.location.href = response.url;
         return;
@@ -132,7 +185,6 @@ if (googleBtn) {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok && data.url) {
-        // Backend mengirimkan link login Google
         window.location.href = data.url;
       } else if (data.message) {
         showAlert(data.message, "info");

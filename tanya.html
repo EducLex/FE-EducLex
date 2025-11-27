@@ -148,25 +148,6 @@
       <p>⏳ Memuat data pertanyaan...</p>
     </div>
   </section>
-
-  <!-- Pertanyaan Populer -->
-  <section class="faq-section">
-    <h2>Pertanyaan Populer</h2>
-    <div class="faq">
-      <details>
-        <summary>Apakah mencuri barang kecil bisa dipenjara?</summary>
-        <p>Iya, walau nilainya kecil, mencuri tetap pelanggaran hukum dan bisa dikenakan sanksi sesuai KUHP.</p>
-      </details>
-      <details>
-        <summary>Apa yang harus dilakukan jika menjadi korban bullying?</summary>
-        <p>Kamu bisa melapor ke pihak sekolah atau orang tua. Jika parah, laporkan ke pihak berwenang agar dilindungi hukum.</p>
-      </details>
-      <details>
-        <summary>Apakah meminjam barang teman tanpa izin termasuk pelanggaran?</summary>
-        <p>Iya, jika tanpa izin pemilik, itu bisa dianggap perbuatan melawan hukum, tergantung kasusnya.</p>
-      </details>
-    </div>
-  </section>
 </main>
 
 <!-- ======== Modal Ajukan Pertanyaan ======== -->
@@ -178,13 +159,17 @@
     <label for="namaUser" class="label-tanya">Nama Lengkap</label>
     <input type="text" id="namaUser" class="input-tanya" placeholder="Masukkan nama Anda...">
 
-    <label for="jenis" class="label-tanya">Jenis</label>
-    <select id="jenis" class="input-tanya">
-      <option value="pertanyaan">Pertanyaan Umum</option>
-      <option value="pengaduan">Pengaduan Masyarakat</option>
-      <option value="hukum_pidana">Hukum Pidana</option>
-      <option value="hukum_perdata">Hukum Perdata</option>
-    </select>
+    <label for="jenis" class="label-tanya">Bidang</label>
+<select id="jenis" class="input-tanya">
+  <option value="Pembinaan">Pembinaan</option>
+  <option value="Intelijen">Intelijen</option>
+  <option value="Pidana Umum">Pidana Umum</option>
+  <option value="Pidana Khusus">Pidana Khusus</option>
+  <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
+  <option value="Pidana Militer">Pidana Militer</option>
+  <option value="Asisten Pengawasan">Asisten Pengawasan</option>
+</select>
+
 
     <label for="isiTanya" class="label-tanya">Isi Pertanyaan</label>
     <textarea id="isiTanya" class="input-tanya" rows="5" placeholder="Tuliskan pertanyaan atau pengaduan Anda di sini..."></textarea>
