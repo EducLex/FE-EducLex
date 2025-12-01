@@ -10,7 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    /* Dropdown Filter */
+    /* ======== STYLING UNTUK FILTER SECTION ======== */
     .filter-section {
       margin: 20px auto;
       max-width: 1100px;
@@ -36,9 +36,176 @@
       font-weight: 600;
       color: #3b2f2f;
     }
+
+    /* ======== STYLING UNTUK GRID TULISAN ======== */
+    .tulisan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 0 20px;
+      margin-top: 20px;
+    }
+
+    .tulisan-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    .tulisan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Ikon PDF — TETAP UKURAN ASLI */
+    .pdf-icon-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .pdf-icon {
+      width: auto;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    /* Kategori — TANPA SHADOW, HANYA TEKS DI ATAS Latar Coklat */
+    .kategori {
+      display: inline-block;
+      background: #ffffff;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 10px 0;
+      /* ❌ HILANGKAN SHADOW */
+      box-shadow: none !important;
+    }
+
+    /* Judul Tulisan — Tanpa background, hanya teks */
+    .judul-tulisan {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #3e2723;
+      margin: 10px 20px;
+      line-height: 1.4;
+      min-height: 60px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Tombol Aksi — Lihat & Unduh */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .btn-lihat, .btn-unduh {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .btn-lihat {
+      background: #a1887f;
+      color: white;
+    }
+
+    .btn-lihat:hover {
+      background: #bcaaa4;
+      transform: scale(1.05);
+    }
+
+    .btn-unduh {
+      background: #6d4c41;
+      color: white;
+    }
+
+    .btn-unduh:hover {
+      background: #8d6e63;
+      transform: scale(1.05);
+    }
+
+    /* Status Badge — Belum Dijawab = merah, Sudah Dijawab = hijau */
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+      text-transform: uppercase;
+      margin-top: 5px;
+      display: inline-block;
+    }
+
+    .status-belum {
+      background: #e57373;
+    }
+
+    .status-sudah {
+      background: #66bb6a;
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
+      .tulisan-grid {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+      }
+      .tulisan-card {
+        padding-bottom: 15px;
+      }
+      .pdf-icon {
+        width: auto;
+        height: 50px;
+      }
+      .judul-tulisan {
+        font-size: 1rem;
+        margin: 10px 15px;
+      }
+      .btn-group {
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tulisan-card {
+        padding: 15px;
+      }
+      .pdf-icon {
+        width: auto;
+        height: 40px;
+      }
+      .judul-tulisan {
+        font-size: 0.95rem;
+        margin: 10px 10px;
+      }
+    }
   </style>
 </head>
-
 <body>
   <!-- Navbar -->
   <header>
@@ -55,7 +222,9 @@
       <!-- 🔹 Dropdown Akun -->
       <div class="dropdown">
         <button class="dropbtn">👤 User </button>
-        <div class="dropdown-content" id="userMenu"></div>
+        <div class="dropdown-content" id="userMenu">
+          <!-- Akan diisi oleh JS -->
+        </div>
       </div>
     </nav>
   </header>
@@ -64,10 +233,10 @@
   <main class="tulisan-container">
     <h1>Tulisan Para Jaksa</h1>
     <p class="intro">
-      <strong>Kumpulan tulisan, opini, dan edukasi hukum dari para jaksa Kejaksaan Tinggi Jawa Barat.</strong>
+      Kumpulan tulisan, opini, dan edukasi hukum dari para jaksa Kejaksaan Tinggi Jawa Barat.
     </p>
 
-    <!-- 🔹 DROPDOWN FILTER BIDANG (Tambahan Baru) -->
+    <!-- Filter Bidang -->
     <div class="filter-section">
       <label for="filterBidang"> Bidang:</label>
       <select id="filterBidang">
@@ -120,52 +289,44 @@
     <p>© 2025 <strong>EducLex</strong> | Edukasi Hukum untuk Remaja.<br>Berkolaborasi dengan Kejaksaan Tinggi Jawa Barat.</p>
   </footer>
 
-  <!-- ============================== -->
-  <!-- PERBAIKAN ERROR NULL STYLE ✔ -->
-  <!-- ============================== -->
+  <!-- Script -->
   <script>
+    // ✅ Logika login/logout
     document.addEventListener("DOMContentLoaded", () => {
       const loginLink = document.getElementById("loginLink");
       const logoutBtn = document.getElementById("logoutBtn");
       const token = localStorage.getItem("token");
 
-      // ✔ pengecekan aman agar tidak error
-      if (loginLink && logoutBtn) {
-        if (token) {
-          loginLink.style.display = "none";
-          logoutBtn.style.display = "block";
-
-          logoutBtn.onclick = (e) => {
-            e.preventDefault();
-            if (confirm("Yakin ingin logout?")) {
-              localStorage.removeItem("token");
-              localStorage.removeItem("user");
-              alert("Anda telah logout.");
-              window.location.href = "login.html";
-            }
-          };
-        } else {
-          loginLink.style.display = "block";
-          logoutBtn.style.display = "none";
-          loginLink.onclick = () => {
+      if (token) {
+        loginLink.style.display = "none";
+        logoutBtn.style.display = "block";
+        logoutBtn.onclick = (e) => {
+          e.preventDefault();
+          if (confirm("Yakin ingin logout?")) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            alert("Anda telah logout.");
             window.location.href = "login.html";
-          };
-        }
+          }
+        };
+      } else {
+        loginLink.style.display = "block";
+        logoutBtn.style.display = "none";
+        loginLink.onclick = () => {
+          window.location.href = "login.html";
+        };
       }
 
       // Dropdown toggle
-      const dropbtn = document.querySelector('.dropbtn');
-      if (dropbtn) {
-        dropbtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          document.querySelector('.dropdown').classList.toggle('show');
-        });
-      }
+      document.querySelector('.dropbtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelector('.dropdown').classList.toggle('show');
+      });
 
       // Tutup dropdown saat klik di luar
       document.addEventListener('click', function(e) {
         const dropdown = document.querySelector('.dropdown');
-        if (dropdown && !dropdown.contains(e.target)) {
+        if (!dropdown.contains(e.target)) {
           dropdown.classList.remove('show');
         }
       });

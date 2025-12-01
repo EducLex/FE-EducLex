@@ -8,28 +8,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <!-- ====== STYLING UNTUK MODAL DAN DAFTAR PERTANYAAN ====== -->
   <style>
-    /* ====== TAMBAHAN STYLE RAPIH UNTUK MODAL DAN FORM ====== */
-    .btn-ajukan {
-      background-color: #6d4c41;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-    .btn-ajukan:hover {
-      background-color: #5d4037;
-    }
-
+    /* ====== MODAL AJUKAN PERTANYAAN ====== */
     .modal-tanya {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
       z-index: 999;
@@ -38,11 +24,11 @@
 
     .modal-content-tanya {
       background: #fff;
-      border-radius: 12px;
-      max-width: 500px;
+      border-radius: 16px;
+      max-width: 550px;
       width: 100%;
-      padding: 25px 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      padding: 30px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
       animation: fadeIn 0.3s ease-in-out;
       font-family: 'Open Sans', sans-serif;
     }
@@ -52,18 +38,26 @@
       to {opacity: 1; transform: translateY(0);}
     }
 
+    .modal-content-tanya h2 {
+      color: #4e342e;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
     .label-tanya {
       display: block;
       margin: 10px 0 5px;
       font-weight: 600;
       color: #4e342e;
+      font-size: 0.9rem;
     }
 
     .input-tanya, textarea.input-tanya, select.input-tanya {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #d7ccc8;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 14px;
       box-sizing: border-box;
       font-family: 'Open Sans', sans-serif;
@@ -74,21 +68,25 @@
       background-color: #6d4c41;
       color: white;
       border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.95rem;
+      transition: 0.3s;
     }
 
     .btn-batal-tanya {
       background-color: #d7ccc8;
       color: #3e2723;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      margin-left: 8px;
+      font-size: 0.95rem;
+      margin-left: 10px;
+      transition: 0.3s;
     }
 
     .btn-kirim-tanya:hover {
@@ -98,10 +96,119 @@
       background-color: #bcaaa4;
     }
 
-    /* Responsive */
+    /* ====== DAFTAR PERTANYAAN ====== */
+    .daftar-pertanyaan {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-top: 20px;
+    }
+
+    .pertanyaan-item {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+      border-left: 5px solid #8d6e63;
+      transition: transform 0.2s;
+    }
+
+    .pertanyaan-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .pertanyaan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .nama-pengguna {
+      font-weight: 600;
+      color: #3e2723;
+      font-size: 1rem;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .status-belum {
+      background: #e57373;
+    }
+
+    .status-sudah {
+      background: #66bb6a;
+    }
+
+    .isi-pertanyaan {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #5d4037;
+      margin: 10px 0;
+      word-wrap: break-word;
+    }
+
+    .kategori {
+      font-size: 0.85rem;
+      color: #6d4c41;
+      background: #f8f4f2;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .tanggal {
+      font-size: 0.8rem;
+      color: #757575;
+      margin-top: 5px;
+      display: block;
+    }
+
+    /* ====== TOMBOL AJUKAN ====== */
+    .btn-ajukan {
+      background-color: #6d4c41;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .btn-ajukan:hover {
+      background-color: #5d4037;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    /* ====== RESPONSIF ====== */
     @media (max-width: 600px) {
       .modal-content-tanya {
         padding: 20px;
+        margin: 10px;
+      }
+      .pertanyaan-item {
+        padding: 15px;
+      }
+      .nama-pengguna {
+        font-size: 0.95rem;
+      }
+      .isi-pertanyaan {
+        font-size: 0.95rem;
       }
     }
   </style>
@@ -119,11 +226,10 @@
       <li><a href="tulisan.html">Tulisan Jaksa</a></li>
       <li><a href="peraturan.html">Peraturan</a></li>
     </ul>
-      <!-- 🔹 Dropdown Akun -->
-      <div class="dropdown">
-        <button class="dropbtn">👤 User </button>
-        <div class="dropdown-content" id="userMenu">
-        </div>
+    <div class="dropdown">
+      <button class="dropbtn">👤 User </button>
+      <div class="dropdown-content" id="userMenu">
+        <!-- Akan diisi oleh JS -->
       </div>
     </div>
   </nav>
@@ -145,7 +251,7 @@
   <section class="daftar-section">
     <h2>Daftar Tanya Jawab</h2>
     <div id="daftar-pertanyaan" class="daftar-pertanyaan">
-      <p>⏳ Memuat data pertanyaan...</p>
+      <p style="text-align:center; color:#777;">⏳ Memuat data pertanyaan...</p>
     </div>
   </section>
 </main>
@@ -154,22 +260,21 @@
 <div id="modalTanya" class="modal-tanya">
   <div class="modal-content-tanya">
     <h2>Ajukan Pertanyaan</h2>
-    <p style="margin-bottom:10px;">Silakan isi formulir di bawah ini untuk bertanya kepada Jaksa.</p>
+    <p style="margin-bottom:10px; color:#5d4037; font-size:0.95rem;">Silakan isi formulir di bawah ini untuk bertanya kepada Jaksa.</p>
 
     <label for="namaUser" class="label-tanya">Nama Lengkap</label>
     <input type="text" id="namaUser" class="input-tanya" placeholder="Masukkan nama Anda...">
 
     <label for="jenis" class="label-tanya">Bidang</label>
-<select id="jenis" class="input-tanya">
-  <option value="Pembinaan">Pembinaan</option>
-  <option value="Intelijen">Intelijen</option>
-  <option value="Pidana Umum">Pidana Umum</option>
-  <option value="Pidana Khusus">Pidana Khusus</option>
-  <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
-  <option value="Pidana Militer">Pidana Militer</option>
-  <option value="Asisten Pengawasan">Asisten Pengawasan</option>
-</select>
-
+    <select id="jenis" class="input-tanya">
+      <option value="Pembinaan">Pembinaan</option>
+      <option value="Intelijen">Intelijen</option>
+      <option value="Pidana Umum">Pidana Umum</option>
+      <option value="Pidana Khusus">Pidana Khusus</option>
+      <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
+      <option value="Pidana Militer">Pidana Militer</option>
+      <option value="Asisten Pengawasan">Asisten Pengawasan</option>
+    </select>
 
     <label for="isiTanya" class="label-tanya">Isi Pertanyaan</label>
     <textarea id="isiTanya" class="input-tanya" rows="5" placeholder="Tuliskan pertanyaan atau pengaduan Anda di sini..."></textarea>

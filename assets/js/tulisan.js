@@ -8,14 +8,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ============================
-  // 🔹 Coba beberapa endpoint otomatis
+  // 🔹 DAFTAR ENDPOINT
   // ============================
   const endpoints = [
     `${apiBase}/tulisan-public`,
-    `${apiBase}/tulisanPublic`,
     `${apiBase}/tulisan`,
   ];
 
+  // ============================
+  // 🔹 Ambil Data Tulisan
+  // ============================
   async function ambilTulisan() {
     for (const url of endpoints) {
       try {
@@ -24,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const res = await fetch(url, {
           method: "GET",
           mode: "cors",
-          // ❗ Jangan kirim Content-Type pada GET (sering bikin error CORS)
         });
 
         if (!res.ok) {
@@ -35,17 +36,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await res.json();
         console.log("Response dari backend:", data);
 
-        // backend bisa saja mengirim {data: []}
-        const tulisanData = Array.isArray(data)
-          ? data
-          : Array.isArray(data.data)
-          ? data.data
-          : [];
+        // ================================
+        // 🔥 NORMALISASI DATA BACKEND
+        // BE bisa kirim: array, object, atau object.data
+        // ================================
+        let tulisanData = [];
+
+        if (Array.isArray(data)) {
+          tulisanData = data;
+        } else if (Array.isArray(data.data)) {
+          tulisanData = data.data;
+        } else if (typeof data === "object" && data !== null) {
+          tulisanData = [data];
+        }
 
         if (tulisanData.length > 0) {
           tampilkanTulisan(tulisanData);
           return;
         }
+
       } catch (err) {
         console.error("Error fetch endpoint:", url, err);
       }
@@ -56,28 +65,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ============================
-  // 🔹 Dummy Data
+  // 🔹 Dummy Data jika backend error
   // ============================
   const dummyData = [
     {
       judul: "Pedoman Penegakan Hukum di Era Digital",
       kategori: "Edukasi dan Literasi Hukum Digital",
-      file_url: "assets/pdf/pedoman_penegakan_hukum.pdf",
+      isi: "Isi dummy tidak tersedia.",
+      file_url: "#"
     },
     {
-      judul: "Hak dan Kewajiban Pengguna Media Sosial Menurut UU ITE",
-      kategori: "Undang-Undang dan Regulasi",
-      file_url: "assets/pdf/hak_kewajiban_pengguna_medsos.pdf",
-    },
-    {
-      judul: "Peran Jaksa dalam Meningkatkan Kesadaran Hukum Masyarakat",
-      kategori: "Edukasi Hukum dan Sosialisasi",
-      file_url: "assets/pdf/peran_jaksa_kesadaran_hukum.pdf",
+      judul: "Hak dan Kewajiban Pengguna Media Sosial",
+      kategori: "Regulasi UU ITE",
+      isi: "Isi dummy tidak tersedia.",
+      file_url: "#"
     },
   ];
 
   // ============================
-  // 🔹 Render Tulisan
+  // 🔹 Render Tulisan ke HTML
   // ============================
   function tampilkanTulisan(data) {
     container.innerHTML = "";
@@ -92,13 +98,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       const card = document.createElement("div");
       card.className = "tulisan-card";
 
-      // fallback jika file_url kosong
-      const fileUrl = t.file_url || "#";
+      // File URL tidak ada dari backend → generate file dummy
+      const fileUrl =
+        t.file_url ??
+        `data:text/plain;charset=utf-8,${encodeURIComponent(
+          t.isi || "Tidak ada isi tulisan."
+        )}`;
 
       card.innerHTML = `
         <img src="assets/img/pdf.png" alt="PDF Icon" class="pdf-icon">
-        <p class="kategori">${t.kategori || "-"}</p>
+
+        <p class="kategori">${t.kategori && t.kategori.trim() !== "" ? t.kategori : "Artikel Hukum"}</p>
+
         <h2>${t.judul}</h2>
+
         <div class="card-actions">
           <a href="${fileUrl}" target="_blank" class="btn-detail">👁️ Lihat</a>
           <a href="${fileUrl}" download class="btn-unduh">⬇️ Unduh</a>
@@ -110,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ============================
-  // 🔹 Mulai eksekusi
+  // 🔹 Jalankan Fetch
   // ============================
   await ambilTulisan();
 });

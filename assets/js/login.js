@@ -11,8 +11,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const forgotPasswordLink = document.getElementById("forgot-password-link");
   const backToLoginBtn = document.getElementById("back-to-login");
   const backToForgotBtn = document.getElementById("back-to-forgot");
-  const loginLinkNavbar = document.querySelector('.btn-login');
-  const userIcon = document.querySelector('.user-icon');
+
+  // 🔹 Elemen dropdown akun NAVBAR
+  const akunDropdown = document.getElementById("akunDropdown");
+  const loginMenu = document.getElementById("menuLogin");
+  const logoutMenu = document.getElementById("menuLogout");
 
   function showAlert(message, type = "info") {
     if (!alertContainer) return;
@@ -21,12 +24,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => (alertContainer.innerHTML = ""), 4000);
   }
 
-  function hideLoginButton() {
-    if (loginLinkNavbar) loginLinkNavbar.style.display = "none";
-    if (userIcon) userIcon.style.display = "inline-block";
+  // ======================================================
+  // 🔹 PERBAIKAN: UPDATE DROPDOWN AKUN
+  // ======================================================
+  function updateAkunDropdown() {
+    const token = localStorage.getItem("token");
+
+    if (!akunDropdown || !loginMenu || !logoutMenu) return;
+
+    if (token) {
+      loginMenu.style.display = "none";
+      logoutMenu.style.display = "block";
+    } else {
+      loginMenu.style.display = "block";
+      logoutMenu.style.display = "none";
+    }
   }
 
-  // ======= NAVIGATION =======
+  // 🔹 Tombol Logout
+  if (logoutMenu) {
+    logoutMenu.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      updateAkunDropdown();
+      window.location.href = "login.html";
+    });
+  }
+
+  updateAkunDropdown(); // jalankan saat halaman dibuka
+
+  // ======= FORM EVENTS =======
   if (forgotPasswordLink) {
     forgotPasswordLink.addEventListener("click", (e) => {
       e.preventDefault();
@@ -51,27 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ======================================================
-  // ⛔ FIX ANTI-CORS: CHECK LOGIN STATUS TANPA COOKIES
-  // ======================================================
-  async function checkLoginStatus() {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) return false;
-
-      const userData = localStorage.getItem("user");
-      if (userData) hideLoginButton();
-
-      return true;
-
-    } catch (err) {
-      console.warn("⚠️ Cek status login gagal:", err.message);
-    }
-    return false;
-  }
-
-  // ======================================================
-  // LOGIN NORMAL (TANPA CREDENTIALS)
+  // LOGIN USER NORMAL
   // ======================================================
   if (loginFormEl) {
     loginFormEl.addEventListener("submit", async (e) => {
@@ -88,7 +95,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         const response = await fetch(`${apiBase}/auth/login`, {
           method: "POST",
-          mode: "cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password })
         });
@@ -100,28 +106,17 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
 
-        localStorage.setItem("token", "dummy-token");
-        const role = data.role || (username.includes("admin") ? "admin" : "user");
+        localStorage.setItem("token", data.token || "dummy-token");
+        localStorage.setItem("user", JSON.stringify({ username, role: data.role || "user" }));
 
-        localStorage.setItem("user", JSON.stringify({ username, role }));
-        hideLoginButton();
+        updateAkunDropdown();
 
-        const redirectTo = () => {
-          window.location.href = role === "admin" ? "dbadmin.html" : "index.html";
-        };
-
-        if (typeof Swal !== "undefined") {
-          Swal.fire({
-            icon: "success",
-            title: "Login Berhasil!",
-            text: `Selamat datang, ${username}!`,
-            timer: 1800,
-            showConfirmButton: false
-          }).then(redirectTo);
+        if (data.role === "admin") {
+          window.location.href = "dbadmin.html";
         } else {
-          showAlert("Login berhasil!", "success");
-          setTimeout(redirectTo, 1200);
+          window.location.href = "index.html";
         }
+
       } catch (error) {
         console.error("❌ Error login:", error);
         showAlert("Gagal terhubung ke server backend.", "error");
@@ -130,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ======================================================
-  // FORGOT PASSWORD (TETAP SAMA)
+  // FORGOT PASSWORD
   // ======================================================
   if (forgotPasswordFormEl) {
     forgotPasswordFormEl.addEventListener("submit", async (e) => {
@@ -142,7 +137,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         const res = await fetch(`${apiBase}/jaksa/auth/forgot-password`, {
           method: "POST",
-          mode: "cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email })
         });
@@ -164,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ======================================================
-  // RESET PASSWORD (TETAP SAMA)
+  // RESET PASSWORD
   // ======================================================
   if (resetPasswordFormEl) {
     resetPasswordFormEl.addEventListener("submit", async (e) => {
@@ -185,7 +179,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         const res = await fetch(`${apiBase}/jaksa/auth/reset-password-jaksa`, {
           method: "POST",
-          mode: "cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token, newPassword })
         });
@@ -207,74 +200,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ======================================================
-  // LOGIN GOOGLE (AMAN, TIDAK KENA CORS)
+  // LOGIN GOOGLE (PERBAIKAN FINAL)
   // ======================================================
   document.querySelectorAll(".google-btn").forEach(btn => {
     btn?.addEventListener("click", () => {
-      window.location.href = `${apiBase}/auth/google/login`;
+      window.location.href = `${apiBase}/auth/google/login?redirect_uri=http://localhost/google-callback.html`;
     });
   });
 
-  // ==================================================================================
-  // 👉 TAMBAHAN GOOGLE LOGIN HANDLER (Redirect dari Backend Google callback)
-  // ==================================================================================
-  if (window.location.search.includes("google_success=true")) {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
-      const email = urlParams.get("email");
-      const username = urlParams.get("username");
-      const role = "user";
+  // ======================================================
+  // GOOGLE CALLBACK HANDLER (google-callback.html)
+  // ======================================================
+  try {
+    const preTag = document.querySelector("pre");
+    if (preTag) {
+      const text = preTag.innerText.trim();
+      const data = JSON.parse(text);
 
-      if (token) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify({ email, username, role }));
-        hideLoginButton();
+      console.log("Google Callback JSON:", data);
 
-        // 👉 Trigger email login (ke backend)
-        await fetch(`${apiBase}/auth/google/send-login-email`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
+      if (data.token) localStorage.setItem("token", data.token);
+      if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-        // 👉 Redirect langsung ke index.html
-        window.location.href = "index.html";
-      }
-    } catch (err) {
-      console.error("Google login handler error:", err);
+      updateAkunDropdown();
+      window.location.href = "index.html";
+      return;
     }
+  } catch {
+    console.warn("Tidak ada JSON callback Google.");
   }
 
-  await checkLoginStatus();
+  updateAkunDropdown();
 });
-
-// Cek jika halaman ini menerima callback dari Google Login
-document.addEventListener("DOMContentLoaded", () => {
-    // Ambil isi halaman (JSON callback Google)
-    try {
-        const preTag = document.querySelector("pre"); // fetch JSON biasanya ditampilkan sebagai <pre>
-        if (preTag) {
-            const text = preTag.innerText.trim();
-            const data = JSON.parse(text);
-
-            console.log("Detected Google callback JSON:", data);
-
-            // Simpan token & user
-            if (data.token) localStorage.setItem("token", data.token);
-            if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-
-            // Redirect ke beranda
-            window.location.href = "beranda.html";
-            return;
-        }
-    } catch (err) {
-        console.warn("Tidak ada JSON callback Google.");
-    }
-});
-
-
-// Fungsi klik tombol login Google
-window.location.href =
-  `${apiBase}/auth/google/login?redirect_uri=http://127.0.0.1:5500/google-callback.html`;
-

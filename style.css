@@ -2935,3 +2935,60 @@ footer a {
   font-size: 15px;
   min-width: 200px;
 }
+
+/* ===== FILTER BIDANG: Card Tengah ===== */
+.filter-section {
+  background: #f7eee8;
+  border: 1px solid #e8d8cc;
+  padding: 16px 24px;
+  border-radius: 14px;
+
+  width: max-content;
+  margin: 0 auto 32px auto;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Label */
+.filter-section label {
+  font-weight: 600;
+  color: #4e342e;
+  font-size: 16px;
+}
+
+/* Dropdown */
+.filter-section select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #c7b2a3;
+  background: #ffffff;
+  color: #4e342e;
+  font-size: 15px;
+  cursor: pointer;
+
+  appearance: none; /* Hilangkan default style */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='%236d4c41' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 34px; /* ruang untuk icon */
+}
+
+/* Hover */
+.filter-section select:hover {
+  border-color: #b39683;
+}
+
+/* Focus */
+.filter-section select:focus {
+  outline: none;
+  border-color: #8d6e63;
+  box-shadow: 0 0 0 2px rgba(141, 110, 99, 0.25);
+}

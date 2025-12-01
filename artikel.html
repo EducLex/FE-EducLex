@@ -6,6 +6,50 @@
   <title>Artikel Hukum Populer | EducLex</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <!-- 🔹 Tambahkan CSS filter-section -->
+  <style>
+    .filter-section {
+      margin: 20px auto;
+      max-width: 1100px;
+      padding: 15px;
+      background: #f5ebe1;
+      border-radius: 10px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .filter-section label {
+      font-weight: 600;
+      color: #3e2723;
+      font-size: 0.95rem;
+    }
+
+    .filter-section select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #b08968;
+      font-size: 14px;
+      font-family: "Poppins", sans-serif;
+      background: #fff;
+      cursor: pointer;
+      min-width: 180px;
+    }
+
+    .filter-section select:focus {
+      outline: none;
+      border-color: #8d6e63;
+      box-shadow: 0 0 6px rgba(141,110,99,0.3);
+    }
+
+    @media (max-width: 768px) {
+      .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -36,46 +80,24 @@
     Kumpulan artikel edukatif seputar hukum dan kesadaran hukum remaja.
   </p>
 
-  <!-- ================================ -->
-  <!-- 🔹 FILTER BIDANG (seperti tulisan) -->
-  <!-- ================================ -->
-  <div style="
-      background:#f5ebe3;
-      padding:20px 30px;
-      border-radius:12px;
-      width: fit-content;
-      margin:0 auto 30px auto;
-      display:flex;
-      align-items:center;
-      gap:15px;
-      border:1px solid #e0d2c5;">
-      
-      <label for="filterBidang" style="font-weight:600; color:#3e2723;">Bidang:</label>
-
-      <select id="filterBidang" style="
-          padding:10px 14px; 
-          border-radius:8px; 
-          border:1px solid #8d6e63;
-          font-size:15px;
-          color:#4e342e;
-          min-width:200px;
-      ">
-        <option value="" selected>Semua Bidang</option>
-        <option value="Pembinaan">Pembinaan</option>
-        <option value="Intelijen">Intelijen</option>
-        <option value="Pidana Umum">Pidana Umum</option>
-        <option value="Pidana Khusus">Pidana Khusus</option>
-        <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
-        <option value="Pidana Militer">Pidana Militer</option>
-        <option value="Asisten Pengawasan">Asisten Pengawasan</option>
-      </select>
+  <!-- 🔹 FILTER BIDANG (Diperbarui sesuai .filter-section) -->
+  <div class="filter-section">
+    <label for="filterBidang">Bidang:</label>
+    <select id="filterBidang">
+      <option value="" selected>Semua Bidang</option>
+      <option value="Pembinaan">Pembinaan</option>
+      <option value="Intelijen">Intelijen</option>
+      <option value="Pidana Umum">Pidana Umum</option>
+      <option value="Pidana Khusus">Pidana Khusus</option>
+      <option value="Perdata dan Tata Usaha Negara">Perdata dan Tata Usaha Negara</option>
+      <option value="Pidana Militer">Pidana Militer</option>
+      <option value="Asisten Pengawasan">Asisten Pengawasan</option>
+    </select>
   </div>
 
   <!-- 🔹 Tempat daftar artikel -->
   <div class="artikel-grid"></div>
 </main>
-
-
 
 <!-- Modal untuk artikel detail -->
 <div id="artikelModal" class="modal">
